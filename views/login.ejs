@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Game System</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/UNO.icon" type="image/x-icon">
+</head>
+<body>
+    
+    <!-- Header Section -->
+    <header class="login-header">
+        <h4 class="login-header-title">UNO GAME SYSTEM</h4>
+        <nav class="navbar-menu">
+            <a href="/login" class="navbar-item">Login</a>
+        </nav>
+        <% if (locals.message) { %>
+            <div class="login-error"> <%= locals.message %> <a href="https://github.com/Guyuchen99/UNO-GAME-SYSTEM" target="_blank" class="error-help">Need Help?</a></div>
+        <% } %>
+    </header>
+
+    <!--Login Section-->
+    <section class="login-body">
+        <div class="login-form">
+            <h2 class="login-form-header">Login Form</h2>
+            <div class="login-form-body">
+                <form action="/auth/login" method="POST">
+                    <div class="fields">
+                        <label for="username" class="form-label">Username: </label>
+                        <input type="text" class="form-control" id="username" name="username" aria-label="Username">
+                    </div>
+                    <div class="fields">
+                        <label for="password" class="form-label">Password: </label>
+                        <input type="password" class="form-control" id="password" name="password" aria-label="Password">
+                    </div>
+                    <div class="submit-btn">
+                        <button type="submit" class="btn">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="login-footer">
+        <span id="laptop">Developed and Designed By <span>YC Graphixs</span> | <i class="bx bx-copyright"></i> 2024 All rights Reserved.</span>
+        <span id="phone">
+            <div>Developed and Designed By <span>YC Graphixs</span></div> 
+            <div><i class="bx bx-copyright"></i> 2024 All rights Reserved.</div>
+        </span>
+    </footer>
+
+</body>
+</html>

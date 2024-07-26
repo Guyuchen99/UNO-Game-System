@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Game System Admin</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="icon" href="/UNO.icon" type="image/x-icon">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div id="grid-container">
+
+        <!-- Header Section  -->
+        <header class="grid-header">
+            <div class="header-left">
+                <i class='bx bx-search' aria-label="Search icon"></i>
+                <input type="text" name="search" id="search" placeholder="Search Anything...">
+            </div>
+            <div class="header-right">
+                <i class='bx bx-user-circle' aria-label="User icon"></i>
+            </div>
+        </header>
+
+        <!-- Sidebar Section  -->
+        <aside class="grid-sidebar" id="sidebar">
+            <div class="sidebar-title">UNO GAME SYSTEM ADMIN</div>
+            <nav class="sidebar-list">
+                <div class="sidebar-list-top">
+                    <a href="/" class="sidebar-item">Dashboard</a>
+                    <a href="/store-items" class="sidebar-item">Store Items</a>
+                    <a href="/memberships" class="sidebar-item">Memberships</a>
+                    <a href="/events" class="sidebar-item">Events</a>
+                    <a href="/matches" class="sidebar-item">Matches</a>
+                </div>
+                <div class="sidebar-list-bottom">
+                    <a href="/auth/logout" class="sidebar-item">Logout</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Section -->
+        <main class="grid-main">
+            <div class="main-body">
+                <div class="table-container-secondary">
+                    <div class="main-body-header">
+                        <h2 class="main-title">RECEMT MEMBERSHIPS</h2>
+                        <div class="table-button-list">
+                            <button class="table-btn add"><i class="bx bx-plus"></i>Create Membership</button>
+                            <button class="table-btn">View All</button>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date Joined</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span><%= username1 %></span></td>
+                                <td><%= totalWin1 %></td>
+                                <td><%= totalGameCount1 %></td>
+                                <td><%= experience1 %></td>
+                                <td><%= country1 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username2 %></td>
+                                <td><%= totalWin2 %></td>
+                                <td><%= totalGameCount2 %></td>
+                                <td><%= experience2 %></td>
+                                <td><%= country2 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username3 %></td>
+                                <td><%= totalWin3 %></td>
+                                <td><%= totalGameCount3 %></td>
+                                <td><%= experience3 %></td>
+                                <td><%= country3 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username4 %></td>
+                                <td><%= totalWin4 %></td>
+                                <td><%= totalGameCount4 %></td>
+                                <td><%= experience4 %></td>
+                                <td><%= country4 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username5 %></td>
+                                <td><%= totalWin5 %></td>
+                                <td><%= totalGameCount5 %></td>
+                                <td><%= experience5 %></td>
+                                <td><%= country5 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username5 %></td>
+                                <td><%= totalWin5 %></td>
+                                <td><%= totalGameCount5 %></td>
+                                <td><%= experience5 %></td>
+                                <td><%= country5 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username5 %></td>
+                                <td><%= totalWin5 %></td>
+                                <td><%= totalGameCount5 %></td>
+                                <td><%= experience5 %></td>
+                                <td><%= country5 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username5 %></td>
+                                <td><%= totalWin5 %></td>
+                                <td><%= totalGameCount5 %></td>
+                                <td><%= experience5 %></td>
+                                <td><%= country5 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username5 %></td>
+                                <td><%= totalWin5 %></td>
+                                <td><%= totalGameCount5 %></td>
+                                <td><%= experience5 %></td>
+                                <td><%= country5 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                            <tr>
+                                <td><%= username5 %></td>
+                                <td><%= totalWin5 %></td>
+                                <td><%= totalGameCount5 %></td>
+                                <td><%= experience5 %></td>
+                                <td><%= country5 %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>  
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="grid-footer">
+            <span id="laptop">Developed and Designed By <span>YC Graphixs</span> | <i class="bx bx-copyright"></i> 2024 All rights Reserved.</span>
+            <span id="phone">
+                <div>Developed and Designed By <span>YC Graphixs</span></div> 
+                <div><i class="bx bx-copyright"></i> 2024 All rights Reserved.</div>
+            </span>
+        </footer>
+    </div>
+</body>
+</html>
