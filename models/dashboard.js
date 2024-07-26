@@ -1,23 +1,21 @@
 const db = require("../config/db");
 
 exports.getTotalPlayers = async () => {
-  return new Promise((resolve, reject) => {
-    db.query("SELECT COUNT(*) AS total_players FROM Players", (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results[0].total_players);
-    });
-  });
+  try {
+    const [results] = await db.promise().query("SELECT COUNT(*) AS total_players FROM Players");
+    return results[0].total_players;
+  } catch (error) {
+    console.error("Error fetching total players:", error.message);
+    throw error;
+  }
 };
 
 exports.getRecentPlayers = async () => {
-  return new Promise((resolve, reject) => {
-    db.query("SELECT * FROM Players ORDER BY player_id DESC LIMIT 5;", (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
-  });
+  try {
+    const [results] = await db.promise().query("SELECT * FROM Players ORDER BY player_id DESC LIMIT 5;");
+    return results;
+  } catch (error) {
+    console.error("Error fetching recent players:", error.message);
+    throw error;
+  }
 };

@@ -6,13 +6,13 @@ exports.login = async (req, res) => {
 
     if (!username || !password) {
       return res.status(400).render("login", {
-        message: "Please enter an username and password... ",
+        message: "Please enter a username and password.",
       });
     }
 
     if (username !== process.env.LOGIN_USERNAME || password !== process.env.LOGIN_PASSWORD) {
       return res.status(401).render("login", {
-        message: "Your username or password is incorrect... ",
+        message: "Your username or password is incorrect.",
       });
     } else {
       const token = jwt.sign({ id: 1 }, process.env.JWT_SECRET, {
@@ -25,7 +25,6 @@ exports.login = async (req, res) => {
       };
 
       res.cookie("myCookie", token, cookieOptions);
-
       res.status(200).redirect("/");
     }
   } catch (error) {

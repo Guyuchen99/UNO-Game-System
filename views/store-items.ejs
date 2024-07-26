@@ -62,30 +62,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <% recentPlayers.forEach(player => { %>
                             <tr>
-                                <td><span><%= username1 %></span></td>
-                                <td><%= totalWin1 %></td>
-                                <td><%= totalGameCount1 %></td>
-                                <td><%= experience1 %></td>
-                                <td><%= country1 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                                <td><span><%= player.username %></span></td>
+                                <td><%= player.dateJoined %></td>
+                                <td><%= player.gender %></td>
+                                <td><%= player.age %></td>
+                                <td><%= player.status %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
                             </tr>
-                            <tr>
-                                <td><%= username2 %></td>
-                                <td><%= totalWin2 %></td>
-                                <td><%= totalGameCount2 %></td>
-                                <td><%= experience2 %></td>
-                                <td><%= country2 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
-                            </tr>
-                            <tr>
-                                <td><%= username3 %></td>
-                                <td><%= totalWin3 %></td>
-                                <td><%= totalGameCount3 %></td>
-                                <td><%= experience3 %></td>
-                                <td><%= country3 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
-                            </tr>
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
@@ -110,38 +96,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <% recentPlayers.forEach(player => { %>
                             <tr>
-                                <td><span><%= username1 %></span></td>
-                                <td><%= totalWin1 %></td>
-                                <td><%= totalGameCount1 %></td>
-                                <td><%= experience1 %></td>
-                                <td><%= country1 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
+                                <td><span><%= player.username %></span></td>
+                                <td><%= player.dateJoined %></td>
+                                <td><%= player.gender %></td>
+                                <td><%= player.age %></td>
+                                <td><%= player.status %></td>
+                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
                             </tr>
-                            <tr>
-                                <td><%= username2 %></td>
-                                <td><%= totalWin2 %></td>
-                                <td><%= totalGameCount2 %></td>
-                                <td><%= experience2 %></td>
-                                <td><%= country2 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
-                            </tr>
-                            <tr>
-                                <td><%= username3 %></td>
-                                <td><%= totalWin3 %></td>
-                                <td><%= totalGameCount3 %></td>
-                                <td><%= experience3 %></td>
-                                <td><%= country3 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
-                            </tr>
-                            <tr>
-                                <td><%= username4 %></td>
-                                <td><%= totalWin4 %></td>
-                                <td><%= totalGameCount4 %></td>
-                                <td><%= experience4 %></td>
-                                <td><%= country4 %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
-                            </tr>
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
