@@ -64,14 +64,14 @@
                         </thead>
                         <tbody>
                             <% recentPlayers.forEach(player => { %>
-                            <tr>
-                                <td><span><%= player.username %></span></td>
-                                <td><%= player.totalWin %></td>
-                                <td><%= player.totalGameCount %></td>
-                                <td><%= player.experience %></td>
-                                <td><%= player.country %></td>
-                                <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete'></i></span></td>
-                            </tr>
+                                <tr>
+                                    <td><span><%= player.username %></span></td>
+                                    <td><%= player.totalWin %></td>
+                                    <td><%= player.totalGameCount %></td>
+                                    <td><%= player.experience %></td>
+                                    <td><%= player.country %></td>
+                                    <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
+                                </tr>
                             <% }) %>
                         </tbody>
                     </table>

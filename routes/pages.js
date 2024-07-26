@@ -38,8 +38,8 @@ router.get("/", authController.isLoggedIn, async (req, res) => {
         recentPlayers,
       });
     } catch (error) {
-      console.error("Error Fetching Data:", error);
-      res.status(500).send("Internal Server Error");
+      console.error("OH NO! Error Fetching Data:", error);
+      res.status(500).send("OH NO! Internal Server Error");
     }
   } else {
     res.redirect("/login");
@@ -55,8 +55,8 @@ router.get("/memberships", authController.isLoggedIn, async (req, res) => {
         recentPlayers,
       });
     } catch (error) {
-      console.error("Error Fetching Data:", error);
-      res.status(500).send("Internal Server Error");
+      console.error("OH NO! Error Fetching Data:", error);
+      res.status(500).send("OH NO! Internal Server Error");
     }
   } else {
     res.redirect("/login");
@@ -72,8 +72,8 @@ router.get("/store-items", authController.isLoggedIn, async (req, res) => {
         recentPlayers,
       });
     } catch (error) {
-      console.error("Error Fetching Data:", error);
-      res.status(500).send("Internal Server Error");
+      console.error("OH NO! Error Fetching Data:", error);
+      res.status(500).send("OH NO! Internal Server Error");
     }
   } else {
     res.redirect("/login");
@@ -89,8 +89,8 @@ router.get("/events", authController.isLoggedIn, async (req, res) => {
         recentPlayers,
       });
     } catch (error) {
-      console.error("Error Fetching Data:", error);
-      res.status(500).send("Internal Server Error");
+      console.error("OH NO! Error Fetching Data:", error);
+      res.status(500).send("OH NO! Internal Server Error");
     }
   } else {
     res.redirect("/login");
@@ -106,8 +106,8 @@ router.get("/matches", authController.isLoggedIn, async (req, res) => {
         recentPlayers,
       });
     } catch (error) {
-      console.error("Error Fetching Data:", error);
-      res.status(500).send("Internal Server Error");
+      console.error("OH NO! Error Fetching Data:", error);
+      res.status(500).send("OH NO! Internal Server Error");
     }
   } else {
     res.redirect("/login");
