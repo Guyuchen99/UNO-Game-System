@@ -36,10 +36,18 @@ CREATE TABLE IF NOT EXISTS Players (
     experience_point INT DEFAULT 0,
     country VARCHAR(255) NOT NULL,
     PRIMARY KEY (player_id),
-    FOREIGN KEY (username) REFERENCES PlayerUsernameAndEmail(username) ON DELETE CASCADE,
-    FOREIGN KEY (total_win, total_game_count) REFERENCES PlayerGameStatistics(total_win, total_game_count) ON DELETE CASCADE,
-    FOREIGN KEY (experience_point) REFERENCES PlayerLevel(experience_point) ON DELETE CASCADE,
-    FOREIGN KEY (country) REFERENCES PlayerLanguage(country) ON DELETE CASCADE
+    FOREIGN KEY (username) REFERENCES PlayerUsernameAndEmail(username) 
+		ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+    FOREIGN KEY (total_win, total_game_count) REFERENCES PlayerGameStatistics(total_win, total_game_count)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+    FOREIGN KEY (experience_point) REFERENCES PlayerLevel(experience_point) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+    FOREIGN KEY (country) REFERENCES PlayerLanguage(country) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS MembershipExpireDate (
@@ -61,16 +69,25 @@ CREATE TABLE IF NOT EXISTS MembershipInPlayer (
     issue_date DATE NOT NULL,
     days_remaining INT NOT NULL,
     privilege_level INT NOT NULL,
-    total_points INT NOT NULL,
+    status VARCHAR(255) DEFAULT 'Active',
     PRIMARY KEY (membership_id),
-	FOREIGN KEY (player_id) REFERENCES Players (player_id) ON DELETE CASCADE,
-    FOREIGN KEY (issue_date, days_remaining) REFERENCES MembershipExpireDate(issue_date, days_remaining) ON DELETE CASCADE,
-    FOREIGN KEY (privilege_level) REFERENCES MembershipPrivilegeClass(privilege_level) ON DELETE CASCADE
+	FOREIGN KEY (player_id) REFERENCES Players (player_id) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+    FOREIGN KEY (issue_date, days_remaining) REFERENCES MembershipExpireDate(issue_date, days_remaining) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+    FOREIGN KEY (privilege_level) REFERENCES MembershipPrivilegeClass(privilege_level) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS Events (
     event_id INT AUTO_INCREMENT,
     name VARCHAR(255),
+    start_date DATE NOT NULL, 
+    end_date DATE NOT NULL, 
+    status VARCHAR(255) NOT NULL, 
     num_of_participants INT DEFAULT 0, 
     PRIMARY KEY (event_id)
 ); 
@@ -80,7 +97,9 @@ CREATE TABLE IF NOT EXISTS Stores (
     player_id INT NOT NULL,
     num_of_items INT,
     PRIMARY KEY (store_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE
+    FOREIGN KEY (player_id) REFERENCES Players(player_id) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS ItemOriginalPrice (
@@ -97,22 +116,37 @@ CREATE TABLE IF NOT EXISTS ItemDiscount (
 
 CREATE TABLE IF NOT EXISTS Items (
     item_id INT AUTO_INCREMENT,
-    store_id INT NOT NULL,
     current_price INT NOT NULL,
-    information VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     quality VARCHAR(255) NOT NULL,
     applied_promotion VARCHAR(255),
     PRIMARY KEY (item_id),
-    FOREIGN KEY (quality) REFERENCES ItemOriginalPrice(quality) ON DELETE CASCADE,
-    FOREIGN KEY (applied_promotion) REFERENCES ItemDiscount(applied_promotion) ON DELETE CASCADE, 
-	FOREIGN KEY (store_id) REFERENCES Stores (store_id) ON DELETE CASCADE
+    FOREIGN KEY (quality) REFERENCES ItemOriginalPrice(quality) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+    FOREIGN KEY (applied_promotion) REFERENCES ItemDiscount(applied_promotion) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS StoreSellItems (
+    store_id INT NOT NULL, 
+    item_id INT NOT NULL, 
+    PRIMARY KEY (store_id, item_id),
+	FOREIGN KEY (store_id) REFERENCES Stores(store_id) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE, 
+	FOREIGN KEY (item_id) REFERENCES Items(item_id) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS Matches (
     match_id INT AUTO_INCREMENT,
-    winner VARCHAR(255),
-    start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    end_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    end_time TIMESTAMP,
+	winner VARCHAR(255),
+	status VARCHAR(255) DEFAULT 'In Process',
     PRIMARY KEY (match_id)
 ); 
 
@@ -125,23 +159,30 @@ CREATE TABLE IF NOT EXISTS Decks (
 CREATE TABLE IF NOT EXISTS CardInDeck (
     card_id INT NOT NULL,
     deck_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL, 
     has_played INT DEFAULT 0,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) ON DELETE CASCADE
+    FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS WildCard (
     card_id INT NOT NULL,
     deck_id INT NOT NULL,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS WildDraw4Card (
     card_id INT NOT NULL,
     deck_id INT NOT NULL,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS NumberCard (
@@ -150,7 +191,9 @@ CREATE TABLE IF NOT EXISTS NumberCard (
     number INT NOT NULL,
     color VARCHAR(255) NOT NULL,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS SkipCard (
@@ -158,7 +201,9 @@ CREATE TABLE IF NOT EXISTS SkipCard (
     deck_id INT NOT NULL,
     color VARCHAR(255) NOT NULL,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS ReverseCard (
@@ -166,7 +211,9 @@ CREATE TABLE IF NOT EXISTS ReverseCard (
     deck_id INT NOT NULL,
     color VARCHAR(255) NOT NULL,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS Draw2Card (
@@ -174,7 +221,9 @@ CREATE TABLE IF NOT EXISTS Draw2Card (
     deck_id INT NOT NULL,
     color VARCHAR(255) NOT NULL,
     PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS HandInPlayerAndMatch (
@@ -183,8 +232,12 @@ CREATE TABLE IF NOT EXISTS HandInPlayerAndMatch (
     match_id INT NOT NULL,
     card_amount INT NOT NULL,
     PRIMARY KEY (hand_id, player_id, match_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE,
-    FOREIGN KEY (match_id) REFERENCES Matches(match_id) ON DELETE CASCADE
+    FOREIGN KEY (player_id) REFERENCES Players(player_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS TurnInPlayerAndMatch (
@@ -193,8 +246,12 @@ CREATE TABLE IF NOT EXISTS TurnInPlayerAndMatch (
     match_id INT NOT NULL,
     turn_order VARCHAR(255) NOT NULL,
     PRIMARY KEY (turn_id, player_id, match_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE,
-    FOREIGN KEY (match_id) REFERENCES Matches(match_id) ON DELETE CASCADE
+    FOREIGN KEY (player_id) REFERENCES Players(player_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS ActionInTurn (
@@ -204,7 +261,9 @@ CREATE TABLE IF NOT EXISTS ActionInTurn (
     match_id INT NOT NULL,
     time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnInPlayerAndMatch(turn_id, player_id, match_id) ON DELETE CASCADE
+    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnInPlayerAndMatch(turn_id, player_id, match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS SkipAction (
@@ -213,7 +272,9 @@ CREATE TABLE IF NOT EXISTS SkipAction (
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) ON DELETE CASCADE
+    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS DrawAction (
@@ -223,7 +284,9 @@ CREATE TABLE IF NOT EXISTS DrawAction (
     match_id INT NOT NULL,
     draw_amount INT NOT NULL,
     PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) ON DELETE CASCADE
+    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS PlayAction (
@@ -232,31 +295,57 @@ CREATE TABLE IF NOT EXISTS PlayAction (
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) ON DELETE CASCADE
+    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
-CREATE TABLE IF NOT EXISTS PlayerParticipatesEvents (
+CREATE TABLE IF NOT EXISTS PlayerContainItems (
+    player_id INT NOT NULL, 
+    item_id INT NOT NULL, 
+    PRIMARY KEY (player_id, item_id),
+	FOREIGN KEY (player_id) REFERENCES Players(player_id) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE, 
+	FOREIGN KEY (item_id) REFERENCES Items(item_id) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS PlayerParticipateEvents (
     player_id INT NOT NULL,
     event_id INT NOT NULL,
     PRIMARY KEY (player_id, event_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES Events(event_id) ON DELETE CASCADE
+    FOREIGN KEY (player_id) REFERENCES Players(player_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES Events(event_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
-CREATE TABLE IF NOT EXISTS PlayerInvolvesMatch (
+CREATE TABLE IF NOT EXISTS PlayerInvolveMatches (
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     PRIMARY KEY (player_id, match_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id) ON DELETE CASCADE,
-    FOREIGN KEY (match_id) REFERENCES Matches(match_id) ON DELETE CASCADE
+    FOREIGN KEY (player_id) REFERENCES Players(player_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS MatchHasDeck (
     match_id INT NOT NULL UNIQUE,
     deck_id INT NOT NULL UNIQUE,
     PRIMARY KEY (match_id, deck_id),
-    FOREIGN KEY (match_id) REFERENCES Matches(match_id) ON DELETE CASCADE,
-    FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) ON DELETE CASCADE
+    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS CardHeldByHand (
@@ -266,8 +355,12 @@ CREATE TABLE IF NOT EXISTS CardHeldByHand (
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     PRIMARY KEY (card_id, deck_id, hand_id, player_id, match_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE,
-    FOREIGN KEY (hand_id, player_id, match_id) REFERENCES HandInPlayerAndMatch(hand_id, player_id, match_id) ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (hand_id, player_id, match_id) REFERENCES HandInPlayerAndMatch(hand_id, player_id, match_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS PlayActionFromCard (
@@ -278,8 +371,12 @@ CREATE TABLE IF NOT EXISTS PlayActionFromCard (
     card_id INT NOT NULL,
     deck_id INT NOT NULL,
     PRIMARY KEY (action_id, turn_id, player_id, match_id, card_id, deck_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES PlayAction(action_id, turn_id, player_id, match_id) ON DELETE CASCADE,
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) ON DELETE CASCADE
+    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES PlayAction(action_id, turn_id, player_id, match_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 INSERT INTO PlayerUsernameAndEmail (username, email) 
@@ -338,21 +435,26 @@ VALUES
 (4, 'Platinum'),
 (5, 'Diamond'); 
 
-INSERT INTO MembershipInPlayer (player_id, issue_date, days_remaining, privilege_level, total_points) 
+INSERT INTO MembershipInPlayer (player_id, issue_date, days_remaining, privilege_level) 
 VALUES 
-(1, DATE '2024-01-01', 30, 1, 100),
-(2, DATE '2024-02-01', 28, 2, 200),
-(3, DATE '2024-03-01', 31, 3, 300),
-(4, DATE '2024-04-01', 30, 4, 400),
-(5, DATE '2024-05-01', 31, 5, 500); 
+(1, DATE '2024-01-01', 30, 1),
+(2, DATE '2024-02-01', 28, 2),
+(3, DATE '2024-03-01', 31, 3),
+(4, DATE '2024-04-01', 30, 4),
+(5, DATE '2024-05-01', 31, 5); 
 
-INSERT INTO Events (name) 
+INSERT INTO Events (name, start_date, end_date, status) 
 VALUES 
-('Grand Tournament'),
-('Weekly Challenge'),
-('Holiday Special'),
-('Friendship Match'),
-('Ultimate Showdown'); 
+('Grand Tournament', DATE '2024-01-01', DATE '2024-01-31', 'Completed'),
+('Weekly Challenge', DATE '2024-02-01', DATE '2024-02-29', 'Completed'),
+('Holiday Special', DATE '2024-03-01', DATE '2024-03-31', 'Completed'),
+('Friendship Match', DATE '2024-04-01', DATE '2024-04-30', 'Completed'),
+('Ultimate Showdown', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
+('Ultimate Showdown1', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
+('Ultimate Showdown2', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
+('Ultimate Showdown3', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
+('Ultimate Showdown4', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
+('Ultimate Showdown5', DATE '2024-05-01', DATE '2024-09-30', 'Active');
 
 INSERT INTO Stores (player_id, num_of_items) 
 VALUES 
@@ -378,21 +480,33 @@ VALUES
 ('Spring Sale', 25),
 ('Autumn Sale', 30); 
 
-INSERT INTO Items (store_id, current_price, information, quality, applied_promotion) 
+INSERT INTO Items (current_price, name, quality, applied_promotion) 
 VALUES 
-(1, 122, 'Red Card', 'Common', 'New Year Sale'),
-(2, 187, 'Blue Card', 'Uncommon', 'New Year Sale'),
-(3, 317, 'Green Card', 'Rare', 'New Year Sale'),
-(4, 577, 'Yellow Card', 'Epic', 'New Year Sale'),
-(5, 1097, 'Wild Card', 'Legendary', 'New Year Sale'); 
+(122, 'Red Card', 'Common', 'New Year Sale'),
+(187, 'Blue Card', 'Uncommon', 'New Year Sale'),
+(317, 'Green Card', 'Rare', 'New Year Sale'),
+(577, 'Yellow Card', 'Epic', 'New Year Sale'),
+(1097, 'Wild Card', 'Legendary', 'New Year Sale'); 
 
-INSERT INTO Matches (winner) 
+INSERT INTO StoreSellItems (store_id, item_id) 
 VALUES 
-('Handsome Programmer'), 
-('Happy Professor'),
-('Poor Student'), 
-('Selfish Engineer'), 
-('Dangerous Salesman'); 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5); 
+
+INSERT INTO Matches (end_time, winner, status) 
+VALUES 
+('2024-07-27 12:00:00', 'Handsome Programmer', 'Completed'), 
+('2024-07-27 12:00:00', 'Happy Professor', 'Completed'),
+('2024-07-27 12:00:00', 'Poor Student', 'Completed'), 
+('2024-07-27 12:00:00', 'Selfish Engineer', 'Completed'), 
+('2024-07-27 12:00:00', 'Dangerous Salesman', 'Completed'), 
+(NULL, NULL, DEFAULT),
+(NULL, NULL, DEFAULT), 
+(NULL, NULL, DEFAULT), 
+(NULL, NULL, DEFAULT); 
 
 INSERT INTO Decks (total_cards) 
 VALUES 
@@ -402,18 +516,18 @@ VALUES
 (108),
 (108); 
 
-INSERT INTO CardInDeck (card_id, deck_id, has_played) 
+INSERT INTO CardInDeck (card_id, deck_id, name, has_played) 
 VALUES 
-(1, 1, 0),
-(2, 1, 0),
-(3, 1, 0),
-(4, 1, 0),
-(5, 1, 0),
-(6, 2, 0),
-(7, 2, 0),
-(8, 2, 0),
-(9, 2, 0),
-(10, 2, 0); 
+(1, 1, 'NAME', 0),
+(2, 1, 'NAME', 0),
+(3, 1, 'NAME', 0),
+(4, 1, 'NAME', 0),
+(5, 1, 'NAME', 0),
+(6, 2, 'NAME', 0),
+(7, 2, 'NAME', 0),
+(8, 2, 'NAME', 0),
+(9, 2, 'NAME', 0),
+(10, 2, 'NAME', 0); 
 
 INSERT INTO WildCard (card_id, deck_id) 
 VALUES 
@@ -511,7 +625,16 @@ VALUES
 (4, 4, 4, 4, 2),
 (5, 5, 5, 5, 2); 
 
-INSERT INTO PlayerParticipatesEvents (player_id, event_id) 
+INSERT INTO PlayerContainItems (player_id, item_id) 
+VALUES 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5), 
+(2, 5); 
+
+INSERT INTO PlayerParticipateEvents (player_id, event_id) 
 VALUES 
 (1, 1),
 (2, 1),
@@ -519,7 +642,7 @@ VALUES
 (4, 1),
 (5, 1); 
 
-INSERT INTO PlayerInvolvesMatch (player_id, match_id) 
+INSERT INTO PlayerInvolveMatches (player_id, match_id) 
 VALUES 
 (1, 1),
 (2, 2),
@@ -550,3 +673,4 @@ VALUES
 (3, 3, 3, 3, 3, 1),
 (4, 4, 4, 4, 4, 1),
 (5, 5, 5, 5, 5, 1); 
+    

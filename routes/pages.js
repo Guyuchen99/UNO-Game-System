@@ -1,25 +1,12 @@
 const express = require("express");
 const authController = require("../controllers/auth");
-const { getTotalPlayers, getRecentPlayers } = require("../models/dashboard");
+const { getPlayerData, getNumOfActivePlayers, getNumOfActiveEvents, getNumOfActiveMatches, getTotalRevenue } = require("../models/dashboard");
+const { getStoreData, getItemData } = require("../models/store-items");
+const { getMembershipData } = require("../models/membership");
+const { getEventData } = require("../models/events");
+const { getMatchData } = require("../models/matches");
 
 const router = express.Router();
-
-// Helper function to get player data
-const getPlayerData = async () => {
-  const totalPlayers = await getTotalPlayers();
-  const recentPlayers = await getRecentPlayers();
-
-  return {
-    totalPlayers,
-    recentPlayers: recentPlayers.map((player) => ({
-      username: player.username,
-      totalWin: player.total_win,
-      totalGameCount: player.total_game_count,
-      experience: player.experience_point,
-      country: player.country,
-    })),
-  };
-};
 
 router.get("/login", authController.isLoggedIn, (req, res) => {
   if (req.loginStatus === true) {
@@ -32,26 +19,17 @@ router.get("/login", authController.isLoggedIn, (req, res) => {
 router.get("/", authController.isLoggedIn, async (req, res) => {
   if (req.loginStatus === true) {
     try {
-      const { totalPlayers, recentPlayers } = await getPlayerData();
-      res.render("index", {
-        totalPlayers,
-        recentPlayers,
-      });
-    } catch (error) {
-      console.error("OH NO! Error Fetching Data:", error);
-      res.status(500).send("OH NO! Internal Server Error");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
+      const { activePlayers } = await getNumOfActivePlayers();
+      const { activeEvents } = await getNumOfActiveEvents();
+      const { activeMatches } = await getNumOfActiveMatches();
+      const { revenue } = await getTotalRevenue();
+      const { recentPlayers } = await getPlayerData();
 
-router.get("/memberships", authController.isLoggedIn, async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const { totalPlayers, recentPlayers } = await getPlayerData();
-      res.render("memberships", {
-        totalPlayers,
+      res.render("index", {
+        activePlayers,
+        activeEvents,
+        activeMatches,
+        revenue,
         recentPlayers,
       });
     } catch (error) {
@@ -66,11 +44,25 @@ router.get("/memberships", authController.isLoggedIn, async (req, res) => {
 router.get("/store-items", authController.isLoggedIn, async (req, res) => {
   if (req.loginStatus === true) {
     try {
-      const { totalPlayers, recentPlayers } = await getPlayerData();
-      res.render("store-items", {
-        totalPlayers,
-        recentPlayers,
-      });
+      const { recentStores } = await getStoreData();
+      const { recentItems } = await getItemData();
+
+      res.render("store-items", { recentStores, recentItems });
+    } catch (error) {
+      console.error("OH NO! Error Fetching Data:", error);
+      res.status(500).send("OH NO! Internal Server Error");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+
+router.get("/memberships", authController.isLoggedIn, async (req, res) => {
+  if (req.loginStatus === true) {
+    try {
+      const { recentMemberships } = await getMembershipData();
+
+      res.render("memberships", { recentMemberships });
     } catch (error) {
       console.error("OH NO! Error Fetching Data:", error);
       res.status(500).send("OH NO! Internal Server Error");
@@ -83,11 +75,9 @@ router.get("/store-items", authController.isLoggedIn, async (req, res) => {
 router.get("/events", authController.isLoggedIn, async (req, res) => {
   if (req.loginStatus === true) {
     try {
-      const { totalPlayers, recentPlayers } = await getPlayerData();
-      res.render("events", {
-        totalPlayers,
-        recentPlayers,
-      });
+      const { recentEvents } = await getEventData();
+
+      res.render("events", { recentEvents });
     } catch (error) {
       console.error("OH NO! Error Fetching Data:", error);
       res.status(500).send("OH NO! Internal Server Error");
@@ -100,11 +90,9 @@ router.get("/events", authController.isLoggedIn, async (req, res) => {
 router.get("/matches", authController.isLoggedIn, async (req, res) => {
   if (req.loginStatus === true) {
     try {
-      const { totalPlayers, recentPlayers } = await getPlayerData();
-      res.render("matches", {
-        totalPlayers,
-        recentPlayers,
-      });
+      const { recentMatches } = await getMatchData();
+
+      res.render("matches", { recentMatches });
     } catch (error) {
       console.error("OH NO! Error Fetching Data:", error);
       res.status(500).send("OH NO! Internal Server Error");

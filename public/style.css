@@ -15,25 +15,12 @@
     --side-padding: 6.5%; 
     --navbar-height: 100px; 
     --footer-height: 40px; 
-
     --grid-header-height: 70px; 
 
     --login-blue: #096dd9; 
     --login-purple: #2E0054; 
-
-
-    --main-bg-color: hsl(220, 20%, 10%);
-    --second-bg-color: hsl(220, 20%, 25%);
+    --link-purple: #531dab; 
     --text-color: white;
-    --home-img-color: #8CF4F2; 
-    --section-above-color: #CCB0FF; 
-    --section-below-color: #B27AD8; 
-    
-    --purple-color1: #907BFF; 
-    --purple-color2: #b37feb; 
-    --purple-color3: #9254de; 
-    --purple-color4: #531dab; 
-    --purple-color5: #3A1F61; 
 }
 
 html {
@@ -65,7 +52,7 @@ body .btn {
 }
 
 body .btn:hover {
-    background:#096dd9;
+    background: var(--login-blue); 
 }
 
 body { 
@@ -140,7 +127,7 @@ body {
     background-color: var(--login-blue);
     overflow-y: auto; 
     font-size: 1.8rem; 
-    color: white; 
+    color: var(--text-color); 
 }
 
 .grid-sidebar .sidebar-title {
@@ -155,8 +142,12 @@ body {
     height: 80%; 
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+}
+
+.grid-sidebar .sidebar-list i {
+    margin: 0.5rem; 
 }
 
 .grid-sidebar .sidebar-list .sidebar-list-top, 
@@ -171,8 +162,7 @@ body {
 .grid-sidebar .sidebar-list .sidebar-item {
     padding: 20px; 
     width: 100%; 
-    text-align: center;
-    color: white; 
+    color: var(--text-color); 
     border: 1rem solid var(--login-blue);
     border-radius: 2.5rem;
 }
@@ -202,29 +192,39 @@ body {
     margin-bottom: 2rem; 
 }
 
-.grid-main .table-btn {
+.grid-main .table-btn, 
+.grid-main .dropdown {
     height: 30px; 
     padding: 0 1rem 0 1rem;  
     background-color: white; 
     border-radius: 0.5rem;
 }
 
-.grid-main .table-button-list .add i {
+.grid-main .table-button-list .add-btn i {
     margin-right: 1rem;
     padding: 5px; 
     background-color: green;
     border-radius: 50%;
-    color: white; 
+    color: var(--text-color); 
+}
+
+.grid-main .add,
+.grid-main .edit,
+.grid-main .delete {
+    font-size: 1.8rem ;
+}
+
+.grid-main .add {
+    color: var(--login-blue); 
+    margin-right: 1rem; 
 }
 
 .grid-main .edit {
-    font-size: 1.8rem ;
     color: #008A5D; 
-    margin-right: 1rem;
+    margin-right: 1rem; 
 }
 
 .grid-main .delete {
-    font-size: 1.8rem ;
     color: #f5222d; 
 }
 
@@ -300,7 +300,6 @@ body {
     padding: 1.8rem 2rem 1.6rem 2rem; 
 }
 
-
 .grid-main .main-body .table-container-secondary {
     padding: 3rem 2rem 3rem 2rem;  
 }
@@ -341,46 +340,12 @@ body {
 
 
 
-
 /* Footer Section  */
 .grid-footer { 
     grid-area: footer; 
     height: 40px; 
     border-top: 1px solid rgba(0, 0, 0, 0.2); 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -430,7 +395,7 @@ body {
     transform: translate(-50%);
     bottom: -3.5rem; 
     font-size: 1.75rem; 
-    color: white; 
+    color: var(--text-color); 
     text-align: center;
     background: linear-gradient(black, var(--login-purple));
     padding: 0.5rem; 
@@ -552,7 +517,7 @@ footer{
 }
 
 footer #laptop span {
-    color: var(--purple-color4); 
+    color: var(--link-purple); 
 }
 
 footer #laptop span:hover {

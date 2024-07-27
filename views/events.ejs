@@ -28,14 +28,14 @@
             <div class="sidebar-title">UNO GAME SYSTEM ADMIN</div>
             <nav class="sidebar-list">
                 <div class="sidebar-list-top">
-                    <a href="/" class="sidebar-item">Dashboard</a>
-                    <a href="/store-items" class="sidebar-item">Store Items</a>
-                    <a href="/memberships" class="sidebar-item">Memberships</a>
-                    <a href="/events" class="sidebar-item">Events</a>
-                    <a href="/matches" class="sidebar-item">Matches</a>
+                    <a href="/" class="sidebar-item"><i class="bx bx-home"></i>Dashboard</a>
+                    <a href="/store-items" class="sidebar-item"><i class="bx bxs-package"></i>Store Items</a>
+                    <a href="/memberships" class="sidebar-item"><i class="bx bxs-crown"></i>Memberships</a>
+                    <a href="/events" class="sidebar-item"><i class="bx bxs-calendar-event"></i>Events</a>
+                    <a href="/matches" class="sidebar-item"><i class="bx bxs-joystick"></i>Matches</a>
                 </div>
                 <div class="sidebar-list-bottom">
-                    <a href="/auth/logout" class="sidebar-item">Logout</a>
+                    <a href="/auth/logout" class="sidebar-item"><i class="bx bx-log-out-circle"></i>Logout</a>
                 </div>
             </nav>
         </aside>
@@ -47,7 +47,14 @@
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT EVENTS</h2>
                         <div class="table-button-list">
-                            <button class="table-btn add"><i class="bx bx-plus"></i>Create Event</button>
+                            <select name="selector" id="selector" class="dropdown">
+                                <option value="Filter">Filter</option>
+                                <option value="Win Rate">Start Date</option>
+                                <option value="Win Rate">End Date</option>
+                                <option value="Win Rate">Number of Participants</option>
+                                <option value="Win Rate">Status</option>
+                            </select>
+                            <button class="table-btn add-btn"><i class="bx bx-plus"></i>Create Event</button>
                             <button class="table-btn">View All</button>
                         </div>
                     </div>
@@ -55,21 +62,21 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Total Wins</th>
-                                <th>Total Game Count</th>
-                                <th>Experience</th>
-                                <th>Country</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Number of Participants</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% recentPlayers.forEach(player => { %>
+                            <% recentEvents.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= player.username %></span></td>
-                                    <td><%= player.totalWin %></td>
-                                    <td><%= player.totalGameCount %></td>
-                                    <td><%= player.experience %></td>
-                                    <td><%= player.country %></td>
+                                    <td><span><%= element.name %></span></td>
+                                    <td><%= element.eventStartDate %></td>
+                                    <td><%= element.eventEndDate %></td>
+                                    <td><%= element.numOfParticipants %></td>
+                                    <td><%= element.eventStatus %></td>
                                     <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
                                 </tr>
                             <% }) %>

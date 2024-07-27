@@ -28,14 +28,14 @@
             <div class="sidebar-title">UNO GAME SYSTEM ADMIN</div>
             <nav class="sidebar-list">
                 <div class="sidebar-list-top">
-                    <a href="/" class="sidebar-item">Dashboard</a>
-                    <a href="/store-items" class="sidebar-item">Store Items</a>
-                    <a href="/memberships" class="sidebar-item">Memberships</a>
-                    <a href="/events" class="sidebar-item">Events</a>
-                    <a href="/matches" class="sidebar-item">Matches</a>
+                    <a href="/" class="sidebar-item"><i class="bx bx-home"></i>Dashboard</a>
+                    <a href="/store-items" class="sidebar-item"><i class="bx bxs-package"></i>Store Items</a>
+                    <a href="/memberships" class="sidebar-item"><i class="bx bxs-crown"></i>Memberships</a>
+                    <a href="/events" class="sidebar-item"><i class="bx bxs-calendar-event"></i>Events</a>
+                    <a href="/matches" class="sidebar-item"><i class="bx bxs-joystick"></i>Matches</a>
                 </div>
                 <div class="sidebar-list-bottom">
-                    <a href="/auth/logout" class="sidebar-item">Logout</a>
+                    <a href="/auth/logout" class="sidebar-item"><i class="bx bx-log-out-circle"></i>Logout</a>
                 </div>
             </nav>
         </aside>
@@ -45,7 +45,7 @@
             <div class="main-body">
                 <div class="table-container-primary">
                     <div class="main-body-header">
-                        <h2 class="main-title">STORE</h2>
+                        <h2 class="main-title">RECENT STORES</h2>
                         <div class="table-button-list">
                             <button class="table-btn">View All</button>
                         </div>
@@ -53,23 +53,19 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Date Joined</th>
-                                <th>Gender</th>
-                                <th>Age</th>
-                                <th>Status</th>
+                                <th>Store ID</th>
+                                <th>Number of Items</th>
+                                <th>Linked To</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% recentPlayers.forEach(player => { %>
+                            <% recentStores.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= player.username %></span></td>
-                                    <td><%= player.totalWin %></td>
-                                    <td><%= player.totalGameCount %></td>
-                                    <td><%= player.experience %></td>
-                                    <td><%= player.country %></td>
-                                    <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
+                                    <td><span><%= element.storeId %></span></td>
+                                    <td><%= element.numOfItems %></td>
+                                    <td><%= element.username %></td>
+                                    <td class="table-btn-td"><button class="table-btn">View Available Store Items</button></td>
                                 </tr>
                             <% }) %>
                         </tbody>
@@ -80,7 +76,15 @@
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT ITEMS</h2>
                         <div class="table-button-list">
-                            <button class="table-btn add"><i class="bx bx-plus"></i>Create Item</button>
+                            <select name="selector" id="selector" class="dropdown">
+                                <option value="Filter">Filter</option>
+                                <option value="Win Rate">Quality</option>
+                                <option value="Win Rate">Current Price</option>
+                                <option value="Win Rate">Original Price</option>
+                                <option value="Win Rate">Applied Promotion</option>
+                                <option value="Win Rate">Discount</option>
+                            </select>
+                            <button class="table-btn add-btn"><i class="bx bx-plus"></i>Create Item</button>
                             <button class="table-btn">View All</button>
                         </div>
                     </div>
@@ -88,22 +92,28 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Date Joined</th>
-                                <th>Gender</th>
-                                <th>Age</th>
-                                <th>Status</th>
+                                <th>Quality</th>
+                                <th>Current Price</th>
+                                <th>Original Price</th>
+                                <th>Applied Promotion</th>
+                                <th>Discount</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% recentPlayers.forEach(player => { %>
+                            <% recentItems.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= player.username %></span></td>
-                                    <td><%= player.totalWin %></td>
-                                    <td><%= player.totalGameCount %></td>
-                                    <td><%= player.experience %></td>
-                                    <td><%= player.country %></td>
-                                    <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
+                                    <td><span><%= element.itemName %></span></td>
+                                    <td><%= element.itemQuality %></td>
+                                    <td><%= element.itemCurrentPrice %></td>
+                                    <td><%= element.itemOriginalPrice %></td>
+                                    <td><%= element.itemAppliedPromotion %></td>
+                                    <td><%= element.itemDiscount %></td>
+                                    <td>
+                                        <i class='bx bx-log-in add' aria-label="Add"></i>
+                                        <i class='bx bxs-edit edit' aria-label="Edit"></i>
+                                        <i class='bx bx-trash delete' aria-label="Delete"></i>
+                                    </td>
                                 </tr>
                             <% }) %>
                         </tbody>

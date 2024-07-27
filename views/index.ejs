@@ -28,14 +28,14 @@
             <div class="sidebar-title">UNO GAME SYSTEM ADMIN</div>
             <nav class="sidebar-list">
                 <div class="sidebar-list-top">
-                    <a href="/" class="sidebar-item">Dashboard</a>
-                    <a href="/store-items" class="sidebar-item">Store Items</a>
-                    <a href="/memberships" class="sidebar-item">Memberships</a>
-                    <a href="/events" class="sidebar-item">Events</a>
-                    <a href="/matches" class="sidebar-item">Matches</a>
+                    <a href="/" class="sidebar-item"><i class="bx bx-home"></i>Dashboard</a>
+                    <a href="/store-items" class="sidebar-item"><i class="bx bxs-package"></i>Store Items</a>
+                    <a href="/memberships" class="sidebar-item"><i class="bx bxs-crown"></i>Memberships</a>
+                    <a href="/events" class="sidebar-item"><i class="bx bxs-calendar-event"></i>Events</a>
+                    <a href="/matches" class="sidebar-item"><i class="bx bxs-joystick"></i>Matches</a>
                 </div>
                 <div class="sidebar-list-bottom">
-                    <a href="/auth/logout" class="sidebar-item">Logout</a>
+                    <a href="/auth/logout" class="sidebar-item"><i class="bx bx-log-out-circle"></i>Logout</a>
                 </div>
             </nav>
         </aside>
@@ -47,31 +47,31 @@
                 <div class="main-cards">
                     <div class="card">
                         <div class="card-inner">
-                            <p>Active Users</p>
-                            <i class='bx bx-user-circle' aria-label="Active Users"></i>
+                            <p>Active Players</p>
+                            <i class="bx bx-user-pin" aria-label="Active Players"></i>
                         </div>
-                        <span><%= totalPlayers %></span>
+                        <span><%= activePlayers %></span>
                     </div>
                     <div class="card">
                         <div class="card-inner">
                             <p>Active Events</p>
-                            <i class='bx bx-shopping-bag' aria-label="Active Events"></i>
+                            <i class="bx bx-calendar-event" aria-label="Active Events"></i>
                         </div>
-                        <span>4</span>
+                        <span><%= activeEvents %></span>
                     </div>
                     <div class="card">
                         <div class="card-inner">
                             <p>Active Matches</p>
-                            <i class='bx bx-dollar' aria-label="Active Matches"></i>
+                            <i class="bx bx-joystick" aria-label="Active Matches"></i>
                         </div>
-                        <span>3</span>
+                        <span><%= activeMatches %></span>
                     </div>
                     <div class="card">
                         <div class="card-inner">
                             <p>Revenue</p>
-                            <i class='bx bx-user-plus' aria-label="Revenue"></i>
+                            <i class="bx bx-money" aria-label="Revenue"></i>
                         </div>
-                        <span>$12,345</span>
+                        <span><%= revenue %></span>
                     </div>
                 </div>
             </div>
@@ -81,17 +81,26 @@
                     <div class="main-body-header">
                         <h2 class="main-title">Recent Players</h2>
                         <div class="table-button-list">
-                            <button class="table-btn add"><i class="bx bx-plus"></i>Add Player</button>
+                            <select name="selector" id="selector" class="dropdown">
+                                <option value="Filter">Filter</option>
+                                <option value="Win Rate">Total Wins</option>
+                                <option value="Win Rate">Total Game Count</option>
+                                <option value="Win Rate">Win Rate</option>
+                                <option value="Win Rate">Experience Point</option>
+                                <option value="Win Rate">Country</option>
+                            </select>
+                            <button class="table-btn add-btn"><i class="bx bx-plus"></i>Add Player</button>
                             <button class="table-btn">View All</button>
                         </div>
                     </div>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Username</th>
                                 <th>Total Wins</th>
                                 <th>Total Game Count</th>
-                                <th>Experience</th>
+                                <th>Win Rate</th>
+                                <th>Experience Points</th>
                                 <th>Country</th>
                                 <th>Actions</th>
                             </tr>
@@ -102,7 +111,8 @@
                                 <td><span><%= player.username %></span></td>
                                 <td><%= player.totalWin %></td>
                                 <td><%= player.totalGameCount %></td>
-                                <td><%= player.experience %></td>
+                                <td><%= player.winRate %></td>
+                                <td><%= player.experiencePoint %></td>
                                 <td><%= player.country %></td>
                                 <td><span><i class='bx bxs-edit edit' aria-label="Edit"></i><i class='bx bx-trash delete' aria-label="Delete"></i></span></td>
                             </tr>
