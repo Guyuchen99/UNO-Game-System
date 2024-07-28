@@ -1,36 +1,31 @@
 const db = require("../config/db");
 const { format } = require("date-fns");
 
-const getRecentEvents = async () => {
+exports.getRecentEvents = async () => {
   try {
     const [results] = await db.promise().query(`
         SELECT 
-            event_id, 
-            name, 
-            start_date, 
-            end_date, 
-            num_of_participants, 
-            status
+            event_id AS eventID, 
+            name AS eventName, 
+            start_date AS eventStartDate, 
+            end_date AS eventEndDate, 
+            num_of_participants AS numOfParticipants, 
+            status AS eventStatus
         FROM Events
-        ORDER BY event_id DESC LIMIT 10; 
-      `);
-    return results;
+        ORDER BY event_id DESC 
+        LIMIT 10;
+    `);
+
+    return results.map((element) => ({
+      eventID: element.eventID,
+      eventName: element.eventName,
+      eventStartDate: format(new Date(element.eventStartDate), "yyyy-M-d"),
+      eventEndDate: format(new Date(element.eventEndDate), "yyyy-M-d"),
+      numOfParticipants: element.numOfParticipants,
+      eventStatus: element.eventStatus,
+    }));
   } catch (error) {
     console.error("OH NO! Error fetching recent events:", error.message);
     throw error;
   }
-};
-
-exports.getEventData = async () => {
-  const recentEvents = await getRecentEvents();
-
-  return {
-    recentEvents: recentEvents.map((element) => ({
-      name: element.name,
-      eventStartDate: format(element.start_date, "yyyy-M-d"),
-      eventEndDate: format(element.end_date, "yyyy-M-d"),
-      numOfParticipants: element.num_of_participants,
-      eventStatus: element.status,
-    })),
-  };
 };

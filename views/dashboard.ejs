@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Game System Admin</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="icon" href="/UNO.icon" type="image/x-icon">
+    <script defer src="/script.js"></script>
+</head>
+<body>
+    <div id="grid-container">
+
+        <!-- Header Section  -->
+        <%- include("partials/header") %>
+
+        <!-- Sidebar Section  -->
+        <%- include("partials/sidebar") %>
+
+        <!-- Main Section -->
+        <main class="grid-main">
+            <div class="main-header" data-main-header>
+                <h2 class="main-header-title" data-main-header-title>DASHBOARD</h2>
+                <div class="main-cards">
+                    <div class="card">
+                        <div class="card-inner">
+                            <p>Active Players</p>
+                            <i class="bx bx-user-pin" aria-label="Active Players"></i>
+                        </div>
+                        <span><%= locals.activePlayers %></span>
+                    </div>
+                    <div class="card">
+                        <div class="card-inner">
+                            <p>Active Events</p>
+                            <i class="bx bx-calendar-event" aria-label="Active Events"></i>
+                        </div>
+                        <span><%= locals.activeEvents %></span>
+                    </div>
+                    <div class="card">
+                        <div class="card-inner">
+                            <p>Active Matches</p>
+                            <i class="bx bx-joystick" aria-label="Active Matches"></i>
+                        </div>
+                        <span><%= locals.activeMatches %></span>
+                    </div>
+                    <div class="card">
+                        <div class="card-inner">
+                            <p>Revenue</p>
+                            <i class="bx bx-money" aria-label="Revenue"></i>
+                        </div>
+                        <span><%= locals.revenue %></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-body" data-main-body>
+                <div class="table-container-primary">
+                    <div class="main-body-header">
+                        <h2 class="main-title">Recent Players</h2>
+                        <div class="table-button-list">
+                            <select name="selector" id="selector" class="dropdown" data-pointer-not-allowed>
+                                <option value="Filter">Filter</option>
+                                <option value="Total Wins">Total Wins</option>
+                                <option value="Total Game Count">Total Game Count</option>
+                                <option value="Win Rate">Win Rate</option>
+                                <option value="Experience Point">Experience Point</option>
+                                <option value="Country">Country</option>
+                            </select>
+                            <button class="table-btn add-btn" onclick="addPlayer()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
+                            <button class="table-btn" data-pointer-not-allowed>View All</button>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Total Wins</th>
+                                <th>Total Game Count</th>
+                                <th>Win Rate</th>
+                                <th>Experience Points</th>
+                                <th>Country</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% locals.recentPlayers.forEach(element => { %>
+                                <tr>
+                                    <td><span><%= element.username %></span></td>
+                                    <td><%= element.totalWin %></td>
+                                    <td><%= element.totalGameCount %></td>
+                                    <td><%= element.winRate %></td>
+                                    <td><%= element.experiencePoint %></td>
+                                    <td><%= element.country %></td>
+                                    <td>
+                                        <i class="bx bxs-edit edit" aria-label="Edit" data-pointer-not-allowed></i>
+                                        <i class="bx bx-trash delete" aria-label="Delete" data-pointer-not-allowed></i>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <form class="modal" action="/dashboard" method="POST" data-create-player-form>
+                <div class="modal-header">
+                    <h2>Create New Player</h2>
+                    <button class="close-btn" type="button" onclick="cancelForm()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <label for="username">Username: </label>
+                        <input type="text" id="username" name="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="password">Password: </label>
+                        <input type="password" id="password" name="password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="email">Email: </label>
+                        <input type="email" id="email" name="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="country">Country: </label>
+                        <input type="text" id="country" name="country" placeholder="e.g. Canada" aria-label="Country" data-input>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-primary" type="submit">Register</button>
+                    <button class="btn modal-btn-danger" type="button" onclick="cancelForm()">Cancel</button>
+                </div>
+            </form>
+            
+            <% if (locals.messages.error) { %>
+                <div class="modal-error-message" data-modal-error-message> &#9888 <%= locals.messages.error[0] %> </div>
+            <% } %>
+        </main>
+
+        <!-- Footer Section -->
+        <%- include("partials/footer") %>
+    </div>
+</body>
+</html>

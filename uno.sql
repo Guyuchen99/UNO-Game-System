@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS UNOGameSystem; 
+
 CREATE DATABASE IF NOT EXISTS UNOGameSystem; 
 
 USE UNOGameSystem; 
@@ -8,24 +10,11 @@ CREATE TABLE IF NOT EXISTS PlayerUsernameAndEmail (
     PRIMARY KEY (username)
 ); 
 
-CREATE TABLE IF NOT EXISTS PlayerGameStatistics (
-    total_win INT NOT NULL,
-    total_game_count INT NOT NULL,
-    win_rate FLOAT NOT NULL,
-    PRIMARY KEY (total_win, total_game_count)
-); 
-
 CREATE TABLE IF NOT EXISTS PlayerLevel (
-    experience_point INT DEFAULT 0,
-    level INT DEFAULT 1,
+    experience_point INT NOT NULL, 
+    level INT NOT NULL, 
     PRIMARY KEY (experience_point),
     CHECK (experience_point <= 10000)
-); 
-
-CREATE TABLE IF NOT EXISTS PlayerLanguage (
-    country VARCHAR(255) NOT NULL,
-    preferred_language VARCHAR(255) NOT NULL,
-    PRIMARY KEY (country)
 ); 
 
 CREATE TABLE IF NOT EXISTS Players (
@@ -34,18 +23,14 @@ CREATE TABLE IF NOT EXISTS Players (
     total_win INT DEFAULT 0,
     total_game_count INT DEFAULT 0,
     experience_point INT DEFAULT 0,
+	win_rate FLOAT DEFAULT 0,
     country VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     PRIMARY KEY (player_id),
     FOREIGN KEY (username) REFERENCES PlayerUsernameAndEmail(username) 
 		ON DELETE CASCADE 
         ON UPDATE CASCADE,
-    FOREIGN KEY (total_win, total_game_count) REFERENCES PlayerGameStatistics(total_win, total_game_count)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
     FOREIGN KEY (experience_point) REFERENCES PlayerLevel(experience_point) 
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-    FOREIGN KEY (country) REFERENCES PlayerLanguage(country) 
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
 ); 
@@ -387,37 +372,27 @@ VALUES
 ('Selfish Engineer', 'selfish_engineer@student.ubc.ca'),
 ('Dangerous Salesman', 'dangerous_salesman@student.ubc.ca'); 
 
-INSERT INTO PlayerGameStatistics (total_win, total_game_count, win_rate) 
-VALUES 
-(10, 20, 0.5),
-(15, 25, 0.6),
-(8, 10, 0.8),
-(12, 13, 0.92),
-(20, 27, 0.74); 
-
 INSERT INTO PlayerLevel (experience_point, level) 
 VALUES 
+(0, 1),
+(1000, 1),
+(2000, 2),
 (3000, 3),
+(4000, 4),
 (5000, 5),
+(6000, 6),
+(7000, 7),
 (8000, 8),
 (9000, 9),
 (10000, 10); 
 
-INSERT INTO PlayerLanguage (country, preferred_language) 
+INSERT INTO Players (username, total_win, total_game_count, win_rate, experience_point, country, password) 
 VALUES 
-('USA', 'English'),
-('Canada', 'English'),
-('France', 'French'),
-('China', 'Chinese'),
-('Korea', 'Korean'); 
-
-INSERT INTO Players (username, total_win, total_game_count, experience_point, country) 
-VALUES 
-('Handsome Programmer', 10, 20, 3000, 'Canada'), 
-('Happy Professor', 15, 25, 5000, 'France'),
-('Poor Student', 8, 10, 8000, 'China'), 
-('Selfish Engineer', 12, 13, 9000, 'USA'), 
-('Dangerous Salesman', 20, 27, 10000, 'Korea'); 
+('Handsome Programmer', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
+('Happy Professor', 15, 25, 0.6, 5000, 'France', 'fduhe9fhwe9f8y9'),
+('Poor Student', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
+('Selfish Engineer', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
+('Dangerous Salesman', 20, 27, 0.74, 10000, 'Korea', 'ackajbasvsvspvsv'); 
 
 INSERT INTO MembershipExpireDate (issue_date, days_remaining, expire_date) 
 VALUES 

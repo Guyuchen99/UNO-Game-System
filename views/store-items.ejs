@@ -7,38 +7,16 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="icon" href="/UNO.icon" type="image/x-icon">
-    <script defer src="script.js"></script>
+    <script defer src="/script.js"></script>
 </head>
 <body>
     <div id="grid-container">
 
         <!-- Header Section  -->
-        <header class="grid-header">
-            <div class="header-left">
-                <i class='bx bx-search' aria-label="Search icon"></i>
-                <input type="text" name="search" id="search" placeholder="Search Anything...">
-            </div>
-            <div class="header-right">
-                <i class='bx bx-user-circle' aria-label="User icon"></i>
-            </div>
-        </header>
+        <%- include("partials/header") %>
 
         <!-- Sidebar Section  -->
-        <aside class="grid-sidebar" id="sidebar">
-            <div class="sidebar-title">UNO GAME SYSTEM ADMIN</div>
-            <nav class="sidebar-list">
-                <div class="sidebar-list-top">
-                    <a href="/" class="sidebar-item"><i class="bx bx-home"></i>Dashboard</a>
-                    <a href="/store-items" class="sidebar-item"><i class="bx bxs-package"></i>Store Items</a>
-                    <a href="/memberships" class="sidebar-item"><i class="bx bxs-crown"></i>Memberships</a>
-                    <a href="/events" class="sidebar-item"><i class="bx bxs-calendar-event"></i>Events</a>
-                    <a href="/matches" class="sidebar-item"><i class="bx bxs-joystick"></i>Matches</a>
-                </div>
-                <div class="sidebar-list-bottom">
-                    <a href="/auth/logout" class="sidebar-item"><i class="bx bx-log-out-circle"></i>Logout</a>
-                </div>
-            </nav>
-        </aside>
+        <%- include("partials/sidebar") %>
 
         <!-- Main Section -->
         <main class="grid-main">
@@ -60,9 +38,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% recentStores.forEach(element => { %>
+                            <% locals.recentStores.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= element.storeId %></span></td>
+                                    <td><span><%= element.storeID %></span></td>
                                     <td><%= element.numOfItems %></td>
                                     <td><%= element.username %></td>
                                     <td class="table-btn-td"><button class="table-btn">View Available Store Items</button></td>
@@ -101,9 +79,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% recentItems.forEach(element => { %>
+                            <% locals.recentItems.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= element.itemName %></span></td>
+                                    <td><%= element.itemName %></td>
                                     <td><%= element.itemQuality %></td>
                                     <td><%= element.itemCurrentPrice %></td>
                                     <td><%= element.itemOriginalPrice %></td>
@@ -123,13 +101,7 @@
         </main>
 
         <!-- Footer Section -->
-        <footer class="grid-footer">
-            <span id="laptop">Developed and Designed By <span>YC Graphixs</span> | <i class="bx bx-copyright"></i> 2024 All rights Reserved.</span>
-            <span id="phone">
-                <div>Developed and Designed By <span>YC Graphixs</span></div> 
-                <div><i class="bx bx-copyright"></i> 2024 All rights Reserved.</div>
-            </span>
-        </footer>
+        <%- include("partials/footer") %>
     </div>
 </body>
 </html>

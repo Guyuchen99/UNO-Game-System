@@ -1,105 +1,39 @@
 const express = require("express");
 const authController = require("../controllers/auth");
-const { getPlayerData, getNumOfActivePlayers, getNumOfActiveEvents, getNumOfActiveMatches, getTotalRevenue } = require("../models/dashboard");
-const { getStoreData, getItemData } = require("../models/store-items");
-const { getMembershipData } = require("../models/membership");
-const { getEventData } = require("../models/events");
-const { getMatchData } = require("../models/matches");
+const dashboardController = require("../controllers/dashboard");
+const eventsController = require("../controllers/events");
+const matchesController = require("../controllers/matches");
+const membershipsController = require("../controllers/memberships");
+const storeItemsController = require("../controllers/store-items");
 
 const router = express.Router();
 
+router.get("/", authController.isLoggedIn, (req, res) => {
+  if (req.loginStatus === true) {
+    res.redirect("/dashboard");
+  } else {
+    res.redirect("/login");
+  }
+});
+
 router.get("/login", authController.isLoggedIn, (req, res) => {
   if (req.loginStatus === true) {
-    res.redirect("/");
+    res.redirect("/dashboard");
   } else {
     res.render("login");
   }
 });
 
-router.get("/", authController.isLoggedIn, async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const { activePlayers } = await getNumOfActivePlayers();
-      const { activeEvents } = await getNumOfActiveEvents();
-      const { activeMatches } = await getNumOfActiveMatches();
-      const { revenue } = await getTotalRevenue();
-      const { recentPlayers } = await getPlayerData();
+router.get("/dashboard", authController.isLoggedIn, dashboardController.loadDashboard);
 
-      res.render("index", {
-        activePlayers,
-        activeEvents,
-        activeMatches,
-        revenue,
-        recentPlayers,
-      });
-    } catch (error) {
-      console.error("OH NO! Error Fetching Data:", error);
-      res.status(500).send("OH NO! Internal Server Error");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
+router.post("/dashboard", dashboardController.registerPlayer);
 
-router.get("/store-items", authController.isLoggedIn, async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const { recentStores } = await getStoreData();
-      const { recentItems } = await getItemData();
+router.get("/store-items", authController.isLoggedIn, storeItemsController.loadStoreItems);
 
-      res.render("store-items", { recentStores, recentItems });
-    } catch (error) {
-      console.error("OH NO! Error Fetching Data:", error);
-      res.status(500).send("OH NO! Internal Server Error");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
+router.get("/memberships", authController.isLoggedIn, membershipsController.loadMemberships);
 
-router.get("/memberships", authController.isLoggedIn, async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const { recentMemberships } = await getMembershipData();
+router.get("/events", authController.isLoggedIn, eventsController.loadEvents);
 
-      res.render("memberships", { recentMemberships });
-    } catch (error) {
-      console.error("OH NO! Error Fetching Data:", error);
-      res.status(500).send("OH NO! Internal Server Error");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
-
-router.get("/events", authController.isLoggedIn, async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const { recentEvents } = await getEventData();
-
-      res.render("events", { recentEvents });
-    } catch (error) {
-      console.error("OH NO! Error Fetching Data:", error);
-      res.status(500).send("OH NO! Internal Server Error");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
-
-router.get("/matches", authController.isLoggedIn, async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const { recentMatches } = await getMatchData();
-
-      res.render("matches", { recentMatches });
-    } catch (error) {
-      console.error("OH NO! Error Fetching Data:", error);
-      res.status(500).send("OH NO! Internal Server Error");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
+router.get("/matches", authController.isLoggedIn, matchesController.loadMatches);
 
 module.exports = router;

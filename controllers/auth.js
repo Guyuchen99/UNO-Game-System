@@ -25,10 +25,10 @@ exports.login = async (req, res) => {
       };
 
       res.cookie("myCookie", token, cookieOptions);
-      res.status(200).redirect("/");
+      res.status(200).redirect("/dashboard");
     }
   } catch (error) {
-    console.log(error);
+    console.log("OH NO! Error occured in authController.login: " + error);
   }
 };
 
@@ -43,6 +43,7 @@ exports.logout = async (req, res) => {
   }, 1000);
 };
 
+// Middleware
 exports.isLoggedIn = (req, res, next) => {
   if (req.cookies.myCookie) {
     req.loginStatus = true;

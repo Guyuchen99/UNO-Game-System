@@ -1,122 +1,142 @@
+const bcrypt = require("bcryptjs");
 const db = require("../config/db");
 
-const getActivePlayers = async () => {
+exports.getNumOfActivePlayers = async () => {
   try {
     const [results] = await db.promise().query(`
-      SELECT COUNT(*) AS active_players 
+      SELECT COUNT(*) AS activePlayers 
       FROM Players
     `);
-    return results[0].active_players;
+
+    return results[0].activePlayers;
   } catch (error) {
-    console.error("OH NO! Error fetching active players:", error.message);
+    console.error("OH NO! Error fetching active players:", error);
     throw error;
   }
 };
 
-const getActiveEvents = async () => {
+exports.getNumOfActiveEvents = async () => {
   try {
     const [results] = await db.promise().query(`
-      SELECT COUNT(*) AS active_events 
-      FROM Events 
+      SELECT COUNT(*) AS activeEvents
+      FROM Events
       WHERE status = "Active"
     `);
-    return results[0].active_events;
+
+    return results[0].activeEvents;
   } catch (error) {
-    console.error("OH NO! Error fetching active events:", error.message);
+    console.error("OH NO! Error fetching active events:", error);
     throw error;
   }
 };
 
-const getActiveMatches = async () => {
+exports.getNumOfActiveMatches = async () => {
   try {
     const [results] = await db.promise().query(`
-      SELECT COUNT(*) AS active_matches
-      FROM Matches 
+      SELECT COUNT(*) AS activeMatches
+      FROM Matches
       WHERE status = "In Process"
     `);
-    return results[0].active_matches;
+
+    return results[0].activeMatches;
   } catch (error) {
-    console.error("OH NO! Error fetching active matches:", error.message);
+    console.error("OH NO! Error fetching active matches:", error);
     throw error;
   }
 };
 
-const getRevenue = async () => {
+exports.getRevenue = async () => {
   try {
     const [results] = await db.promise().query(`
-      SELECT SUM(iop.original_price) AS revenue 
+      SELECT SUM(iop.original_price) AS revenue
       FROM PlayerContainItems pi
       JOIN Items i ON pi.item_id = i.item_id
       JOIN ItemOriginalPrice iop ON i.quality = iop.quality;
   `);
-    return results[0].revenue;
+
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(results[0].revenue);
   } catch (error) {
-    console.error("OH NO! Error fetching revenue:", error.message);
+    console.error("OH NO! Error fetching revenue:", error);
     throw error;
   }
 };
 
-const getRecentPlayers = async () => {
+exports.getRecentPlayers = async () => {
   try {
     const [results] = await db.promise().query(`
-      SELECT 
-        p.player_id, 
-        p.username, 
-        p.total_win, 
-        p.total_game_count, 
-        pg.win_rate, 
-        p.experience_point, 
-        p.country
-      FROM 
-        Players p
-      JOIN 
-        PlayerGameStatistics pg ON p.total_win = pg.total_win AND p.total_game_count = pg.total_game_count
-      ORDER BY player_id DESC LIMIT 5; 
+      SELECT
+        player_id AS playerID,
+        username AS username, 
+        total_win AS totalWin,
+        total_game_count AS totalGameCount,
+        win_rate AS winRate,
+        experience_point AS experiencePoint,
+        country AS country
+      FROM Players
+      ORDER BY player_id DESC LIMIT 5;
     `);
+
     return results;
   } catch (error) {
-    console.error("OH NO! Error fetching recent players:", error.message);
+    console.error("OH NO! Error fetching recent players:", error);
     throw error;
   }
 };
 
-exports.getNumOfActivePlayers = async () => {
-  const activePlayers = await getActivePlayers();
+exports.registerPlayer = async (username, password, email, country) => {
+  try {
+    await insertPlayerUsernameAndEmail(username, email);
 
-  return { activePlayers };
+    let hashedPassword = await bcrypt.hash(password, 10);
+
+    await db.promise().query("INSERT INTO Players SET ?", { username: username, password: hashedPassword, country: country });
+    console.log("Player registered successfully.");
+  } catch (error) {
+    console.error("OH NO! Error during register player:", error);
+    throw error;
+  }
 };
 
-exports.getNumOfActiveEvents = async () => {
-  const activeEvents = await getActiveEvents();
+const insertPlayerUsernameAndEmail = async (username, email) => {
+  try {
+    if (!(await checkUsernameAvailability(username))) {
+      console.log("Username already taken... Please try again!");
+      throw new Error("Username already taken");
+    }
 
-  return { activeEvents };
+    if (!(await checkEmailAvailability(email))) {
+      console.log("Email already taken... Please try again!");
+      throw new Error("Email already taken");
+    }
+
+    await db.promise().query("INSERT INTO PlayerUsernameAndEmail SET ?", { username: username, email: email });
+    console.log("Inserted into PlayerUsernameAndEmail successfully.");
+  } catch (error) {
+    console.error("OH NO! Error inserting into PlayerUsernameAndEmail:", error);
+    throw error;
+  }
 };
 
-exports.getNumOfActiveMatches = async () => {
-  const activeMatches = await getActiveMatches();
+const checkUsernameAvailability = async (username) => {
+  try {
+    const [results] = await db.promise().query("SELECT * FROM PlayerUsernameAndEmail WHERE username = ?", [username]);
+    const isUsernameAvailable = results.length === 0;
 
-  return { activeMatches };
+    return isUsernameAvailable;
+  } catch (error) {
+    console.error("OH NO! Error fetching playerUsernameAndEmail: ", error);
+    throw error;
+  }
 };
 
-exports.getTotalRevenue = async () => {
-  const revenue = await getRevenue();
-  const formattedRevenue = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(revenue);
+const checkEmailAvailability = async (email) => {
+  try {
+    const [results] = await db.promise().query("SELECT * FROM PlayerUsernameAndEmail WHERE email = ?", [email]);
+    const isEmailAvailable = results.length === 0;
 
-  return { revenue: formattedRevenue };
-};
-
-exports.getPlayerData = async () => {
-  const recentPlayers = await getRecentPlayers();
-
-  return {
-    recentPlayers: recentPlayers.map((element) => ({
-      playerId: element.player_id,
-      username: element.username,
-      totalWin: element.total_win,
-      totalGameCount: element.total_game_count,
-      winRate: Math.round(element.win_rate * 100) + "%",
-      experiencePoint: element.experience_point,
-      country: element.country,
-    })),
-  };
+    return isEmailAvailable;
+  } catch (error) {
+    console.error("OH NO! Error fetching playerUsernameAndEmail: ", error);
+    throw error;
+  }
 };
