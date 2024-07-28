@@ -21,6 +21,13 @@ db.connect((error) => {
         if (error) {
           if (error.message.includes("database exists")) {
             console.log("Database already exists. Skipping creation.");
+            db.query(`USE ${process.env.DATABASE}`, (error, results, fields) => {
+              if (error) {
+                console.error("Failed switching db: ", error.message);
+              } else {
+                console.log("Switch successful.");
+              }
+            });
           } else {
             console.error("Failed creating db: ", error.message);
           }
