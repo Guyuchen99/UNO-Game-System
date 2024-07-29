@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (urlParams.get("status") === "success") {
     clearFormData();
     hideModal();
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 300); 
   }
 
   // Restore createItemModal state
@@ -27,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Add event listeners to save form data on change
-  const inputs = document.querySelectorAll("[data-input]");
+  const inputs = document.querySelectorAll("[data-save-input]");
   inputs.forEach((element) => {
     element.addEventListener("input", (e) => {
       const formData = JSON.parse(localStorage.getItem("formData")) || {};
@@ -86,9 +89,9 @@ async function showEditPlayerModal(username) {
 
   const playerData = await fetchPlayerData(username);
   if (playerData) {
-    usernameInput.placeholder = playerData.username;
-    emailInput.placeholder = playerData.email;
-    countryInput.placeholder = playerData.country;
+    usernameInput.value = playerData.username;
+    emailInput.value = playerData.email;
+    countryInput.value = playerData.country;
   }
 
   const editPlayerModal = document.querySelector("[data-edit-player-modal]");

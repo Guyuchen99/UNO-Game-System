@@ -68,7 +68,7 @@
                                 <option value="Country">Country</option>
                             </select>
                             <button class="table-btn add-btn" onclick="showCreatePlayerModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
-                            <button class="table-btn" data-pointer-not-allowed>View All</button>
+                            <button class="table-btn" onclick="viewAll()" data-pointer-not-allowed>View All</button>
                         </div>
                     </div>
                     <table class="table">
@@ -93,8 +93,8 @@
                                     <td><%= element.experiencePoint %></td>
                                     <td><%= element.country %></td>
                                     <td>
-                                        <i class="bx bxs-edit edit" aria-label="Edit" data-pointer-not-allowed data-edit onclick="showEditPlayerModal('<%= element.username %>')"></i>
-                                        <i class="bx bx-trash delete" aria-label="Delete" data-pointer-not-allowed data-delete onclick="showDeleteItemModal('<%= element.username %>')"</i>
+                                        <i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditPlayerModal('<%= element.username %>')" data-edit data-pointer-not-allowed ></i>
+                                        <i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.username %>')" data-delete data-pointer-not-allowed></i>
                                     </td>
                                 </tr>
                                 <% }) %>
@@ -119,23 +119,23 @@
                 <div class="modal-body">
                     <div class="modal-fields">
                         <label for="usernameEdit">Username: </label>
-                        <input type="text" id="usernameEdit" name="username" autocomplete="username" aria-label="Username" data-input data-username-edit>
+                        <input type="text" id="usernameEdit" name="username" autocomplete="username" aria-label="Username" data-username-edit>
                     </div>
                     <div class="modal-fields">
                         <label for="emailEdit">Email: </label>
-                        <input type="email" id="emailEdit" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-email-edit>
+                        <input type="email" id="emailEdit" name="email" autocomplete="email" aria-label="Email" data-email-edit>
                     </div>
                     <div class="modal-fields">
                         <label for="newPasswordEdit">New Password: </label>
-                        <input type="password" id="newPasswordEdit" name="newPassword" autocomplete="new-password" placeholder="(Unchanged if empty)" aria-label="New Password" data-input>
+                        <input type="password" id="newPasswordEdit" name="newPassword" autocomplete="new-password" placeholder="(Unchanged if empty)" aria-label="New Password">
                     </div>
                     <div class="modal-fields">
                         <label for="confirmPasswordEdit">Confirm Password: </label>
-                        <input type="password" id="confirmPasswordEdit" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter new password)" aria-label="Confirm Password" data-input>
+                        <input type="password" id="confirmPasswordEdit" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter new password)" aria-label="Confirm Password">
                     </div>
                     <div class="modal-fields">
                         <label for="countryEdit">Country: </label>
-                        <input type="text" id="countryEdit" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-input data-country-edit>
+                        <input type="text" id="countryEdit" name="country" autocomplete="country-name" aria-label="Country" data-country-edit>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -152,23 +152,31 @@
                 <div class="modal-body">
                     <div class="modal-fields">
                         <label for="usernameCreate">Username: </label>
-                        <input type="text" id="usernameCreate" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-input>
+                        <input type="text" id="usernameCreate" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-save-input>
                     </div>
                     <div class="modal-fields">
                         <label for="passwordCreate">Password: </label>
-                        <input type="password" id="passwordCreate" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-input>
+                        <input type="password" id="passwordCreate" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-save-input>
                     </div>
                     <div class="modal-fields">
                         <label for="confirmPasswordCreate">Confirm Password: </label>
-                        <input type="password" id="confirmPasswordCreate" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter password)" aria-label="Confirm Password" data-input>
+                        <input type="password" id="confirmPasswordCreate" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter password)" aria-label="Confirm Password" data-save-input>
                     </div>
                     <div class="modal-fields">
                         <label for="emailCreate">Email: </label>
-                        <input type="email" id="emailCreate" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-input>
+                        <input type="email" id="emailCreate" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-save-input>
                     </div>
                     <div class="modal-fields">
                         <label for="countryCreate">Country: </label>
-                        <input type="text" id="countryCreate" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-input>
+                        <!-- <input type="text" id="countryCreate" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-save-input> -->
+
+                        <select name="countryDropdown" id="countryCreate" class="dropdown" data-save-input>
+                            <option value="Canada">Canada</option>
+                            <option value="USA">USA</option>
+                            <option value="China">China</option>
+                            <option value="Japan">Japan</option>
+                            <option value="India">India</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
