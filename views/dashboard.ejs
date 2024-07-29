@@ -67,7 +67,7 @@
                                 <option value="Experience Point">Experience Point</option>
                                 <option value="Country">Country</option>
                             </select>
-                            <button class="table-btn add-btn" onclick="addPlayer()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
+                            <button class="table-btn add-btn" onclick="showCreateItemModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
                             <button class="table-btn" data-pointer-not-allowed>View All</button>
                         </div>
                     </div>
@@ -86,15 +86,15 @@
                         <tbody>
                             <% locals.recentPlayers.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= element.username %></span></td>
+                                    <td><%= element.username %></td>
                                     <td><%= element.totalWin %></td>
                                     <td><%= element.totalGameCount %></td>
                                     <td><%= element.winRate %></td>
                                     <td><%= element.experiencePoint %></td>
                                     <td><%= element.country %></td>
                                     <td>
-                                        <i class="bx bxs-edit edit" aria-label="Edit" data-pointer-not-allowed></i>
-                                        <i class="bx bx-trash delete" aria-label="Delete" data-pointer-not-allowed></i>
+                                        <i class="bx bxs-edit edit" aria-label="Edit" data-pointer-not-allowed data-edit></i>
+                                        <i class="bx bx-trash delete" aria-label="Delete" data-pointer-not-allowed data-delete onclick="showDeleteItemModal('<%= element.username %>')"</i>
                                     </td>
                                 </tr>
                                 <% }) %>
@@ -103,32 +103,40 @@
                 </div>
             </div>
 
-            <form class="modal" action="/dashboard" method="POST" data-create-player-form>
+            <div class="modal delete-modal" data-delete-modal>
+                <h1>&#9888</h1>
+                <h2>Are you sure?</h2>
+                <p>This action cannot be undone. All values <br> associated with this field will be lost.</p>
+                <button class="btn modal-btn-delete" type="button" data-conform-delete>Delete Player</button>
+                <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
+            </div>
+
+            <form class="modal create-modal" action="/dashboard" method="POST" data-create-player-form>
                 <div class="modal-header">
                     <h2>Create New Player</h2>
-                    <button class="close-btn" type="button" onclick="cancelForm()">&times;</button>
+                    <button class="close-btn" type="button" onclick="hideCreateItemModal()">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="modal-fields">
                         <label for="username">Username: </label>
-                        <input type="text" id="username" name="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-input>
+                        <input type="text" id="username" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-input>
                     </div>
                     <div class="modal-fields">
                         <label for="password">Password: </label>
-                        <input type="password" id="password" name="password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-input>
+                        <input type="password" id="password" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-input>
                     </div>
                     <div class="modal-fields">
                         <label for="email">Email: </label>
-                        <input type="email" id="email" name="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-input>
+                        <input type="email" id="email" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-input>
                     </div>
                     <div class="modal-fields">
                         <label for="country">Country: </label>
-                        <input type="text" id="country" name="country" placeholder="e.g. Canada" aria-label="Country" data-input>
+                        <input type="text" id="country" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-input>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn modal-btn-primary" type="submit">Register</button>
-                    <button class="btn modal-btn-danger" type="button" onclick="cancelForm()">Cancel</button>
+                    <button class="btn modal-btn-confirm" type="submit">Register</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideCreateItemModal()">Cancel</button>
                 </div>
             </form>
             

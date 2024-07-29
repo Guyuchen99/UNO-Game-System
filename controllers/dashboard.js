@@ -36,8 +36,20 @@ exports.registerPlayer = async (req, res) => {
     await dashboardModel.registerPlayer(username, password, email, country);
     return res.redirect("/dashboard?status=success");
   } catch (error) {
-    console.error("OH NO! Internal Server Error with Register Player:", error);
     req.flash("error", error.message);
     return res.redirect("/dashboard");
+  }
+};
+
+exports.deletePlayer = async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    await dashboardModel.deletePlayerByUsername(username);
+
+    res.status(200).send(`${username} deleted successfully`);
+  } catch (error) {
+    console.error(`OH NO! Error Deleting ${username}:`, error);
+    res.status(500).send("OH NO! Internal Server Error with Delete Player");
   }
 };

@@ -21,7 +21,7 @@
         <!-- Main Section -->
         <main class="grid-main">
             <div class="main-body">
-                <div class="table-container-primary">
+                <div class="table-container-secondary">
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT STORES</h2>
                         <div class="table-button-list">
@@ -40,7 +40,7 @@
                         <tbody>
                             <% locals.recentStores.forEach(element => { %>
                                 <tr>
-                                    <td><span><%= element.storeID %></span></td>
+                                    <td><%= element.storeID %></td>
                                     <td><%= element.numOfItems %></td>
                                     <td><%= element.username %></td>
                                     <td class="table-btn-td"><button class="table-btn">View Available Store Items</button></td>
@@ -50,7 +50,7 @@
                     </table>
                 </div>
                 <br><br>
-                <div class="table-container-primary">
+                <div class="table-container-secondary">
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT ITEMS</h2>
                         <div class="table-button-list">

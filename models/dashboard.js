@@ -83,6 +83,15 @@ exports.getRecentPlayers = async () => {
   }
 };
 
+exports.deletePlayerByUsername = async (username) => {
+  try {
+    await db.promise().query("DELETE FROM Players WHERE ?", {username: username});
+  } catch (error) {
+    console.error( `OH NO! Error deleting ${username}:`, error);
+    throw error;
+  }
+};
+
 exports.registerPlayer = async (username, password, email, country) => {
   try {
     await insertPlayerUsernameAndEmail(username, email);
