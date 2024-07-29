@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clearFormData();
     hideModal();
     setTimeout(() => {
-      window.location.href = '/dashboard';
-    }, 300); 
+      window.location.href = "/dashboard";
+    }, 300);
   }
 
   // Restore createItemModal state
@@ -142,10 +142,10 @@ function showModal() {
   const mainHeaderTitle = document.querySelector("[data-main-header-title]");
   const mainBody = document.querySelector("[data-main-body]");
 
-  document.body.classList.add("openedModal");
-  mainHeader.classList.add("openedModal");
-  mainHeaderTitle.classList.add("openedModal");
-  mainBody.classList.add("openedModal");
+  document.body?.classList.add("openedModal");
+  mainHeader?.classList.add("openedModal");
+  mainHeaderTitle?.classList.add("openedModal");
+  mainBody?.classList.add("openedModal");
 
   const others = document.querySelectorAll("[data-pointer-not-allowed]");
   others.forEach((element) => {
@@ -159,10 +159,10 @@ function hideModal() {
   const mainHeaderTitle = document.querySelector("[data-main-header-title]");
   const mainBody = document.querySelector("[data-main-body]");
 
-  document.body.classList.remove("openedModal");
-  mainHeader.classList.remove("openedModal");
-  mainHeaderTitle.classList.remove("openedModal");
-  mainBody.classList.remove("openedModal");
+  document.body?.classList.remove("openedModal");
+  mainHeader?.classList.remove("openedModal");
+  mainHeaderTitle?.classList.remove("openedModal");
+  mainBody?.classList.remove("openedModal");
 
   const others = document.querySelectorAll("[data-pointer-not-allowed]");
   others.forEach((element) => {

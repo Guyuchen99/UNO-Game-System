@@ -28,6 +28,7 @@ exports.loadDashboard = async (req, res) => {
 
 exports.registerPlayer = async (req, res) => {
   const { username, password, confirmPassword, email, country } = req.body;
+  console.log(country);
 
   try {
     if (!username || !password || !email || !country) {

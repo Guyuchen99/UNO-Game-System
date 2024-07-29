@@ -387,10 +387,10 @@ VALUES
 INSERT IGNORE INTO Players (username, total_win, total_game_count, win_rate, experience_point, country, password) 
 VALUES 
 ('Handsome Programmer', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
-('Happy Professor', 15, 25, 0.6, 5000, 'France', 'fduhe9fhwe9f8y9'),
+('Happy Professor', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
 ('Poor Student', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
 ('Selfish Engineer', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
-('Dangerous Salesman', 20, 27, 0.74, 10000, 'Korea', 'ackajbasvsvspvsv'); 
+('Dangerous Salesman', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'); 
 
 INSERT IGNORE INTO MembershipExpireDate (issue_date, days_remaining, expire_date) 
 VALUES 

@@ -135,7 +135,13 @@
                     </div>
                     <div class="modal-fields">
                         <label for="countryEdit">Country: </label>
-                        <input type="text" id="countryEdit" name="country" autocomplete="country-name" aria-label="Country" data-country-edit>
+                        <select id="countryEdit" name="country" class="dropdown" data-country-edit>
+                            <option value="Canada">Canada</option>
+                            <option value="USA">USA</option>
+                            <option value="China">China</option>
+                            <option value="Japan">Japan</option>
+                            <option value="India">India</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -168,9 +174,7 @@
                     </div>
                     <div class="modal-fields">
                         <label for="countryCreate">Country: </label>
-                        <!-- <input type="text" id="countryCreate" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-save-input> -->
-
-                        <select name="countryDropdown" id="countryCreate" class="dropdown" data-save-input>
+                        <select id="countryCreate" name="country" class="dropdown" data-save-input>
                             <option value="Canada">Canada</option>
                             <option value="USA">USA</option>
                             <option value="China">China</option>
