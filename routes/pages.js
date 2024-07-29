@@ -27,6 +27,7 @@ router.get("/login", authController.isLoggedIn, (req, res) => {
 router.get("/dashboard", authController.isLoggedIn, dashboardController.loadDashboard);
 router.post("/dashboard", dashboardController.registerPlayer);
 router.delete("/dashboard", dashboardController.deletePlayer); 
+router.get("/dashboard/player-data", dashboardController.loadEditModal); 
 
 router.get("/store-items", authController.isLoggedIn, storeItemsController.loadStoreItems);
 

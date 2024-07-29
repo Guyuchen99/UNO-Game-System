@@ -67,7 +67,7 @@
                                 <option value="Experience Point">Experience Point</option>
                                 <option value="Country">Country</option>
                             </select>
-                            <button class="table-btn add-btn" onclick="showCreateItemModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
+                            <button class="table-btn add-btn" onclick="showCreatePlayerModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
                             <button class="table-btn" data-pointer-not-allowed>View All</button>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                                     <td><%= element.experiencePoint %></td>
                                     <td><%= element.country %></td>
                                     <td>
-                                        <i class="bx bxs-edit edit" aria-label="Edit" data-pointer-not-allowed data-edit></i>
+                                        <i class="bx bxs-edit edit" aria-label="Edit" data-pointer-not-allowed data-edit onclick="showEditPlayerModal('<%= element.username %>')"></i>
                                         <i class="bx bx-trash delete" aria-label="Delete" data-pointer-not-allowed data-delete onclick="showDeleteItemModal('<%= element.username %>')"</i>
                                     </td>
                                 </tr>
@@ -103,7 +103,7 @@
                 </div>
             </div>
 
-            <div class="modal delete-modal" data-delete-modal>
+            <div class="modal delete-item-modal" data-delete-item-modal>
                 <h1>&#9888</h1>
                 <h2>Are you sure?</h2>
                 <p>This action cannot be undone. All values <br> associated with this field will be lost.</p>
@@ -111,32 +111,69 @@
                 <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
             </div>
 
-            <form class="modal create-modal" action="/dashboard" method="POST" data-create-player-form>
+            <form class="modal edit-item-modal" action="/dashboard" method="PUT" data-edit-player-modal>
                 <div class="modal-header">
-                    <h2>Create New Player</h2>
-                    <button class="close-btn" type="button" onclick="hideCreateItemModal()">&times;</button>
+                    <h2>Edit Player</h2>
+                    <button class="close-btn" type="button" onclick="hideEditPlayerModal()">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="modal-fields">
-                        <label for="username">Username: </label>
-                        <input type="text" id="username" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-input>
+                        <label for="usernameEdit">Username: </label>
+                        <input type="text" id="usernameEdit" name="username" autocomplete="username" aria-label="Username" data-input data-username-edit>
                     </div>
                     <div class="modal-fields">
-                        <label for="password">Password: </label>
-                        <input type="password" id="password" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-input>
+                        <label for="emailEdit">Email: </label>
+                        <input type="email" id="emailEdit" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-email-edit>
                     </div>
                     <div class="modal-fields">
-                        <label for="email">Email: </label>
-                        <input type="email" id="email" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-input>
+                        <label for="newPasswordEdit">New Password: </label>
+                        <input type="password" id="newPasswordEdit" name="newPassword" autocomplete="new-password" placeholder="(Unchanged if empty)" aria-label="New Password" data-input>
                     </div>
                     <div class="modal-fields">
-                        <label for="country">Country: </label>
-                        <input type="text" id="country" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-input>
+                        <label for="confirmPasswordEdit">Confirm Password: </label>
+                        <input type="password" id="confirmPasswordEdit" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter new password)" aria-label="Confirm Password" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="countryEdit">Country: </label>
+                        <input type="text" id="countryEdit" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-input data-country-edit>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Update</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideEditPlayerModal()">Cancel</button>
+                </div>
+            </form>
+                    
+            <form class="modal create-item-modal" action="/dashboard" method="POST" data-create-player-modal>
+                <div class="modal-header">
+                    <h2>Create New Player</h2>
+                    <button class="close-btn" type="button" onclick="hideCreatePlayerModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <label for="usernameCreate">Username: </label>
+                        <input type="text" id="usernameCreate" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="passwordCreate">Password: </label>
+                        <input type="password" id="passwordCreate" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="confirmPasswordCreate">Confirm Password: </label>
+                        <input type="password" id="confirmPasswordCreate" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter password)" aria-label="Confirm Password" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="emailCreate">Email: </label>
+                        <input type="email" id="emailCreate" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="countryCreate">Country: </label>
+                        <input type="text" id="countryCreate" name="country" autocomplete="country-name" placeholder="e.g. Canada" aria-label="Country" data-input>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn modal-btn-confirm" type="submit">Register</button>
-                    <button class="btn modal-btn-cancel" type="button" onclick="hideCreateItemModal()">Cancel</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideCreatePlayerModal()">Cancel</button>
                 </div>
             </form>
             

@@ -231,6 +231,7 @@ body.openedModal {
 .grid-main .table-btn.openedModal, 
 .grid-main .dropdown.openedModal {
     cursor: default;
+    pointer-events: none;
 }
 
 .grid-main .table-button-list .add-btn i {
@@ -252,6 +253,7 @@ body.openedModal {
 .grid-main .edit.openedModal,
 .grid-main .delete.openedModal {
     cursor: default;
+    pointer-events: none;
 }
 
 .grid-main .add {
@@ -412,11 +414,6 @@ body.openedModal {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: none;
-}
-
-.modal.openedModal {
-    display: flex;
 }
 
 .btn.modal-btn-delete {
@@ -452,11 +449,16 @@ body.openedModal {
 
 
 /* Delete Modal Section  */
-.modal.delete-modal { 
+.modal.delete-item-modal { 
     align-items: center;
     justify-content: center;
     padding: 2.5rem; 
     animation: GlowingRed 2.5s linear 0.75s infinite alternate;
+    display: none;
+}
+
+.modal.delete-item-modal.openedModal {
+    display: flex;
 }
 
 @keyframes GlowingRed {
@@ -473,7 +475,7 @@ body.openedModal {
     }
 }
 
-.delete-modal h1 {
+.delete-item-modal h1 {
     width: 5rem;  
     height: 5rem; 
     font-size: 3.5rem;
@@ -484,24 +486,30 @@ body.openedModal {
     border-radius: 50%;
 }
 
-.delete-modal h2 {
+.delete-item-modal h2 {
     font-size: 1.7rem; 
     margin-bottom: 2rem; 
 }
 
-.delete-modal p {
+.delete-item-modal p {
     text-align: center;
 }
 
 
 
 /* Create Modal Section  */
-.modal.create-modal {
-    height: 80%; 
+.modal.create-item-modal, 
+.modal.edit-item-modal {
     width: 50rem; 
     max-width: 75%;
     padding: 1rem; 
     animation: GlowingBlue 2.5s linear 0.75s infinite alternate;
+    display: none;
+}
+
+.modal.create-item-modal.openedModal, 
+.modal.edit-item-modal.openedModal {
+    display: flex;
 }
 
 @keyframes GlowingBlue {
@@ -540,7 +548,7 @@ body.openedModal {
 .modal-body {
     flex-grow: 1;
     margin: 1rem; 
-    padding-bottom: 3rem; 
+    padding-bottom: 1rem; 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
