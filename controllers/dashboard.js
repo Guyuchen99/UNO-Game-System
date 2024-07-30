@@ -1,72 +1,136 @@
 const dashboardModel = require("../models/dashboard");
 
-exports.loadDashboard = async (req, res) => {
-  if (req.loginStatus === true) {
-    try {
-      const activePlayers = await dashboardModel.getNumOfActivePlayers();
-      const activeEvents = await dashboardModel.getNumOfActiveEvents();
-      const activeMatches = await dashboardModel.getNumOfActiveMatches();
-      const revenue = await dashboardModel.getRevenue();
-      const recentPlayers = await dashboardModel.getRecentPlayers();
+const logError = (functionName) => {
+  return `OH NO! Error with ${functionName} in Controllers:`;
+};
 
-      res.render("dashboard", {
-        activePlayers,
-        activeEvents,
-        activeMatches,
-        revenue,
-        recentPlayers,
-        messages: req.flash(),
-      });
-    } catch (error) {
-      console.error("OH NO! Error Loading Dashboard:", error);
-      res.status(500).send("OH NO! Internal Server Error with Loading Dashboard");
+const resError = (functionName) => {
+  return `OH NO! Internal Server Error with ${functionName} in Controllers:`;
+};
+
+exports.loadDashboard = async (req, res) => {
+  if (!req.loginStatus) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const [activePlayers, activeEvents, activeMatches, revenue, recentPlayers] = await Promise.all([
+      dashboardModel.getNumOfActivePlayers(),
+      dashboardModel.getNumOfActiveEvents(),
+      dashboardModel.getNumOfActiveMatches(),
+      dashboardModel.getRevenue(),
+      dashboardModel.getRecentPlayers(),
+    ]);
+
+    res.render("dashboard", {
+      activePlayers,
+      activeEvents,
+      activeMatches,
+      revenue,
+      recentPlayers,
+    });
+  } catch (error) {
+    console.error(logError("loadDashboard"), error);
+    res.status(500).send(resError("loadDashboard"));
+  }
+};
+
+exports.deletePlayer = async (req, res) => {
+  const { item: username } = req.body;
+
+  try {
+    await dashboardModel.deletePlayerByUsername(username);
+
+    res.status(200).send(`OH YES! ${username} Deleted Successfully!`);
+  } catch (error) {
+    console.error(logError("deletePlayer"), error);
+    res.status(500).send(resError("deletePlayer"));
+  }
+};
+
+exports.loadEditModal = async (req, res) => {
+  const { playerID } = req.query;
+
+  try {
+    const results = await dashboardModel.getPlayerDataByID(playerID);
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error(logError("loadEditModal"), error);
+    res.status(500).send(resError("loadEditModal"));
+  }
+};
+
+exports.updatePlayer = async (req, res) => {
+  const { playerID, username, email, newPassword, confirmPassword, country } = req.body;
+
+  try {
+    const results = await dashboardModel.getPlayerDataByID(playerID);
+    const updates = {};
+
+    if (username !== results.username) {
+      updates.username = username;
     }
-  } else {
-    res.redirect("/login");
+
+    if (email !== results.email) {
+      updates.email = email;
+    }
+
+    if (country !== results.country) {
+      updates.country = country;
+    }
+
+    if (newPassword) {
+      updates.password = newPassword;
+    }
+
+    if (updates.username || updates.email) {
+      await dashboardModel.updatePlayerUsernameAndEmail(updates.username || results.username, updates.email || results.email, results.username);
+      delete updates.username;
+      delete updates.email;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await dashboardModel.updatePlayerByID(playerID, updates);
+    }
+
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.error(logError("updatePlayer"), error);
+    res.status(500).send(resError("updatePlayer"));
+  }
+};
+
+exports.loadCreateModal = async (req, res) => {
+  const { username, email } = req.query;
+
+  try {
+    const isUsernameAvailable = await dashboardModel.isUsernameAvailable(username);
+    const isEmailAvailable = await dashboardModel.isEmailAvailable(email);
+
+    if (!isUsernameAvailable) {
+      return res.status(409).send(`OH NO! ${username} already taken!`);
+    }
+
+    if (!isEmailAvailable) {
+      return res.status(409).send(`OH NO! ${email} already taken!`);
+    }
+
+    return res.status(200).send("OH YES! Username and Email Available");
+  } catch (error) {
+    console.error(logError("loadCreateModal"), error);
+    res.status(500).send(resError("loadCreateModal"));
   }
 };
 
 exports.registerPlayer = async (req, res) => {
   const { username, password, confirmPassword, email, country } = req.body;
-  console.log(country);
 
   try {
-    if (!username || !password || !email || !country) {
-      throw new Error("Form Incomplete... Please try again!");
-    }
-    if (password !== confirmPassword) {
-      throw new Error("Password do not match... Please try again!");
-    }
     await dashboardModel.registerPlayer(username, password, email, country);
-    return res.redirect("/dashboard?status=success");
+    res.redirect("/dashboard");
   } catch (error) {
-    req.flash("error", error.message);
-    return res.redirect("/dashboard");
-  }
-};
-
-exports.deletePlayer = async (req, res) => {
-  const { username } = req.body;
-
-  try {
-    await dashboardModel.deletePlayerByUsername(username);
-
-    res.status(200).send(`${username} deleted successfully`);
-  } catch (error) {
-    console.error(`OH NO! Error Deleting ${username}:`, error);
-    res.status(500).send("OH NO! Internal Server Error with Delete Player");
-  }
-};
-
-exports.loadEditModal = async (req, res) => {
-  const { username } = req.query;
-
-  try {
-    const results = await dashboardModel.getPlayerData(username);
-
-    res.status(200).json(results);
-  } catch (error) {
-    console.error(`Error fetching ${username} data:`, error);
-    res.status(500).json({ message: "Internal Server Error with Load Edit Modal" });
+    console.error(logError("registerPlayer"), error);
+    res.status(500).send(resError("registerPlayer"));
   }
 };

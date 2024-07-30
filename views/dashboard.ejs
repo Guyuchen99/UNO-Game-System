@@ -93,7 +93,7 @@
                                     <td><%= element.experiencePoint %></td>
                                     <td><%= element.country %></td>
                                     <td>
-                                        <i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditPlayerModal('<%= element.username %>')" data-edit data-pointer-not-allowed ></i>
+                                        <i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditPlayerModal('<%= element.playerID %>')" data-edit data-pointer-not-allowed ></i>
                                         <i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.username %>')" data-delete data-pointer-not-allowed></i>
                                     </td>
                                 </tr>
@@ -111,7 +111,7 @@
                 <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
             </div>
 
-            <form class="modal edit-item-modal" action="/dashboard" method="PUT" data-edit-player-modal>
+            <form class="modal edit-item-modal" action="/dashboard/update" method="POST" data-edit-player-modal>
                 <div class="modal-header">
                     <h2>Edit Player</h2>
                     <button class="close-btn" type="button" onclick="hideEditPlayerModal()">&times;</button>
@@ -119,6 +119,7 @@
                 <div class="modal-body">
                     <div class="modal-fields">
                         <label for="usernameEdit">Username: </label>
+                        <input type="hidden" id="playerID" name="playerID" data-player-id>
                         <input type="text" id="usernameEdit" name="username" autocomplete="username" aria-label="Username" data-username-edit>
                     </div>
                     <div class="modal-fields">
@@ -127,11 +128,11 @@
                     </div>
                     <div class="modal-fields">
                         <label for="newPasswordEdit">New Password: </label>
-                        <input type="password" id="newPasswordEdit" name="newPassword" autocomplete="new-password" placeholder="(Unchanged if empty)" aria-label="New Password">
+                        <input type="password" id="newPasswordEdit" name="newPassword" autocomplete="new-password" placeholder="(Unchanged if empty)" aria-label="New Password" data-password>
                     </div>
                     <div class="modal-fields">
                         <label for="confirmPasswordEdit">Confirm Password: </label>
-                        <input type="password" id="confirmPasswordEdit" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter new password)" aria-label="Confirm Password">
+                        <input type="password" id="confirmPasswordEdit" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter new password)" aria-label="Confirm Password" data-confirm-password>
                     </div>
                     <div class="modal-fields">
                         <label for="countryEdit">Country: </label>
@@ -148,9 +149,10 @@
                     <button class="btn modal-btn-confirm" type="submit">Update</button>
                     <button class="btn modal-btn-cancel" type="button" onclick="hideEditPlayerModal()">Cancel</button>
                 </div>
+                <div class="modal-error-message" data-modal-error-message></div>
             </form>
                     
-            <form class="modal create-item-modal" action="/dashboard" method="POST" data-create-player-modal>
+            <form class="modal create-item-modal" action="/dashboard/register" method="POST" data-create-player-modal>
                 <div class="modal-header">
                     <h2>Create New Player</h2>
                     <button class="close-btn" type="button" onclick="hideCreatePlayerModal()">&times;</button>
@@ -158,23 +160,23 @@
                 <div class="modal-body">
                     <div class="modal-fields">
                         <label for="usernameCreate">Username: </label>
-                        <input type="text" id="usernameCreate" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-save-input>
+                        <input type="text" id="usernameCreate" name="username" autocomplete="username" placeholder="e.g. Amazing Designer" aria-label="Username" data-username data-save-input>
                     </div>
                     <div class="modal-fields">
                         <label for="passwordCreate">Password: </label>
-                        <input type="password" id="passwordCreate" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-save-input>
+                        <input type="password" id="passwordCreate" name="password" autocomplete="new-password" placeholder="e.g. Coding Everyday &#129323" aria-label="Password" data-password>
                     </div>
                     <div class="modal-fields">
                         <label for="confirmPasswordCreate">Confirm Password: </label>
-                        <input type="password" id="confirmPasswordCreate" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter password)" aria-label="Confirm Password" data-save-input>
+                        <input type="password" id="confirmPasswordCreate" name="confirmPassword" autocomplete="new-password" placeholder="(Re-enter password)" aria-label="Confirm Password" data-confirm-password>
                     </div>
                     <div class="modal-fields">
                         <label for="emailCreate">Email: </label>
-                        <input type="email" id="emailCreate" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-save-input>
+                        <input type="email" id="emailCreate" name="email" autocomplete="email" placeholder="e.g. xxx@student.ubc.ca" aria-label="Email" data-email data-save-input>
                     </div>
                     <div class="modal-fields">
                         <label for="countryCreate">Country: </label>
-                        <select id="countryCreate" name="country" class="dropdown" data-save-input>
+                        <select id="countryCreate" name="country" class="dropdown">
                             <option value="Canada">Canada</option>
                             <option value="USA">USA</option>
                             <option value="China">China</option>
@@ -187,11 +189,8 @@
                     <button class="btn modal-btn-confirm" type="submit">Register</button>
                     <button class="btn modal-btn-cancel" type="button" onclick="hideCreatePlayerModal()">Cancel</button>
                 </div>
+                <div class="modal-error-message" data-modal-error-message></div>
             </form>
-            
-            <% if (locals.messages.error) { %>
-                <div class="modal-error-message" data-modal-error-message> &#9888 <%= locals.messages.error[0] %> </div>
-            <% } %>
         </main>
 
         <!-- Footer Section -->
