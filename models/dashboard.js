@@ -109,7 +109,7 @@ exports.getPlayerDataByID = async (playerID) => {
 exports.deletePlayerByUsername = async (username) => {
   try {
     await db.promise().query("DELETE FROM PlayerUsernameAndEmail WHERE ?", { username: username });
-    console.log(`OH YES! ${username} Deleted Successfully!`);
+    console.log("OH YES! Player Deleted Successfully!");
   } catch (error) {
     console.error(logError("deletePlayerByUsername"), error);
     throw error;
@@ -180,7 +180,7 @@ exports.registerPlayer = async (username, password, email, country) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.promise().query("INSERT INTO Players SET ?", { username: username, password: hashedPassword, country: country });
-    console.log(`OH YES! ${username} Registered Successfully!`);
+    console.log("OH YES! Player Registered Successfully!");
   } catch (error) {
     console.error(logError("registerPlayer"), error);
     throw error;
