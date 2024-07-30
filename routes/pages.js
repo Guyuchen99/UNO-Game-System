@@ -25,15 +25,13 @@ router.get("/login", authController.isLoggedIn, (req, res) => {
 });
 
 router.get("/dashboard", authController.isLoggedIn, dashboardController.loadDashboard);
-router.get("/dashboard/load-edit-modal", dashboardController.loadEditModal); 
-router.get("/dashboard/load-create-modal", dashboardController.loadCreateModal); 
+
+router.get("/dashboard/edit-modal/fetch-data", dashboardController.loadEditModal); 
+router.get("/dashboard/create-modal/check-input", dashboardController.loadCreateModal); 
+
 router.post("/dashboard/register", dashboardController.registerPlayer);
 router.post("/dashboard/update", dashboardController.updatePlayer); 
 router.delete("/dashboard/delete", dashboardController.deletePlayer); 
-
-
-
-
 
 router.get("/store-items", authController.isLoggedIn, storeItemsController.loadStoreItems);
 

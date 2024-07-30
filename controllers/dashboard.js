@@ -1,12 +1,7 @@
 const dashboardModel = require("../models/dashboard");
 
-const logError = (functionName) => {
-  return `OH NO! Error with ${functionName} in Controllers:`;
-};
-
-const resError = (functionName) => {
-  return `OH NO! Internal Server Error with ${functionName} in Controllers:`;
-};
+const logError = (functionName) => `OH NO! Error with ${functionName} in Controllers:`;
+const resError = (functionName) => `OH NO! Internal Server Error with ${functionName} in Controllers:`;
 
 exports.loadDashboard = async (req, res) => {
   if (!req.loginStatus) {
@@ -105,14 +100,14 @@ exports.loadCreateModal = async (req, res) => {
   const { username, email } = req.query;
 
   try {
-    const isUsernameAvailable = await dashboardModel.isUsernameAvailable(username);
-    const isEmailAvailable = await dashboardModel.isEmailAvailable(email);
+    const usernameAvailable = await dashboardModel.isUsernameAvailable(username);
+    const emailAvailable = await dashboardModel.isEmailAvailable(email);
 
-    if (!isUsernameAvailable) {
+    if (!usernameAvailable) {
       return res.status(409).send(`OH NO! ${username} already taken!`);
     }
 
-    if (!isEmailAvailable) {
+    if (!emailAvailable) {
       return res.status(409).send(`OH NO! ${email} already taken!`);
     }
 

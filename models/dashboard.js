@@ -1,9 +1,7 @@
 const bcrypt = require("bcryptjs");
 const db = require("../config/db");
 
-const logError = (functionName) => {
-  return `OH NO! Error with ${functionName} in Models:`;
-};
+const logError = (functionName) => `OH NO! Error with ${functionName} in Models:`;
 
 exports.getNumOfActivePlayers = async () => {
   try {
@@ -156,9 +154,8 @@ exports.updatePlayerByID = async (playerID, updates) => {
 exports.isUsernameAvailable = async (username) => {
   try {
     const [results] = await db.promise().query("SELECT * FROM PlayerUsernameAndEmail WHERE username = ?", [username]);
-    const isAvailable = results.length === 0;
 
-    return isAvailable;
+    return results.length === 0;
   } catch (error) {
     console.error(logError("isUsernameAvailable"), error);
     throw error;
@@ -168,9 +165,8 @@ exports.isUsernameAvailable = async (username) => {
 exports.isEmailAvailable = async (email) => {
   try {
     const [results] = await db.promise().query("SELECT * FROM PlayerUsernameAndEmail WHERE email = ?", [email]);
-    const isAvailable = results.length === 0;
 
-    return isAvailable;
+    return results.length === 0;
   } catch (error) {
     console.error(logError("isEmailAvailable"), error);
     throw error;
@@ -181,10 +177,10 @@ exports.registerPlayer = async (username, password, email, country) => {
   try {
     await insertPlayerUsernameAndEmail(username, email);
 
-    let hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.promise().query("INSERT INTO Players SET ?", { username: username, password: hashedPassword, country: country });
-    console.log("OH YES! Player Registered Successfully!");
+    console.log(`OH YES! ${username} Registered Successfully!`);
   } catch (error) {
     console.error(logError("registerPlayer"), error);
     throw error;

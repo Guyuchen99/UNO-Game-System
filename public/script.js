@@ -6,26 +6,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Restore form data
   const formData = JSON.parse(localStorage.getItem("formData")) || {};
-  Object.keys(formData).forEach((key) => {
-    const input = document.getElementById(key);
+  Object.keys(formData).forEach((element) => {
+    const input = document.getElementById(element);
     if (input) {
-      input.value = formData[key];
+      input.value = formData[element];
     }
   });
 
   // Add event listeners to save form data on change
-  const inputs = document.querySelectorAll("[data-save-input]");
-  inputs.forEach((element) => {
+  document.querySelectorAll("[data-save-input]")?.forEach((element) => {
     element.addEventListener("input", (e) => {
-      const formData = JSON.parse(localStorage.getItem("formData")) || {};
       formData[e.target.id] = e.target.value;
       localStorage.setItem("formData", JSON.stringify(formData));
     });
   });
 
   // Add event listeners to delete data on click
-  const deleteConfirmButton = document.querySelector("[data-conform-delete]");
-  deleteConfirmButton?.addEventListener("click", async () => {
+  document.querySelector("[data-conform-delete]")?.addEventListener("click", async () => {
     if (itemToDelete) {
       const response = await fetch(`${pathname}/delete`, {
         method: "DELETE",
@@ -79,7 +76,7 @@ document.querySelector("[data-edit-player-modal]")?.addEventListener("submit", a
     return;
   }
 
-  hideModalErrorMessage();
+  hideModalErrorMessage("[data-edit-player-modal]");
 
   e.target.submit();
 });
@@ -110,7 +107,7 @@ function hideEditPlayerModal() {
   editPlayerModal.classList.remove("openedModal");
 
   clearPasswordFields("[data-edit-player-modal]");
-  hideModalErrorMessage();
+  hideModalErrorMessage("[data-edit-player-modal]");
   hideModal();
 }
 
@@ -133,19 +130,20 @@ document.querySelector("[data-create-player-modal]")?.addEventListener("submit",
     return;
   }
 
-  const isUsernameTaken = await isUsernameAvailable("[data-create-player-modal]");
-  if (!isUsernameTaken) {
+  const usernameAvailable = await isUsernameAvailable("[data-create-player-modal]");
+  if (!usernameAvailable) {
     displayModalErrorMessage("[data-create-player-modal]", "Username is taken... Please try again!");
     return;
   }
 
-  const isEmailTaken = await isEmailAvailable("[data-create-player-modal]");
-  if (!isEmailTaken) {
+  const emailAvailable = await isEmailAvailable("[data-create-player-modal]");
+  if (!emailAvailable) {
     displayModalErrorMessage("[data-create-player-modal]", "Email is taken... Please try again!");
     return;
   }
 
-  hideModalErrorMessage();
+  clearFormData();
+  hideModalErrorMessage("[data-create-player-modal]");
   e.target.submit();
 });
 
@@ -162,7 +160,7 @@ function hideCreatePlayerModal() {
   createPlayerModal.classList.remove("openedModal");
 
   clearPasswordFields("[data-create-player-modal]");
-  hideModalErrorMessage();
+  hideModalErrorMessage("[data-create-player-modal]");
   hideModal();
 }
 
@@ -206,28 +204,26 @@ function hideModal() {
   localStorage.setItem("modalState", "closed");
 }
 
-function hideModalErrorMessage() {
-  const modalErrorMessage = document.querySelector("[data-modal-error-message]");
+function displayModalErrorMessage(modalType, message) {
+  const modalErrorMessage = document.querySelector(`${modalType} [data-modal-error-message]`);
+  modalErrorMessage.innerHTML = `&#9888; ${message}`;
+  modalErrorMessage.style.display = "flex";
+}
+
+function hideModalErrorMessage(modalType) {
+  const modalErrorMessage = document.querySelector(`${modalType} [data-modal-error-message]`);
   modalErrorMessage.innerHTML = "";
   modalErrorMessage.style.display = "none";
 }
 
 function isFieldsEmpty(modalType, fieldsArray) {
-  return fieldsArray.some((element) => {
-    return document.querySelector(`${modalType} ${element}`).value === "";
-  });
+  return fieldsArray.some((element) => document.querySelector(`${modalType} ${element}`).value === "");
 }
 
 function isPasswordFieldsNotMatch(modalType) {
   const password = document.querySelector(`${modalType} [data-password]`).value;
   const confirmPassword = document.querySelector(`${modalType} [data-confirm-password]`).value;
   return password !== confirmPassword;
-}
-
-function displayModalErrorMessage(modalType, message) {
-  const modalErrorMessage = document.querySelector(`${modalType} [data-modal-error-message]`);
-  modalErrorMessage.innerHTML = `&#9888; ${message}`;
-  modalErrorMessage.style.display = "flex";
 }
 
 function clearPasswordFields(modalType) {
@@ -249,35 +245,23 @@ function clearFormData() {
 
 // Helper Function to Fetch Player Data to Display in Edit Player Modal
 async function fetchPlayerData(playerID) {
-  const response = await fetch(`/dashboard/load-edit-modal?playerID=${playerID}`);
+  const response = await fetch(`/dashboard/edit-modal/fetch-data?playerID=${playerID}`);
   if (response.ok) {
-    const playerData = await response.json();
-    return playerData;
-  } else {
-    return null;
+    return response.json();
   }
+  return null;
 }
 
 // Helper Function to Check Username Availability in Create Player Modal
 async function isUsernameAvailable(modalType) {
   const username = document.querySelector(`${modalType} [data-username]`).value;
-
-  const response = await fetch(`/dashboard/load-create-modal?username=${username}`);
-  if (response.ok) {
-    return true;
-  } else {
-    return false;
-  }
+  const response = await fetch(`/dashboard/create-modal/check-input?username=${username}`);
+  return response.ok;
 }
 
 // Helper Function to Check Username Availability in Create Player Modal
 async function isEmailAvailable(modalType) {
   const email = document.querySelector(`${modalType} [data-email]`).value;
-
-  const response = await fetch(`/dashboard/load-create-modal?email=${email}`);
-  if (response.ok) {
-    return true;
-  } else {
-    return false;
-  }
+  const response = await fetch(`/dashboard/create-modal/check-input?email=${email}`);
+  return response.ok;
 }
