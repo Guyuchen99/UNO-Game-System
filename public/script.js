@@ -131,6 +131,16 @@ function hideDeleteItemModal() {
 document.querySelector("[data-edit-player-modal]")?.addEventListener("submit", async function (e) {
 	e.preventDefault();
 
+	if (isFieldsEmpty("[data-edit-player-modal]", ["[data-username]"])) {
+		displayModalErrorMessage("[data-edit-player-modal]", "Username cannot be empty.. Please try again!");
+		return;
+	}
+
+	if (isFieldsEmpty("[data-edit-player-modal]", ["[data-email]"])) {
+		displayModalErrorMessage("[data-edit-player-modal]", "Email cannot be empty... Please try again!");
+		return;
+	}
+
 	if (isPasswordFieldsNotMatch("[data-edit-player-modal]")) {
 		displayModalErrorMessage("[data-edit-player-modal]", "Passwords do not match... Please try again!");
 		return;
@@ -142,10 +152,10 @@ document.querySelector("[data-edit-player-modal]")?.addEventListener("submit", a
 });
 
 async function showEditPlayerModal(playerID) {
-	const playerIDInput = document.querySelector("[data-player-id]");
-	const usernameInput = document.querySelector("[data-username-edit]");
-	const emailInput = document.querySelector("[data-email-edit]");
-	const countryInput = document.querySelector("[data-country-edit]");
+	const playerIDInput = document.querySelector("[data-edit-player-modal] [data-player-id]");
+	const usernameInput = document.querySelector("[data-edit-player-modal] [data-username]");
+	const emailInput = document.querySelector("[data-edit-player-modal] [data-email]");
+	const countryInput = document.querySelector("[data-edit-player-modal] [data-country]");
 
 	const playerData = await fetchPlayerData(playerID);
 	if (playerData) {
