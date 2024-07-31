@@ -50,6 +50,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
+/* Autocomplete Search Bar Section Below ------------------------------------------------------------- */
+/* =================================================================================================== */
+/* =================================================================================================== */
+const possibleSearchesTemplate = [
+	"Which players have participated in all the events?",
+	"Which events have more than {number} participants?",
+	"How many participants from each country are there in each event?",
+];
+
+const searchBarInput = document.querySelector("[data-search-bar-input]");
+const searchableList = document.querySelector("[data-searchable-list]");
+
+searchBarInput.addEventListener("keyup", () => {
+	const searchTerm = searchBarInput.value.toLowerCase();
+	const numberMatch = searchTerm.match(/\b\d+\b/);
+	const number = numberMatch ? parseInt(numberMatch[0]) : 10;
+	const possibleSearches = possibleSearchesTemplate.map((query) => query.replace("{number}", number));
+	const sortedSearches = possibleSearches.sort();
+
+	clearSearchResults();
+	updateSearchResults(sortedSearches, searchTerm);
+});
+
+function updateSearchResults(searches, searchTerm) {
+	searches.forEach((element) => {
+		if (element.toLowerCase().includes(searchTerm) && searchTerm) {
+			searchBarInput.classList.add("border-show");
+
+			const searchableListItem = document.createElement("li");
+			searchableListItem.classList.add("searchable-list-item");
+			searchableListItem.setAttribute("onclick", `displaySearch('${element}')`);
+			searchableListItem.innerHTML = element.replace(new RegExp(searchTerm, "gi"), (match) => `<b>${match}</b>`);
+
+			searchableList.classList.add("border-show");
+			searchableList.appendChild(searchableListItem);
+		}
+	});
+}
+
+function displaySearch(value) {
+	searchBarInput.value = value;
+}
+
+function clearSearchResults() {
+	searchBarInput.classList.remove("border-show");
+	searchableList.classList.remove("border-show");
+	searchableList.innerHTML = "";
+}
+
+/* =================================================================================================== */
+/* =================================================================================================== */
 /* Delete Item Modal Section Below ------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -140,7 +191,7 @@ document.querySelector("[data-create-player-modal]")?.addEventListener("submit",
 	}
 
 	const usernameAvailable = await isUsernameAvailable("[data-create-player-modal]");
-	if (!await isUsernameAvailable("[data-create-player-modal]")) {
+	if (!(await isUsernameAvailable("[data-create-player-modal]"))) {
 		displayModalErrorMessage("[data-create-player-modal]", "Username is taken... Please try again!");
 		return;
 	}
@@ -192,13 +243,11 @@ document.querySelector("[data-create-membership-modal]")?.addEventListener("subm
 	e.target.submit();
 });
 
-
 async function isUserHasMembership() {
 	const username = document.querySelector("[data-username]").value;
 	const response = await fetch(`/memberships/check-membership?username=${username}`);
 	return response.ok;
 }
-
 
 function showCreateMembershipModal() {
 	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
@@ -242,7 +291,6 @@ function updatePrivilegeClass() {
 
 	privilegeClass.innerHTML = currentClass;
 }
-
 
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -351,7 +399,3 @@ async function isEmailAvailable(modalType) {
 /* Perrry Below ---------------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
-
-
-
-

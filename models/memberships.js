@@ -8,6 +8,7 @@ exports.getRecentMemberships = async () => {
 	try {
 		const [results] = await db.promise().query(`
 			SELECT 
+            	p.player_id AS playerID, 
 				p.username AS username,
 				mp.issue_time AS membershipIssueTime,
 				mp.days_remaining AS membershipDaysRemaining,
@@ -22,6 +23,7 @@ exports.getRecentMemberships = async () => {
     	`);
 
 		return results.map((element) => ({
+			playeID: element.playerID, 
 			username: element.username,
 			membershipIssueTime: formatInTimeZone(element.membershipIssueTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz"),
 			membershipDaysRemaining: element.membershipDaysRemaining,
