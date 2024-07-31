@@ -8,13 +8,15 @@ exports.loadDashboard = async (req, res) => {
     return res.redirect("/login");
   }
 
+  const { order } = req.query;
+
   try {
     const [activePlayers, activeEvents, activeMatches, revenue, recentPlayers] = await Promise.all([
       dashboardModel.getNumOfActivePlayers(),
       dashboardModel.getNumOfActiveEvents(),
       dashboardModel.getNumOfActiveMatches(),
       dashboardModel.getRevenue(),
-      dashboardModel.getRecentPlayers(),
+      dashboardModel.getAllPlayers(order),
     ]);
 
     res.render("dashboard", {
@@ -30,20 +32,7 @@ exports.loadDashboard = async (req, res) => {
   }
 };
 
-exports.deletePlayer = async (req, res) => {
-  const { item: username } = req.body;
-
-  try {
-    await dashboardModel.deletePlayerByUsername(username);
-
-    res.status(200).send(`OH YES! ${username} Deleted Successfully!`);
-  } catch (error) {
-    console.error(logError("deletePlayer"), error);
-    res.status(500).send(resError("deletePlayer"));
-  }
-};
-
-exports.loadEditModal = async (req, res) => {
+exports.fetchPlayerData = async (req, res) => {
   const { playerID } = req.query;
 
   try {
@@ -53,6 +42,28 @@ exports.loadEditModal = async (req, res) => {
   } catch (error) {
     console.error(logError("loadEditModal"), error);
     res.status(500).send(resError("loadEditModal"));
+  }
+};
+
+exports.checkFormInput = async (req, res) => {
+  const { username, email } = req.query;
+
+  try {
+    const usernameAvailable = await dashboardModel.isUsernameAvailable(username);
+    const emailAvailable = await dashboardModel.isEmailAvailable(email);
+
+    if (!usernameAvailable) {
+      return res.status(409).send(`OH NO! ${username} already taken!`);
+    }
+
+    if (!emailAvailable) {
+      return res.status(409).send(`OH NO! ${email} already taken!`);
+    }
+
+    return res.status(200).send("OH YES! Username and Email Available");
+  } catch (error) {
+    console.error(logError("loadCreateModal"), error);
+    res.status(500).send(resError("loadCreateModal"));
   }
 };
 
@@ -96,28 +107,6 @@ exports.updatePlayer = async (req, res) => {
   }
 };
 
-exports.loadCreateModal = async (req, res) => {
-  const { username, email } = req.query;
-
-  try {
-    const usernameAvailable = await dashboardModel.isUsernameAvailable(username);
-    const emailAvailable = await dashboardModel.isEmailAvailable(email);
-
-    if (!usernameAvailable) {
-      return res.status(409).send(`OH NO! ${username} already taken!`);
-    }
-
-    if (!emailAvailable) {
-      return res.status(409).send(`OH NO! ${email} already taken!`);
-    }
-
-    return res.status(200).send("OH YES! Username and Email Available");
-  } catch (error) {
-    console.error(logError("loadCreateModal"), error);
-    res.status(500).send(resError("loadCreateModal"));
-  }
-};
-
 exports.registerPlayer = async (req, res) => {
   const { username, password, confirmPassword, email, country } = req.body;
 
@@ -127,5 +116,18 @@ exports.registerPlayer = async (req, res) => {
   } catch (error) {
     console.error(logError("registerPlayer"), error);
     res.status(500).send(resError("registerPlayer"));
+  }
+};
+
+exports.deletePlayer = async (req, res) => {
+  const { item: username } = req.body;
+
+  try {
+    await dashboardModel.deletePlayerByUsername(username);
+
+    res.status(200).send(`OH YES! ${username} Deleted Successfully!`);
+  } catch (error) {
+    console.error(logError("deletePlayer"), error);
+    res.status(500).send(resError("deletePlayer"));
   }
 };

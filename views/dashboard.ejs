@@ -59,52 +59,57 @@
                     <div class="main-body-header">
                         <h2 class="main-title">Recent Players</h2>
                         <div class="table-button-list">
-                            <select name="selector" id="selector" class="dropdown" data-pointer-not-allowed>
-                                <option value="Filter">Filter</option>
-                                <option value="Total Wins">Total Wins</option>
-                                <option value="Total Game Count">Total Game Count</option>
-                                <option value="Win Rate">Win Rate</option>
-                                <option value="Experience Point">Experience Point</option>
-                                <option value="Country">Country</option>
-                            </select>
+                            <div class="dropdown-container">
+                                <p class="dropdown-title">Sort By:</p> 
+                                <select name="dropdown" class="dropdown" data-dropdown data-pointer-not-allowed>
+                                    <option value="recent">Recent</option>
+                                    <option value="totalWins">Total Wins</option>
+                                    <option value="totalGameCount">Total Game Count</option>
+                                    <option value="winRate">Win Rate</option>
+                                    <option value="experiencePoint">Experience Point</option>
+                                    <option value="country">Country</option>
+                                </select>
+                            </div>
                             <button class="table-btn add-btn" onclick="showCreatePlayerModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Add Player</button>
-                            <button class="table-btn" onclick="viewAll()" data-pointer-not-allowed>View All</button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Total Wins</th>
-                                <th>Total Game Count</th>
-                                <th>Win Rate</th>
-                                <th>Experience Points</th>
-                                <th>Country</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% locals.recentPlayers.forEach(element => { %>
+
+                    <div class="scrollable-table">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td><%= element.username %></td>
-                                    <td><%= element.totalWin %></td>
-                                    <td><%= element.totalGameCount %></td>
-                                    <td><%= element.winRate %></td>
-                                    <td><%= element.experiencePoint %></td>
-                                    <td><%= element.country %></td>
-                                    <td>
-                                        <i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditPlayerModal('<%= element.playerID %>')" data-edit data-pointer-not-allowed ></i>
-                                        <i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.username %>')" data-delete data-pointer-not-allowed></i>
-                                    </td>
+                                    <th>Username</th>
+                                    <th>Total Wins</th>
+                                    <th>Total Game Count</th>
+                                    <th>Win Rate</th>
+                                    <th>Experience Points</th>
+                                    <th>Country</th>
+                                    <th>Actions</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                <% locals.recentPlayers.forEach(element => { %>
+                                    <tr>
+                                        <td><%= element.username %></td>
+                                        <td><%= element.totalWin %></td>
+                                        <td><%= element.totalGameCount %></td>
+                                        <td><%= element.winRate %></td>
+                                        <td><%= element.experiencePoint %></td>
+                                        <td><%= element.country %></td>
+                                        <td>
+                                            <i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditPlayerModal('<%= element.playerID %>')" data-edit data-pointer-not-allowed></i>
+                                            <i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.username %>')" data-delete data-pointer-not-allowed></i>
+                                        </td>
+                                    </tr>
                                 <% }) %>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <div class="modal delete-item-modal" data-delete-item-modal>
-                <h1>&#9888</h1>
+                <h1>&#9888;</h1>
                 <h2>Are you sure?</h2>
                 <p>This action cannot be undone. All values <br> associated with this field will be lost.</p>
                 <button class="btn modal-btn-delete" type="button" data-conform-delete>Delete Player</button>

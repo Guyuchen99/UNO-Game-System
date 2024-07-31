@@ -26,18 +26,29 @@ router.get("/login", authController.isLoggedIn, (req, res) => {
 
 router.get("/dashboard", authController.isLoggedIn, dashboardController.loadDashboard);
 
-router.get("/dashboard/edit-modal/fetch-data", dashboardController.loadEditModal); 
-router.get("/dashboard/create-modal/check-input", dashboardController.loadCreateModal); 
+router.get("/dashboard/edit-modal/fetch-data", dashboardController.fetchPlayerData); 
+router.get("/dashboard/create-modal/check-input", dashboardController.checkFormInput); 
 
-router.post("/dashboard/register", dashboardController.registerPlayer);
 router.post("/dashboard/update", dashboardController.updatePlayer); 
+router.post("/dashboard/register", dashboardController.registerPlayer);
 router.delete("/dashboard/delete", dashboardController.deletePlayer); 
+
+
 
 router.get("/store-items", authController.isLoggedIn, storeItemsController.loadStoreItems);
 
+
+
 router.get("/memberships", authController.isLoggedIn, membershipsController.loadMemberships);
+router.post("/memberships", membershipsController.registerMembership);
+router.get("/memberships/check-membership", membershipsController.checkMembership);
+router.delete("/memberships/delete", membershipsController.deleteMembership); 
+
+
 
 router.get("/events", authController.isLoggedIn, eventsController.loadEvents);
+
+
 
 router.get("/matches", authController.isLoggedIn, matchesController.loadMatches);
 

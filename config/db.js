@@ -11,53 +11,52 @@ const db = mysql.createConnection({
 db.connect((error) => {
   if (error) {
     console.error("OH NO! Error connecting to MySQL:", error.message);
-    return;
-  }
-
-  if (db.config.database === undefined) {
-    db.query(`CREATE DATABASE ${process.env.DATABASE}`, (error, results) => {
-      if (error && !error.message.includes("database exists")) {
-        console.error("Failed creating db: ", error.message);
-        return;
-      }
-
-      if (!error) {
-        console.log("Create successful.");
-      } else {
-        console.log("Database already exists. Skipping creation.");
-      }
-
-      db.query(`USE ${process.env.DATABASE}`, (error) => {
+  } else {
+    // check if database exists
+    if (db.config.database === undefined) {
+      db.query(`CREATE DATABASE ${process.env.DATABASE}`, (error, results, fields) => {
         if (error) {
-          console.error("Failed switching db: ", error.message);
-          return;
+          if (error.message.includes("database exists")) {
+            console.log("Database already exists. Skipping creation.");
+            db.query(`USE ${process.env.DATABASE}`, (error, results, fields) => {
+              if (error) {
+                console.error("Failed switching db: ", error.message);
+              } else {
+                console.log("Switch successful.");
+              }
+            });
+          } else {
+            console.error("Failed creating db: ", error.message);
+          }
+        } else {
+          console.log("Create successful.");
+          db.query(`USE ${process.env.DATABASE}`, (error, results, fields) => {
+            if (error) {
+              console.error("Failed switching db: ", error.message);
+            } else {
+              console.log("Switch successful.");
+              // initialize DB: create tables, insert dummy data
+              initializeDB();
+              console.log("Initialization successful.");
+            }
+          });
         }
-
-        console.log("Switch successful.");
-        initializeDB();
-        console.log("Initialization successful.");
       });
-    });
+    }
   }
 });
 
 function initializeDB() {
-  const sql = fs.readFileSync("uno.sql").toString().split(";").filter(stmt => stmt.trim() !== "");
-  sql.forEach(stmt => {
-    db.query(stmt, (error) => {
-      if (error) {
-        console.error("Failed initializing db: ", error.message);
-      }
-    });
-  });
-}
-
-function fileLog(content) {
-  fs.appendFileSync("./log.txt", `${content}\n`, (err) => {
-    if (err) {
-      console.log(err);
+  let sql = fs.readFileSync("uno.sql").toString().split(";");
+  for (let i = 0; i < sql.length; i++) {
+    if (sql[i].trim() !== "") {
+      db.query(sql[i], (error, results, fields) => {
+        if (error) {
+          console.error("Failed initializing db: ", error.message);
+        }
+      });
     }
-  });
+  }
 }
 
 module.exports = db;

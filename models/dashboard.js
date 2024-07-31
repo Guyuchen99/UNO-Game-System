@@ -63,7 +63,32 @@ exports.getRevenue = async () => {
   }
 };
 
-exports.getRecentPlayers = async () => {
+exports.getAllPlayers = async (order) => {
+  let orderByClause;
+
+  switch (order) {
+    case "recent":
+      orderByClause = "player_id";
+      break;
+    case "totalWins":
+      orderByClause = "total_win";
+      break;
+    case "totalGameCount":
+      orderByClause = "total_game_count";
+      break;
+    case "winRate":
+      orderByClause = "win_rate";
+      break;
+    case "experiencePoint":
+      orderByClause = "experience_point";
+      break;
+    case "country":
+      orderByClause = "country";
+      break;
+    default:
+      orderByClause = "player_id";
+  }
+
   try {
     const [results] = await db.promise().query(`
       SELECT
@@ -74,13 +99,13 @@ exports.getRecentPlayers = async () => {
         win_rate AS winRate,
         experience_point AS experiencePoint,
         country AS country
-      FROM Players
-      ORDER BY player_id DESC LIMIT 5;
+      FROM Players 
+      ORDER BY ${orderByClause} DESC; 
     `);
 
     return results;
   } catch (error) {
-    console.error(logError("getRecentPlayers"), error);
+    console.error(logError("getAllPlayers"), error);
     throw error;
   }
 };

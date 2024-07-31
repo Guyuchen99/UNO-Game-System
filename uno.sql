@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Players (
 ); 
 
 CREATE TABLE IF NOT EXISTS MembershipExpireDate (
-    issue_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    issue_time DATE NOT NULL,
     days_remaining INT NOT NULL,
     expire_time DATE NOT NULL,
     PRIMARY KEY (issue_time, days_remaining)
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS MembershipPrivilegeClass (
 CREATE TABLE IF NOT EXISTS MembershipInPlayer (
     membership_id INT AUTO_INCREMENT,
     player_id INT NOT NULL,
-    issue_time TIMESTAMP NOT NULL,
+    issue_time DATE NOT NULL,
     days_remaining INT NOT NULL,
     privilege_level INT NOT NULL,
     status VARCHAR(255) DEFAULT 'Active',
@@ -364,7 +364,17 @@ VALUES
 ('Happy Professor', 'happy_professor@student.ubc.ca'),
 ('Poor Student', 'poor_student@student.ubc.ca'),
 ('Selfish Engineer', 'selfish_engineer@student.ubc.ca'),
-('Dangerous Salesman', 'dangerous_salesman@student.ubc.ca'); 
+('Dangerous Salesman', 'dangerous_salesman@student.ubc.ca'),
+('Handsome Programmer1', 'handsome_programmer1@student.ubc.ca'),
+('Happy Professor1', 'happy_professor1@student.ubc.ca'),
+('Poor Student1', 'poor_student1@student.ubc.ca'),
+('Selfish Engineer1', 'selfish_engineer1@student.ubc.ca'),
+('Dangerous Salesman1', 'dangerous_salesman2@student.ubc.ca'),
+('Handsome Programmer2', 'handsome_programmer2@student.ubc.ca'),
+('Happy Professor2', 'happy_professor2@student.ubc.ca'),
+('Poor Student2', 'poor_student2@student.ubc.ca'),
+('Selfish Engineer2', 'selfish_engineer2@student.ubc.ca'),
+('Dangerous Salesman2', 'dangerous_salesman2@student.ubc.ca'); 
 
 INSERT IGNORE INTO PlayerLevel (experience_point, level) 
 VALUES 
@@ -386,7 +396,17 @@ VALUES
 ('Happy Professor', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
 ('Poor Student', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
 ('Selfish Engineer', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
-('Dangerous Salesman', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'); 
+('Dangerous Salesman', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'),
+('Handsome Programmer1', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
+('Happy Professor1', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
+('Poor Student1', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
+('Selfish Engineer1', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
+('Dangerous Salesman1', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'),
+('Handsome Programmer2', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
+('Happy Professor2', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
+('Poor Student2', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
+('Selfish Engineer2', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
+('Dangerous Salesman2', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'); 
 
 INSERT IGNORE INTO MembershipExpireDate (issue_time, days_remaining, expire_time) 
 VALUES 
@@ -642,3 +662,4 @@ VALUES
 (3, 3, 3, 3, 3, 1),
 (4, 4, 4, 4, 4, 1),
 (5, 5, 5, 5, 5, 1); 
+

@@ -1,403 +1,426 @@
 /*  import google fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap");
 
 * {
-    margin: 0px;
-    padding: 0px; 
-    border: none; 
-    outline: none; 
-    text-decoration: none; 
-    box-sizing: border-box; 
-    font-family: "Poppins", sans-serif; 
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	outline: none;
+	text-decoration: none;
+	box-sizing: border-box;
+	font-family: "Poppins", sans-serif;
 }
 
 :root {
-    --side-padding: 6.5%; 
-    --navbar-height: 100px; 
-    --footer-height: 40px; 
-    --grid-header-height: 70px; 
+	--side-padding: 6.5%;
+	--navbar-height: 100px;
+	--footer-height: 40px;
+	--grid-header-height: 70px;
 
-    --login-blue: #096dd9; 
-    --login-purple: #2E0054; 
-    --link-purple: #531dab; 
-    --text-color: white;
+	--login-blue: #096dd9;
+	--login-purple: #2e0054;
+	--link-purple: #531dab;
+	--text-color: white;
 
-    --red1: #ffccc7;
-    --red2: #ff4d4f; 
-    --blue1: #91d5ff; 
-    --blue2: #1890ff; 
-    --green1: #61DDAA; 
-    --green2: #008A5D; 
-    --grey1: #f5f5f5; 
-    --grey2: #E2E2E2; 
-    --grey3: #ABABAB; 
-    --grey4: #595959; 
+	--red1: #ffccc7;
+	--red2: #ff4d4f;
+	--blue1: #91d5ff;
+	--blue2: #1890ff;
+	--green1: #61ddaa;
+	--green2: #008a5d;
+	--grey1: #f5f5f5;
+	--grey2: #e2e2e2;
+	--grey3: #ababab;
+	--grey4: #595959;
 }
 
 html {
-    font-size: 62.5%;
-    scroll-padding-top: var(--navbar-height);
-    scroll-behavior: smooth; 
+	font-size: 62.5%;
+	scroll-padding-top: var(--navbar-height);
+	scroll-behavior: smooth;
 }
 
 section {
-    width: 100vw; 
-    min-height: calc(100svh - var(--navbar-height)); 
-    margin-top: var(--navbar-height); 
-    padding: 0 var(--side-padding);
-    display: flex;
-    justify-content: space-between;
+	width: 100vw;
+	min-height: calc(100svh - var(--navbar-height));
+	margin-top: var(--navbar-height);
+	padding: 0 var(--side-padding);
+	display: flex;
+	justify-content: space-between;
 }
 
 body .btn {
-    display: inline-block;
-    background-color: black;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 500;
-    padding: 1rem 2.5rem;  
-    margin-top: 2rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    border: 1px solid black;
-    cursor: pointer;
+	display: inline-block;
+	background-color: black;
+	color: white;
+	font-size: 1.5rem;
+	font-weight: 500;
+	padding: 1rem 2.5rem;
+	margin-top: 2rem;
+	border-radius: 0.5rem;
+	transition: all 0.3s ease;
+	border: 1px solid black;
+	cursor: pointer;
 }
 
 body .btn:hover {
-    background: var(--login-blue); 
+	background: var(--login-blue);
 }
 
-body { 
-    background-color: var(--grey1); 
+body {
+	background-color: var(--grey1);
 }
 
-body.openedModal { 
-    background-color: var(--grey4)
+body.openedModal {
+	background-color: var(--grey4);
 }
 
 #grid-container {
-    height: 100vh; 
-    display: grid; 
-    grid-template-columns: 23rem 1fr 1fr 1fr;
-    grid-template-rows: 0.2fr 3fr 40px; 
-    grid-template-areas:
-        "sidebar header header header"
-        "sidebar main main main"
-        "sidebar footer footer footer"; 
+	height: 100vh;
+	display: grid;
+	grid-template-columns: 23rem 1fr 1fr 1fr;
+	grid-template-rows: 0.2fr 3fr 40px;
+	grid-template-areas:
+		"sidebar header header header"
+		"sidebar main main main"
+		"sidebar footer footer footer";
 }
-
-
 
 
 
 /* Header Section  */
-.grid-header { 
-    grid-area: header; 
-    height: var(--grid-header-height); 
-    background-color: white; 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0px 20px 0px 20px; 
-    box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.2); 
-    font-size: 1.5rem;
-    color: black;
+.grid-header {
+	grid-area: header;
+	height: var(--grid-header-height);
+	background-color: white;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0px 20px 0px 20px;
+	box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+	font-size: 1.5rem;
+	color: black;
 }
 
 .grid-header .header-left {
-    width: 75%; 
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+	width: 75%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
 }
 
-.grid-header .header-left > i, 
+.grid-header .header-left > i,
 .grid-header .header-right > i {
-    padding: 10px; 
-    font-size: 1.9rem;
-    cursor: pointer; 
+	padding: 10px;
+	font-size: 1.9rem;
+	cursor: pointer;
 }
 
 .grid-header .header-left > input {
-    width: 100%; 
-    height: 100%;
-    border: 0.3rem solid white;
-    border-radius: 0.5rem;
-    padding: 0 0.5rem;
-    font-size: 1.5rem;
+	width: 100%;
+	height: 100%;
+	border: 0.3rem solid white;
+	border-radius: 0.5rem;
+	padding: 0 0.5rem;
+	font-size: 1.5rem;
 }
 
 .grid-header .header-right {
-    width: 15%; 
-    display: flex;
-    align-items: center; 
-    justify-content: flex-end;
+	width: 15%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 }
 
 
 
 /* Sidebar Section */
 .grid-sidebar {
-    grid-area: sidebar; 
-    height: 100%; 
-    background-color: var(--login-blue);
-    overflow-y: auto; 
-    font-size: 1.8rem; 
-    color: var(--text-color); 
+	grid-area: sidebar;
+	height: 100%;
+	background-color: var(--login-blue);
+	overflow: hidden;
+	font-size: 1.8rem;
+	color: var(--text-color);
 }
 
 .grid-sidebar .sidebar-title {
-    text-align: center;
-    font-size: 2rem; 
-    font-weight: 600;
-    padding: 0.25rem;
-    margin: 0.5rem 0 4rem 0;
+	text-align: center;
+	font-size: 2rem;
+	font-weight: 600;
+	padding: 0.25rem;
+	margin: 0.5rem 0 4rem 0;
 }
 
 .grid-sidebar .sidebar-list {
-    height: 80%; 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
 }
 
 .grid-sidebar .sidebar-list i {
-    margin: 0.5rem; 
+	margin: 0.5rem;
 }
 
-.grid-sidebar .sidebar-list .sidebar-list-top, 
+.grid-sidebar .sidebar-list .sidebar-list-top,
 .grid-sidebar .sidebar-list .sidebar-list-bottom {
-    width: 100%; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
 }
 
 .grid-sidebar .sidebar-list .sidebar-item {
-    padding: 20px; 
-    width: 100%; 
-    color: var(--text-color); 
-    border: 1rem solid var(--login-blue);
-    border-radius: 2.5rem;
+	padding: 20px;
+	width: 100%;
+	color: var(--text-color);
+	border: 1rem solid var(--login-blue);
+	border-radius: 2.5rem;
 }
 
 .grid-sidebar .sidebar-list .sidebar-item:hover {
-    background-color: white;
-    color: var(--login-blue); 
-    cursor: pointer;
+	background-color: white;
+	color: var(--login-blue);
+	cursor: pointer;
 }
 
 
 
 /* Main Section  */
 .grid-main {
-    grid-area: main; 
-    overflow-y: auto;
-    padding: 40px 30px 40px 30px; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; 
-    position: relative;
+	grid-area: main;
+	padding: 40px 30px 40px 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	position: relative;
 }
 
 .grid-main .main-header-title {
-    font-size: 2rem;  
-    font-weight: 600;
-    margin-bottom: 2rem; 
-    color: black; 
+	font-size: 2rem;
+	font-weight: 600;
+	margin-bottom: 2rem;
+	color: black;
 }
 
 .grid-main .main-header-title.openedModal {
-    color: var(--text-color); 
+	color: var(--text-color);
 }
 
 .grid-main .main-title {
-    font-size: 2rem;  
-    font-weight: 600;
-    margin-bottom: 2rem; 
+	font-size: 2rem;
+	font-weight: 600;
+	margin-bottom: 2rem;
 }
 
-.grid-main .table-btn, 
+.grid-main .dropdown-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.grid-main .dropdown-title {
+	font-size: 1.3rem;
+	padding-right: 1.2rem;
+}
+
+.grid-main .table-btn,
 .grid-main .dropdown {
-    height: 30px; 
-    padding: 0 1rem 0 1rem;  
-    background-color: white; 
-    border-radius: 0.5rem;
-    border: 1px solid black; 
-    cursor: pointer;
+	font-size: 1.3rem;
+	height: 30px;
+	padding: 0 1rem 0 1rem;
+	background-color: white;
+	border-radius: 0.5rem;
+	border: 1px solid black;
+	cursor: pointer;
 }
 
-.grid-main .table-btn.openedModal, 
+.grid-main .table-btn.openedModal,
 .grid-main .dropdown.openedModal {
-    cursor: default;
-    pointer-events: none;
+	cursor: default;
+	pointer-events: none;
+}
+
+.grid-main .table-button-list {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2rem;
 }
 
 .grid-main .table-button-list .add-btn i {
-    margin-right: 1rem;
-    padding: 5px; 
-    background-color: green;
-    border-radius: 50%;
-    color: var(--text-color); 
+	margin-right: 1rem;
+	padding: 5px;
+	background-color: green;
+	border-radius: 50%;
+	color: var(--text-color);
 }
 
 .grid-main .add,
 .grid-main .edit,
 .grid-main .delete {
-    font-size: 1.8rem ;
-    cursor: pointer;
+	font-size: 1.8rem;
+	cursor: pointer;
 }
 
 .grid-main .add.openedModal,
 .grid-main .edit.openedModal,
 .grid-main .delete.openedModal {
-    cursor: default;
-    pointer-events: none;
+	cursor: default;
+	pointer-events: none;
 }
 
 .grid-main .add {
-    color: var(--login-blue); 
-    margin-right: 1rem; 
+	color: var(--login-blue);
+	margin-right: 1rem;
 }
 
 .grid-main .edit {
-    color: var(--green2); 
-    margin-right: 1rem; 
+	color: var(--green2);
+	margin-right: 1rem;
 }
 
 .grid-main .delete {
-    color: var(--red2); 
+	color: var(--red2);
 }
 
 .grid-main .main-header {
-    margin-bottom: 5rem;
+	margin-bottom: 5rem;
 }
 
 .grid-main .main-header,
-.grid-main .main-body  {
-    width: 100%; 
-    opacity: 1;
+.grid-main .main-body {
+	width: 100%;
+	opacity: 1;
 }
 
 .grid-main .main-header.openedModal,
 .grid-main .main-body.openedModal {
-    opacity: 0.2;
+	opacity: 0.2;
 }
 
 .grid-main .main-header .main-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 2rem; 
-    margin: 2rem 0; 
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	gap: 2rem;
+	margin: 2rem 0;
 }
 
 .grid-main .main-header .main-cards .card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 25px;
-    border: 1px solid black; 
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 10px -3px rgba(0, 0, 0, 0.2);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	padding: 25px;
+	border: 1px solid black;
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 10px -3px rgba(0, 0, 0, 0.2);
 }
 
 .grid-main .main-header .main-cards .card:first-child {
-    background-color: #95F0FF;
-    border-left: 0.7rem solid black; 
+	background-color: #95f0ff;
+	border-left: 0.7rem solid black;
 }
 
 .grid-main .main-header .main-cards .card:nth-child(2) {
-    background-color: #FFBB95; 
-    border-left: 0.7rem solid black; 
+	background-color: #ffbb95;
+	border-left: 0.7rem solid black;
 }
 
 .grid-main .main-header .main-cards .card:nth-child(3) {
-    background-color: #FFC2EC; 
-    border-left: 0.7rem solid black; 
+	background-color: #ffc2ec;
+	border-left: 0.7rem solid black;
 }
 
 .grid-main .main-header .main-cards .card:nth-child(4) {
-    background-color: #efdbff; 
-    border-left: 0.7rem solid black; 
+	background-color: #efdbff;
+	border-left: 0.7rem solid black;
 }
 
 .grid-main .main-header .main-cards .card > span {
-    font-size: 2rem; 
-    font-weight: 600;
+	font-size: 2rem;
+	font-weight: 600;
 }
 
 .grid-main .main-header .main-cards .card .card-inner {
-    font-size: 1.8rem; 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+	font-size: 1.8rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .grid-main .main-header .main-cards .card .card-inner > span {
-    font-size: 3.5rem; 
+	font-size: 3.5rem;
 }
 
-.grid-main .main-body .table-container-primary, 
+.grid-main .main-body .table-container-primary,
 .grid-main .main-body .table-container-secondary {
-    width: 100%;
-    border-radius: 1rem;
-    background-color:var(--grey2); 
+	width: 100%;
+	border-radius: 1rem;
+	background-color: var(--grey2);
 }
 
 .grid-main .main-body .table-container-primary {
-    padding: 3rem 2rem 2.8rem 2rem;  
+	padding: 3rem 2rem 2.8rem 2rem;
 }
 
 .grid-main .main-body .table-container-secondary {
-    padding: 1.8rem 2rem 1.6rem 2rem; 
+	padding: 1.8rem 2rem 1.6rem 2rem;
 }
 
 .grid-main .main-body-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
 }
 
-.grid-main .main-body-header .table-button-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem; 
+.grid-main .main-body .scrollable-table {
+	width: 100%;
+	height: 270px;
+	overflow-y: auto;
+	scroll-snap-type: y mandatory;
 }
 
 .grid-main .main-body .table {
-    width: 100%;
-    text-align: left;
-    overflow-y: scroll;
-    border-collapse: collapse;
-    font-size: 1.6rem;
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+	font-size: 1.6rem;
+}
+
+.grid-main .main-body .table th {
+	background-color: var(--grey2);
+	padding: 1rem;
+	position: sticky;
+	top: 0;
+	border-bottom: 1px solid white;
 }
 
 .grid-main .main-body .table tr {
-    border-bottom: 1px solid white;
+	scroll-snap-align: start;
+	border-bottom: 1px solid white;
 }
 
-.grid-main .main-body .table td, 
-.grid-main .main-body .table th {
-    padding: 1rem; 
+.grid-main .main-body .table td {
+	padding: 1rem;
 }
 
 .grid-main .main-body .table .table-btn-td {
-    padding: 0.5rem ;
+	padding: 0.5rem;
 }
+
 
 
 
 /* Footer Section  */
-.grid-footer { 
-    grid-area: footer; 
-    height: 40px; 
-    border-top: 1px solid rgba(0, 0, 0, 0.2); 
+.grid-footer {
+	grid-area: footer;
+	height: 40px;
+	border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
-
 
 
 
@@ -405,221 +428,236 @@ body.openedModal {
 
 
 /* ------------------------------------------------------------------------------------------------- */
-
+/* ------------------------------------------------------------------------------------------------- */
 /* Modal Section  */
 .modal {
-    background-color: white;
-    border-radius: 1rem;
-    display: flex;
-    flex-direction: column;
-    position: absolute; 
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	background-color: white;
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .btn.modal-btn-delete {
-    background-color: var(--red2);
-    color: var(--text-color); 
+	background-color: var(--red2);
+	color: var(--text-color);
 }
 
 .btn.modal-btn-delete:hover {
-    background: red;
-    color: var(--text-color); 
+	background: red;
+	color: var(--text-color);
 }
 
 .btn.modal-btn-confirm {
-    background-color: var(--blue2);
-    color: var(--text-color); 
+	background-color: var(--blue2);
+	color: var(--text-color);
 }
 
 .btn.modal-btn-confirm:hover {
-    background: blue; 
-    color: var(--text-color); 
+	background: blue;
+	color: var(--text-color);
 }
 
 .btn.modal-btn-cancel {
-    background-color: var(--grey2);
-    color: black;
+	background-color: var(--grey2);
+	color: black;
 }
 
 .btn.modal-btn-cancel:hover {
-    background: var(--grey3); 
-    color: var(--text-color); 
+	background: var(--grey3);
+	color: var(--text-color);
 }
 
 
 
 /* Delete Modal Section  */
-.modal.delete-item-modal { 
-    align-items: center;
-    justify-content: center;
-    padding: 2.5rem; 
-    animation: GlowingRed 2.5s linear 0.75s infinite alternate;
-    display: none;
+.modal.delete-item-modal {
+	align-items: center;
+	justify-content: center;
+	padding: 2.5rem;
+	animation: GlowingRed 2.5s linear 0.75s infinite alternate;
+	display: none;
 }
 
 .modal.delete-item-modal.openedModal {
-    display: flex;
+	display: flex;
 }
 
 @keyframes GlowingRed {
-    0% {
-        box-shadow: 0px 0px 0px 0px red;
-    }
+	0% {
+		box-shadow: 0px 0px 0px 0px red;
+	}
 
-    80% {
-        box-shadow: 0px 0.5rem 2rem 0.5rem white;
-    }
+	80% {
+		box-shadow: 0px 0.5rem 2rem 0.5rem white;
+	}
 
-    100% {
-        box-shadow: 0px 0.5rem 2rem 0.5rem white;
-    }
+	100% {
+		box-shadow: 0px 0.5rem 2rem 0.5rem white;
+	}
 }
 
 .delete-item-modal h1 {
-    width: 5rem;  
-    height: 5rem; 
-    font-size: 3.5rem;
-    text-align: center;
-    color: red; 
-    background-color: var(--red1);
-    margin-bottom: 2rem; 
-    border-radius: 50%;
+	width: 5rem;
+	height: 5rem;
+	font-size: 3.5rem;
+	text-align: center;
+	color: red;
+	background-color: var(--red1);
+	margin-bottom: 2rem;
+	border-radius: 50%;
 }
 
 .delete-item-modal h2 {
-    font-size: 1.7rem; 
-    margin-bottom: 2rem; 
+	font-size: 1.7rem;
+	margin-bottom: 2rem;
 }
 
 .delete-item-modal p {
-    text-align: center;
+	text-align: center;
 }
 
 
 
 /* Create Modal Section  */
-.modal.create-item-modal, 
+.modal.create-item-modal,
 .modal.edit-item-modal {
-    width: 50rem; 
-    max-width: 75%;
-    padding: 1rem; 
-    animation: GlowingBlue 2.5s linear 0.75s infinite alternate;
-    display: none;
+	width: 50rem;
+	max-width: 75%;
+	padding: 1rem;
+	animation: GlowingBlue 2.5s linear 0.75s infinite alternate;
+	display: none;
 }
 
-.modal.create-item-modal.openedModal, 
+.modal.create-item-modal.openedModal,
 .modal.edit-item-modal.openedModal {
-    display: flex;
+	display: flex;
 }
 
 @keyframes GlowingBlue {
-    0% {
-        box-shadow: 0px 0px 0px 0px blue;
-    }
+	0% {
+		box-shadow: 0px 0px 0px 0px blue;
+	}
 
-    80% {
-        box-shadow: 0px 0.5rem 2rem 0.5rem white;
-    }
+	80% {
+		box-shadow: 0px 0.5rem 2rem 0.5rem white;
+	}
 
-    100% {
-        box-shadow: 0px 0.5rem 2rem 0.5rem white;
-    }
+	100% {
+		box-shadow: 0px 0.5rem 2rem 0.5rem white;
+	}
 }
 
 .modal-header {
-    margin: 1rem 1rem 0;
-    border-bottom: 1px solid #777777;
-    display: flex;
-    justify-content: space-between;
+	margin: 1rem 1rem 0;
+	border-bottom: 1px solid #777777;
+	display: flex;
+	justify-content: space-between;
 }
 
 .modal-header h2 {
-    font-size: 1.7rem;
+	font-size: 1.7rem;
 }
 
 .modal-header .close-btn {
-    background: none;
-    font-size: 2rem;
-    font-weight: bold;
-    align-self: flex-start;
-    cursor: pointer;
+	background: none;
+	font-size: 2rem;
+	font-weight: bold;
+	align-self: flex-start;
+	cursor: pointer;
 }
 
 .modal-body {
-    flex-grow: 1;
-    margin: 1rem; 
-    padding-bottom: 1rem; 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    font-size: 1.5rem; 
+	flex-grow: 1;
+	margin: 1rem;
+	padding-bottom: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
+	font-size: 1.5rem;
 }
 
 .modal-body .modal-fields {
-    width: 100%; 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin: 1rem 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	margin: 1rem 0;
 }
 
 .modal-body .modal-fields label {
-    padding-bottom: 0.5rem;
+	padding-bottom: 0.5rem;
 }
 
 .modal-body .modal-fields input {
-    width: 100%; 
-    border: 0.3rem solid black; 
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 1.5rem;
-    transition: all 0.3s ease; 
+	width: 100%;
+	border: 0.3rem solid black;
+	border-radius: 0.5rem;
+	padding: 0.25rem 0.5rem;
+	font-size: 1.5rem;
+	transition: all 0.3s ease;
 }
 
 .modal-body .modal-fields select {
-    height: 34px; 
-    width: 100%; 
-    border: 0.3rem solid black; 
-    border-radius: 0.5rem;
-    padding: 0.25rem 0; 
-    font-size: 1.5rem; 
+	height: 34px;
+	width: 100%;
+	border: 0.3rem solid black;
+	border-radius: 0.5rem;
+	padding: 0.25rem 0;
+	font-size: 1.5rem;
+}
+
+.modal-body .modal-fields select.half-width {
+	width: 35%;
 }
 
 .modal-body .modal-fields input:focus {
-    border: 0.3rem solid var(--login-blue);  
+	border: 0.3rem solid var(--login-blue);
+}
+
+.modal-body .modal-fields .modal-dropdown-container {
+	width: 100%; 
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.modal-body .modal-fields .modal-dropdown-container > span {
+	padding: 1rem; 
 }
 
 .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 1rem 1rem; 
-    border-top: 1px solid #777777;
+	display: flex;
+	justify-content: flex-end;
+	padding: 0 1rem 1rem;
+	border-top: 1px solid #777777;
 }
 
 .modal-footer .btn {
-    margin: 1rem 0.5rem 0; 
+	margin: 1rem 0.5rem 0;
 }
 
 .modal-footer .btn:last-child {
-    margin-right: initial;
+	margin-right: initial;
 }
 
 .modal-error-message {
-    width: 40rem; 
-    padding: 0.25rem 1rem; 
-    font-size: 1.3rem; 
-    background-color: red;
-    color: yellow; 
-    text-shadow: 0 0 0.75rem white;  
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -180%);
-    border-radius: 5px; 
-    display: none;
+	width: 40rem;
+	padding: 0.25rem 1rem;
+	font-size: 1.3rem;
+	background-color: red;
+	color: yellow;
+	text-shadow: 0 0 0.75rem white;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -180%);
+	border-radius: 5px;
+	display: none;
 }
 
 
@@ -627,179 +665,178 @@ body.openedModal {
 
 
 /* ------------------------------------------------------------------------------------------------- */
-
+/* ------------------------------------------------------------------------------------------------- */
 /* Login Header Section  */
 .login-header {
-    width: 100vw; 
-    height: 100px; 
-    padding: 5px var(--side-padding); 
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--text-color); 
-    background: radial-gradient(circle, var(--login-blue), var(--login-purple));
-    border-bottom: 2px solid var(--login-blue); 
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0; 
-    z-index: 99;
-    font-family: "Ubuntu", sans-serif;
+	width: 100vw;
+	height: 100px;
+	padding: 5px var(--side-padding);
+	font-size: 2rem;
+	font-weight: 500;
+	color: var(--text-color);
+	background: radial-gradient(circle, var(--login-blue), var(--login-purple));
+	border-bottom: 2px solid var(--login-blue);
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	z-index: 99;
+	font-family: "Ubuntu", sans-serif;
 }
 
 .login-header .navbar-menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .login-header .navbar-menu .navbar-item {
-    margin-left: 3rem; 
-    color: var(--text-color); 
+	margin-left: 3rem;
+	color: var(--text-color);
 }
 
 .login-header .navbar-menu .navbar-item:hover {
-    text-shadow: 0 0 3.5rem white, 0 0 3rem yellow, 0 0 3.5rem white; 
+	text-shadow: 0 0 3.5rem white, 0 0 3rem yellow, 0 0 3.5rem white;
 }
 
 .login-header .login-error {
-    position: absolute; 
-    width: 100vw; 
-    left: 50%;    
-    transform: translate(-50%);
-    bottom: -3.5rem; 
-    font-size: 1.75rem; 
-    color: var(--text-color); 
-    text-align: center;
-    background: linear-gradient(black, var(--login-purple));
-    padding: 0.5rem; 
+	position: absolute;
+	width: 100vw;
+	left: 50%;
+	transform: translate(-50%);
+	bottom: -3.5rem;
+	font-size: 1.75rem;
+	color: var(--text-color);
+	text-align: center;
+	background: linear-gradient(black, var(--login-purple));
+	padding: 0.5rem;
 }
 
 .login-header .error-help {
-    color: yellow; 
-    text-shadow: 0 0 1rem white;  
-    text-decoration: underline;
+	color: yellow;
+	text-shadow: 0 0 1rem white;
+	text-decoration: underline;
 }
 
 
 
 /* Login Section */
 .login-body {
-    min-height: calc(100vh - var(--navbar-height) - var(--footer-height)); 
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    background-image: url("UNO_Background.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position-x: 15%;
-    background-position-y: center;
+	min-height: calc(100vh - var(--navbar-height) - var(--footer-height));
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-image: url("UNO_Background.png");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position-x: 15%;
+	background-position-y: center;
 }
 
 .login-body .login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 30vw; 
-    height: 50vh; 
-    padding: 3rem; 
-    margin: 5rem; 
-    border: 3px solid var(--login-purple);
-    color: black; 
-    font-size: 1.5rem; 
-    position: relative; 
-    z-index: 99;
-    overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	width: 30vw;
+	height: 50vh;
+	padding: 3rem;
+	margin: 5rem;
+	border: 3px solid var(--login-purple);
+	color: black;
+	font-size: 1.5rem;
+	position: relative;
+	z-index: 99;
+	overflow: hidden;
 }
 
 .login-body .login-form::before {
-    content: "";
-    width: 250%;
-    height: 250%;
-    background-color: white; 
-    position: absolute;
-    top: -75%; 
-    left: -75%;
-    z-index: -5; 
-    background-image: conic-gradient(transparent, var(--login-blue), transparent 50%);
-    animation: Rotate 3s linear infinite; 
+	content: "";
+	width: 250%;
+	height: 250%;
+	background-color: white;
+	position: absolute;
+	top: -75%;
+	left: -75%;
+	z-index: -5;
+	background-image: conic-gradient(transparent, var(--login-blue), transparent 50%);
+	animation: Rotate 3s linear infinite;
 }
 
 @keyframes Rotate {
-    to {
-        transform: rotate(360deg);
-    }
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .login-body .login-form::after {
-    content: "";
-    position: absolute;
-    inset: 0.7rem; 
-    background-color: white;
-    border-radius: 0.3rem;
-    z-index: -1;
+	content: "";
+	position: absolute;
+	inset: 0.7rem;
+	background-color: white;
+	border-radius: 0.3rem;
+	z-index: -1;
 }
 
 .login-body .login-form .login-form-header {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 5rem;
+	font-size: 2rem;
+	font-weight: 600;
+	margin-bottom: 5rem;
 }
 
 .login-body .login-form .login-form-body .submit-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.login-body .login-form .login-fields { 
-    width: 20vw; 
-    margin-bottom: 3rem; 
+.login-body .login-form .login-fields {
+	width: 20vw;
+	margin-bottom: 3rem;
 }
 
 .login-body .login-form .login-fields input {
-    height: 100%;
-    width: 100%;
-    border: 0.3rem solid black;
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 1.5rem;
-    transition: all 0.3s ease; 
+	height: 100%;
+	width: 100%;
+	border: 0.3rem solid black;
+	border-radius: 0.5rem;
+	padding: 0.25rem 0.5rem;
+	font-size: 1.5rem;
+	transition: all 0.3s ease;
 }
 
 .login-body .login-form .login-fields input:focus {
-    border: 0.3rem solid var(--login-blue);  
+	border: 0.3rem solid var(--login-blue);
 }
 
 .login-footer {
-    padding: 7px 20px;
-    border-top: 3px solid var(--login-blue); 
+	padding: 7px 20px;
+	border-top: 3px solid var(--login-blue);
 }
 
 
 
 /* Footer Section */
-footer{
-    background: white;
-    padding: 8.5px 20px;
-    color: black;
-    text-align: center;
-    font-size: 1.5rem;
-    font-family: "Ubuntu", sans-serif;
+footer {
+	background: white;
+	padding: 8.5px 20px;
+	color: black;
+	text-align: center;
+	font-size: 1.5rem;
+	font-family: "Ubuntu", sans-serif;
 }
 
 footer #laptop span {
-    color: var(--link-purple); 
+	color: var(--link-purple);
 }
 
 footer #laptop span:hover {
-    text-decoration: underline;
-    cursor: pointer;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 footer #phone {
-    display: none;
+	display: none;
 }
