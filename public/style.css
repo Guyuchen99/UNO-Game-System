@@ -21,6 +21,7 @@
 	--login-purple: #2e0054;
 	--searchbar-green: #9DF5CA; 
 	--link-purple: #531dab;
+	--modal-border: #777777;
 	--text-color: white;
 
 	--red1: #ffccc7;
@@ -130,6 +131,7 @@ body.openedModal {
 	border: 0.3rem solid white;
 	border-radius: 0.5rem;
 }
+
 .grid-header .header-left .searchbar input.border-show {
 	border: 0.3rem solid var(--login-blue);
 	border-bottom-right-radius: 0;
@@ -457,7 +459,6 @@ body.openedModal {
 
 
 
-
 /* Footer Section  */
 .grid-footer {
 	grid-area: footer;
@@ -465,6 +466,90 @@ body.openedModal {
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+
+
+
+
+/* ------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------- */
+/* Search Result Section  */
+.search-result {
+	min-width: 30%; 
+	border-radius: 1rem;
+	background-color: white; 
+	padding: 2rem 2rem 1.8rem 2rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	animation: GlowingGreen 2.5s linear 0.75s infinite alternate;
+	display: none;
+}
+
+@keyframes GlowingGreen {
+	0% {
+		box-shadow: 0px 0px 0px 0px green;
+	}
+
+	80% {
+		box-shadow: 0px 0.5rem 2rem 0.5rem white;
+	}
+
+	100% {
+		box-shadow: 0px 0.5rem 2rem 0.5rem white;
+	}
+}
+
+.search-result.openedModal {
+	display: flex;
+	flex-direction: column;
+}
+
+.search-result-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.5rem; 
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--modal-border); 
+	font-size: 1.1rem; 
+}
+
+.search-result .close-btn {
+	background: none;
+	font-size: 1.7rem;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.search-result .scrollable-table {
+	width: 100%;
+	height: 255px; 
+	overflow-y: auto;
+	scroll-snap-type: y mandatory;
+}
+
+.search-result .table {
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+	font-size: 1.3rem; 
+}
+
+.search-result .table th {
+	background-color: white; 
+	padding: 1rem 0.75rem;
+	position: sticky;
+	top: 0;
+}
+
+.search-result .table tr {
+	scroll-snap-align: start;
+}
+
+.search-result .table td {
+	padding: 0 0.75rem;
+}
 
 
 
@@ -596,7 +681,7 @@ body.openedModal {
 
 .modal-header {
 	margin: 1rem 1rem 0;
-	border-bottom: 1px solid #777777;
+	border-bottom: 1px solid var(--modal-border); 
 	display: flex;
 	justify-content: space-between;
 }
@@ -678,7 +763,7 @@ body.openedModal {
 	display: flex;
 	justify-content: flex-end;
 	padding: 0 1rem 1rem;
-	border-top: 1px solid #777777;
+	border-top: 1px solid var(--modal-border); 
 }
 
 .modal-footer .btn {

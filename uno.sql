@@ -29,13 +29,6 @@ CREATE TABLE IF NOT EXISTS Players (
 		ON UPDATE CASCADE
 ); 
 
-CREATE TABLE IF NOT EXISTS MembershipExpireDate (
-    issue_time DATE NOT NULL,
-    days_remaining INT NOT NULL,
-    expire_time DATE NOT NULL,
-    PRIMARY KEY (issue_time, days_remaining)
-); 
-
 CREATE TABLE IF NOT EXISTS MembershipPrivilegeClass (
     privilege_level INT NOT NULL,
     privilege_class VARCHAR(255) NOT NULL,
@@ -46,14 +39,11 @@ CREATE TABLE IF NOT EXISTS MembershipInPlayer (
     membership_id INT AUTO_INCREMENT,
     player_id INT NOT NULL,
     issue_time DATE NOT NULL,
-    days_remaining INT NOT NULL,
+    expire_time DATE NOT NULL,
     privilege_level INT NOT NULL,
     status VARCHAR(255) DEFAULT 'Active',
     PRIMARY KEY (membership_id),
 	FOREIGN KEY (player_id) REFERENCES Players (player_id) 
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-    FOREIGN KEY (issue_time, days_remaining) REFERENCES MembershipExpireDate(issue_time, days_remaining) 
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
     FOREIGN KEY (privilege_level) REFERENCES MembershipPrivilegeClass(privilege_level) 
@@ -408,13 +398,6 @@ VALUES
 ('Selfish Engineer2', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
 ('Dangerous Salesman2', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'); 
 
-INSERT IGNORE INTO MembershipExpireDate (issue_time, days_remaining, expire_time) 
-VALUES 
-(DATE '2024-01-01', 30, DATE '2024-01-31'),
-(DATE '2024-02-01', 28, DATE '2024-02-29'),
-(DATE '2024-03-01', 31, DATE '2024-03-31'),
-(DATE '2024-04-01', 30, DATE '2024-04-30'),
-(DATE '2024-05-01', 31, DATE '2024-05-31'); 
 
 INSERT IGNORE INTO MembershipPrivilegeClass (privilege_level, privilege_class) 
 VALUES 
@@ -424,13 +407,13 @@ VALUES
 (4, 'Platinum'),
 (5, 'Diamond'); 
 
-INSERT IGNORE INTO MembershipInPlayer (player_id, issue_time, days_remaining, privilege_level) 
+INSERT IGNORE INTO MembershipInPlayer (player_id, issue_time, expire_time, privilege_level)
 VALUES 
-(1, DATE '2024-01-01', 30, 1),
-(2, DATE '2024-02-01', 28, 2),
-(3, DATE '2024-03-01', 31, 3),
-(4, DATE '2024-04-01', 30, 4),
-(5, DATE '2024-05-01', 31, 5); 
+(1, DATE '2024-01-01', DATE '2024-01-31', 1),
+(2, DATE '2024-02-01', DATE '2024-02-29', 2),
+(3, DATE '2024-03-01', DATE '2024-03-31', 3),
+(4, DATE '2024-04-01', DATE '2024-04-30', 4),
+(5, DATE '2024-05-01', DATE '2024-05-31', 5);
 
 INSERT IGNORE INTO Events (name, start_date, end_date, status) 
 VALUES 
@@ -662,4 +645,3 @@ VALUES
 (3, 3, 3, 3, 3, 1),
 (4, 4, 4, 4, 4, 1),
 (5, 5, 5, 5, 5, 1); 
-

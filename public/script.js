@@ -53,35 +53,69 @@ document.addEventListener("DOMContentLoaded", () => {
 /* Autocomplete Search Bar Section Below ------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
+
 const possibleSearchesTemplate = [
 	"Which players have participated in all the events?",
 	"Which events have more than {number} participants?",
 	"How many participants from each country are there in each event?",
 ];
 
+const searchBar = document.querySelector("[data-search-bar]");
 const searchBarInput = document.querySelector("[data-search-bar-input]");
 const searchableList = document.querySelector("[data-searchable-list]");
+const searchResult = document.querySelector("[data-search-result]");
+
+searchBar.addEventListener("submit", async (e) => {
+	e.preventDefault();
+	const searchQuery = searchBarInput.value.toLowerCase();
+	const numberMatch = searchQuery.match(/\b\d+\b/);
+	const number = numberMatch ? parseInt(numberMatch[0]) : 10;
+	const queryType = getQueryType(searchQuery);
+
+	const response = await fetch(`/search-results?queryType=${queryType}&number=${number}`);
+	const searchResultData = await response.text();
+	searchResult.innerHTML = searchResultData;
+	searchResult.classList.add("openedModal");
+	showModal();
+});
+
+function getQueryType(searchQuery) {
+	if (searchQuery.includes("which events have more than")) {
+		return "event-participants-count-by-number";
+	} else if (searchQuery.includes("how many participants from each country")) {
+		return "event-participants-count-by-country";
+	} else if (searchQuery.includes("which players have participated in all the events")) {
+		return "player-participates-all-events";
+	} else {
+		return searchQuery;
+	}
+}
 
 searchBarInput.addEventListener("keyup", () => {
-	const searchTerm = searchBarInput.value.toLowerCase();
-	const numberMatch = searchTerm.match(/\b\d+\b/);
+	const searchQuery = searchBarInput.value.toLowerCase();
+	const numberMatch = searchQuery.match(/\b\d+\b/);
 	const number = numberMatch ? parseInt(numberMatch[0]) : 10;
 	const possibleSearches = possibleSearchesTemplate.map((query) => query.replace("{number}", number));
 	const sortedSearches = possibleSearches.sort();
 
 	clearSearchResults();
-	updateSearchResults(sortedSearches, searchTerm);
+	updateSearchResults(sortedSearches, searchQuery);
 });
 
-function updateSearchResults(searches, searchTerm) {
-	searches.forEach((element) => {
-		if (element.toLowerCase().includes(searchTerm) && searchTerm) {
+function updateSearchResults(sortedSearches, searchQuery) {
+	sortedSearches.forEach((element) => {
+		if (element.toLowerCase().includes(searchQuery) && searchQuery) {
 			searchBarInput.classList.add("border-show");
 
 			const searchableListItem = document.createElement("li");
 			searchableListItem.classList.add("searchable-list-item");
 			searchableListItem.setAttribute("onclick", `displaySearch('${element}')`);
-			searchableListItem.innerHTML = element.replace(new RegExp(searchTerm, "gi"), (match) => `<b>${match}</b>`);
+			searchableListItem.innerHTML = element.replace(new RegExp(searchQuery, "gi"), (match) => `<b>${match}</b>`);
+
+			searchableListItem.addEventListener("click", () => {
+				searchBar.dispatchEvent(new Event("submit"));
+				clearSearchResults();
+			});
 
 			searchableList.classList.add("border-show");
 			searchableList.appendChild(searchableListItem);
@@ -97,6 +131,14 @@ function clearSearchResults() {
 	searchBarInput.classList.remove("border-show");
 	searchableList.classList.remove("border-show");
 	searchableList.innerHTML = "";
+}
+
+function hideSearchResult() {
+	searchResult.classList.remove("openedModal");
+	searchBarInput.value = "";
+
+	clearSearchResults();
+	hideModal();
 }
 
 /* =================================================================================================== */
@@ -201,7 +243,7 @@ document.querySelector("[data-create-player-modal]")?.addEventListener("submit",
 	}
 
 	const usernameAvailable = await isUsernameAvailable("[data-create-player-modal]");
-	if (!(await isUsernameAvailable("[data-create-player-modal]"))) {
+	if (!usernameAvailable) {
 		displayModalErrorMessage("[data-create-player-modal]", "Username is taken... Please try again!");
 		return;
 	}
@@ -240,67 +282,67 @@ function hideCreatePlayerModal() {
 /* =================================================================================================== */
 /* =================================================================================================== */
 
-document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
-	e.preventDefault();
+// document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
+// 	e.preventDefault();
 
-	if (await isUserHasMembership()) {
-		displayModalErrorMessage("[data-create-membership-modal]", "Membership already exists... Please try again!");
-		return;
-	}
+// 	if (await isUserHasMembership()) {
+// 		displayModalErrorMessage("[data-create-membership-modal]", "Membership already exists... Please try again!");
+// 		return;
+// 	}
 
-	clearFormData();
-	hideModalErrorMessage("[data-create-membership-modal]");
-	e.target.submit();
-});
+// 	clearFormData();
+// 	hideModalErrorMessage("[data-create-membership-modal]");
+// 	e.target.submit();
+// });
 
-async function isUserHasMembership() {
-	const username = document.querySelector("[data-username]").value;
-	const response = await fetch(`/memberships/check-membership?username=${username}`);
-	return response.ok;
-}
+// async function isUserHasMembership() {
+// 	const username = document.querySelector("[data-username]").value;
+// 	const response = await fetch(`/memberships/check-membership?username=${username}`);
+// 	return response.ok;
+// }
 
-function showCreateMembershipModal() {
-	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
-	createMembershipModal.classList.add("openedModal");
+// function showCreateMembershipModal() {
+// 	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
+// 	createMembershipModal.classList.add("openedModal");
 
-	showModal();
-	localStorage.setItem("modalState", "createMembershipModalOpened");
-}
+// 	showModal();
+// 	localStorage.setItem("modalState", "createMembershipModalOpened");
+// }
 
-function hideCreateMembershipModal() {
-	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
-	createMembershipModal.classList.remove("openedModal");
+// function hideCreateMembershipModal() {
+// 	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
+// 	createMembershipModal.classList.remove("openedModal");
 
-	hideModalErrorMessage("[data-create-membership-modal]");
-	hideModal();
-}
+// 	hideModalErrorMessage("[data-create-membership-modal]");
+// 	hideModal();
+// }
 
-function updatePrivilegeClass() {
-	const privilegeLevel = document.querySelector("[data-memberber-level]");
-	const privilegeClass = document.querySelector("[data-privilege-class]");
+// function updatePrivilegeClass() {
+// 	const privilegeLevel = document.querySelector("[data-memberber-level]");
+// 	const privilegeClass = document.querySelector("[data-privilege-class]");
 
-	let currentClass;
+// 	let currentClass;
 
-	switch (privilegeLevel.value) {
-		case "1":
-			currentClass = "Bronze";
-			break;
-		case "2":
-			currentClass = "Silver";
-			break;
-		case "3":
-			currentClass = "Gold";
-			break;
-		case "4":
-			currentClass = "Platinum";
-			break;
-		case "5":
-			currentClass = "Diamond";
-			break;
-	}
+// 	switch (privilegeLevel.value) {
+// 		case "1":
+// 			currentClass = "Bronze";
+// 			break;
+// 		case "2":
+// 			currentClass = "Silver";
+// 			break;
+// 		case "3":
+// 			currentClass = "Gold";
+// 			break;
+// 		case "4":
+// 			currentClass = "Platinum";
+// 			break;
+// 		case "5":
+// 			currentClass = "Diamond";
+// 			break;
+// 	}
 
-	privilegeClass.innerHTML = currentClass;
-}
+// 	privilegeClass.innerHTML = currentClass;
+// }
 
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -409,3 +451,151 @@ async function isEmailAvailable(modalType) {
 /* Perrry Below ---------------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
+function showCreateMembershipModal() {
+	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
+	createMembershipModal.classList.add("openedModal");
+
+	const modalErrorMessage = document.querySelector("[data-modal-error-message");
+	modalErrorMessage?.classList.add("openedModal");
+
+	showModal();
+	localStorage.setItem("modalState", "createMembershipModalOpened");
+}
+
+// Hide the Create Player Modal
+function hideCreateMembershipModal() {
+	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
+	createMembershipModal.classList.remove("openedModal");
+
+	const modalErrorMessage = document.querySelector("[data-modal-error-message");
+	modalErrorMessage?.classList.remove("openedModal");
+
+	hideModal();
+	hideModalErrorMessage("[data-create-membership-modal]");
+}
+
+function updatePrivilegeClass(levelElement, classElement) {
+	const privilegeLevel = document.getElementById(levelElement).value.toString();
+	console.log(privilegeLevel);
+	const privilegeClass = document.getElementById(classElement);
+	console.log(privilegeClass);
+	let level = "";
+	switch (privilegeLevel) {
+		case "1":
+			level = "Bronze";
+			break;
+		case "2":
+			level = "Silver";
+			break;
+		case "3":
+			level = "Gold";
+			break;
+		case "4":
+			level = "Platinum";
+			break;
+		case "5":
+			level = "Diamond";
+	}
+	privilegeClass.innerHTML = level;
+}
+
+document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
+
+	if (await isUserHasMembership()) {
+		displayModalErrorMessage("[data-create-membership-modal]", "Invalid user, aborted.");
+		return;
+	}
+
+	clearFormData();
+	hideModalErrorMessage("[data-create-membership-modal]");
+	e.target.submit();
+});
+
+/**
+ * Check if the user has a membership.
+ * If so, the new membership should not be created.
+ */
+async function isUserHasMembership() {
+	const username = document.getElementById("usernameCreate").value;
+	const response = await fetch(`/memberships/check-membership?username=${username}`);
+	return response.ok;
+}
+
+async function fetchMembershipData(playerID) {
+	const response = await fetch(`/memberships/fetch?playerID=${playerID}`);
+	if (response.ok) {
+		return response.json();
+	} else {
+		return null;
+	}
+}
+
+async function showEditMembershipModal(playerID) {
+	// const playerIDInput = document.querySelector("[data-player-id]");
+	// const usernameInput = document.querySelector("[data-username-edit]");
+	// const emailInput = document.querySelector("[data-email-edit]");
+	// const countryInput = document.querySelector("[data-country-edit]");
+	const playerIDInput = document.getElementById("playerIDEdit");
+	const username = document.getElementById("usernameEdit");
+	const issueDate = document.getElementById("issueDateEdit");
+	const daysRemaining = document.getElementById("daysRemainingEdit");
+	const membershipLevel = document.getElementById("membershipLevelEdit");
+	const privilegeClass = document.getElementById("privilegeClassEdit");
+	const status = document.getElementById("statusEdit");
+
+	const membershipData = await fetchMembershipData(playerID);
+	if (membershipData) {
+		username.value = membershipData.username;
+		playerIDInput.value = membershipData.playerID;
+		daysRemaining.value = membershipData.membershipDaysRemaining;
+		membershipLevel.value = membershipData.membershipPrivilegeLevel;
+		privilegeClass.innerHTML = membershipData.membershipPrivilegeClass;
+		status.value = membershipData.membershipStatus;
+
+		// handle issue date issue
+		const issueDateValue = new Date(Date.parse(membershipData.membershipIssueTime));
+		const year = issueDateValue.getFullYear();
+		const month = (issueDateValue.getMonth() + 1).toString().padStart(2, "0");
+		const day = issueDateValue.getDate().toString().padStart(2, "0");
+		issueDate.value = `${year}-${month}-${day}`;
+	}
+
+	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
+	editMembershipModal.classList.add("openedModal");
+
+	showModal();
+	localStorage.setItem("modalState", "editMembershipModalOpened");
+}
+
+function hideEditMembershipModal() {
+	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
+	editMembershipModal.classList.remove("openedModal");
+
+	hideModalErrorMessage("[data-edit-membership-modal]");
+	hideModal();
+}
+
+document.querySelector("[data-edit-membership-modal")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
+	usernameEdit = document.getElementById("usernameEdit");
+	issueDateEdit = document.getElementById("issueDateEdit");
+	daysRemainingEdit = document.getElementById("daysRemainingEdit");
+	privilegeLevelEdit = document.getElementById("membershipLevelEdit");
+	statusEdit = document.getElementById("statusEdit");
+
+	// if any of the field is empty, display error message
+	if (
+		usernameEdit.value === "" ||
+		issueDateEdit.value === "" ||
+		daysRemainingEdit.value === "" ||
+		privilegeLevelEdit.value === "" ||
+		statusEdit.value === ""
+	) {
+		console.log("Captured");
+		displayModalErrorMessage("[data-edit-membership-modal]", "Form Incomplete... Please try again!");
+		return;
+	}
+	hideModalErrorMessage("[data-edit-membership-modal]");
+	e.target.submit();
+});

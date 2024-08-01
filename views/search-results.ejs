@@ -1,0 +1,28 @@
+<div class="search-result-header">
+    <h2>Your Search Result</h2>
+    <button class="close-btn" type="button" onclick="hideSearchResult()">&times;</button>
+</div>
+<div class="scrollable-table">
+    <% if (locals.columnNames.length > 0 && locals.columnData.length > 0) { %>
+        <table class="table">
+            <thead>
+                <tr>
+                    <% locals.columnNames.forEach(element => { %>
+                    <th><%= element.replace('_', ' ').toUpperCase() %></th>
+                    <% }) %>
+                </tr>
+            </thead>
+            <tbody>
+                <% locals.columnData.forEach(row => { %>
+                    <tr>
+                    <% locals.columnNames.forEach(column => { %>
+                        <td><%= row[column] %></td>
+                    <% }) %>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No data is available with your search...</p>
+    <% } %>
+</div>

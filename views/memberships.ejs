@@ -1,125 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNO Game System Admin</title>
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
-    <link rel="icon" href="/UNO.icon" type="image/x-icon" />
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="icon" href="/UNO.icon" type="image/x-icon">
     <script defer src="/script.js"></script>
-</head>
-<body>
+  </head>
+
+  <body>
     <div id="grid-container">
 
-        <!-- Header Section -->
-        <%- include("partials/header") %>
+      <!-- Header Section  -->
+      <%- include("partials/header") %>
 
-        <!-- Sidebar Section -->
+        <!-- Sidebar Section  -->
         <%- include("partials/sidebar") %>
 
-        <!-- Main Section -->
-        <main class="grid-main">
+          <!-- Main Section -->
+          <main class="grid-main">
             <div class="main-body" data-main-body>
-                <div class="table-container-primary">
-                    <div class="main-body-header">
-                        <h2 class="main-title">RECENT MEMBERSHIPS</h2>
-                        <div class="table-button-list">
-							<div class="dropdown-container">
-                                <p class="dropdown-title">Sort By:</p> 
-								<select name="selector" id="selector" class="dropdown" data-dropdown data-pointer-not-allowed>
-									<option value="recent">Recent</option>
-									<option value="issueDate">Issue Date</option>
-									<option value="daysRemaining">Days Remaining</option>
-									<option value="privilegeClass">Privilege Class</option>
-									<option value="privilegeLevel">Privilege Level</option>
-									<option value="status">Status</option>
-								</select>
-                            </div>
-                            <button class="table-btn add-btn" onclick="showCreateMembershipModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Membership</button>
-                        </div>
-                    </div>
-
-					<div class="scrollable-table">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Username</th>
-									<th>Issue Date</th>
-									<th>Days Remaining</th>
-									<th>Privilege Class</th>
-									<th>Privilege Level</th>
-									<th>Status</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% locals.recentMemberships.forEach(element => { %>
-									<tr>
-										<td><%= element.username %></td>
-										<td><%= element.membershipIssueTime %></td>
-										<td><%= element.membershipDaysRemaining %></td>
-										<td><%= element.membershipPrivilegeClass %></td>
-										<td><%= element.membershipPrivilegeLevel %></td>
-										<td><%= element.membershipStatus %></td>
-										<td>
-											<i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditPlayerModal('<%= element.username %>')" data-edit data-pointer-not-allowed></i>
-											<i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.username %>')" data-delete data-pointer-not-allowed></i>
-										</td>
-									</tr>
-								<% }) %>
-							</tbody>
-						</table>
-					</div>
+              <div class="table-container-primary">
+                <div class="main-body-header">
+                  <h2 class="main-title">RECENT MEMBERSHIPS</h2>
+                  <div class="table-button-list">
+                    <select name="selector" id="selector" class="dropdown">
+                      <option value="Filter">Filter</option>
+                      <option value="Win Rate">Issue Date</option>
+                      <option value="Win Rate">Days Remaining</option>
+                      <option value="Win Rate">Privilege Class</option>
+                      <option value="Win Rate">Privilege Level</option>
+                      <option value="Win Rate">Status</option>
+                    </select>
+                    <button class="table-btn add-btn" onclick="showCreateMembershipModal()"><i
+                        class="bx bx-plus"></i>Create Membership</button>
+                    <button class="table-btn">View All</button>
+                  </div>
                 </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Issue Date</th>
+                      <th>Days Remaining</th>
+                      <th>Privilege Class</th>
+                      <th>Privilege Level</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% locals.recentMemberships.forEach(element=> { %>
+                      <tr>
+                        <td>
+                          <%= element.username %>
+                        </td>
+                        <td>
+                          <%= element.membershipIssueTime %>
+                        </td>
+                        <td>
+                          <%= element.membershipDaysRemaining %>
+                        </td>
+                        <td>
+                          <%= element.membershipPrivilegeClass %>
+                        </td>
+                        <td>
+                          <%= element.membershipPrivilegeLevel %>
+                        </td>
+                        <td>
+                          <%= element.membershipStatus %>
+                        </td>
+                        <td>
+                          <i class="bx bxs-edit edit" aria-label="Edit"
+                            onclick="showEditMembershipModal('<%= element.playerID %>')" data-edit
+                            data-pointer-not-allowed></i>
+                          <i class="bx bx-trash delete" aria-label="Delete"
+                            onclick="showDeleteItemModal('<%= element.playerID %>')" data-delete
+                            data-pointer-not-allowed></i>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
             </div>
-
             <div class="modal delete-item-modal" data-delete-item-modal>
-                <h1>&#9888;</h1>
-                <h2>Are you sure?</h2>
-                <p>This action cannot be undone. All values <br>associated with this field will be lost.</p>
-                <button class="btn modal-btn-delete" type="button" data-conform-delete>Delete Membership</button>
-                <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
+              <h1>&#9888</h1>
+              <h2>Are you sure?</h2>
+              <p>This action cannot be undone. All values <br> associated with this field will be lost.</p>
+              <button class="btn modal-btn-delete" type="button" data-conform-delete>Delete Player</button>
+              <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
+              <div class="modal-error-message" data-modal-error-message></div>
             </div>
 
-            <form class="modal create-item-modal" action="/memberships/register" method="POST" data-create-membership-modal>
-                <div class="modal-header">
-                    <h2>Create New Membership</h2>
-                    <button class="close-btn" type="button" onclick="hideCreateMembershipModal()">&times;</button>
+            <form class="modal create-item-modal" action="/memberships" method="POST" data-create-membership-modal>
+              <div class="modal-header">
+                <h2>Subscribe Membership</h2>
+                <button class="close-btn" type="button" onclick="hideCreateMembershipModal()">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div class="modal-fields">
+                  <label for="usernameCreate">Username: </label>
+                  <input type="text" id="usernameCreate" name="username" autocomplete="username" aria-label="Username"
+                    data-save-input>
                 </div>
-                <div class="modal-body">
-                    <div class="modal-fields">
-                        <label for="usernameCreate">Username: </label>
-                        <input type="text" id="usernameCreate" name="username" autocomplete="username" aria-label="Username" data-username data-save-input>
-                    </div>
-                    <div class="modal-fields">
-                        <label for="membershipDuration">Duration: </label>
-                        <input type="number" id="membershipDuration" name="duration" placeholder="Duration of the membership in days"  min="1" aria-label="Duration" data-save-input>
-                    </div>
-                   <div class="modal-fields">
-                        <label for="membershipLevel">Privilege Level: </label>
-						<div class="modal-dropdown-container">
-							<select id="membershipLevel" name="level" class="half-width dropdown" default="1" onchange="updatePrivilegeClass()" data-memberber-level data-save-input>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-							</select>
-							<span data-save-input data-privilege-class>Bronze</span>
-						</div>
-                    </div>
+                <div class="modal-fields">
+                  <label for="membershipDuration">Duration (days): </label>
+                  <input type="number" id="membershipDuration" name="duration" aria-label="Duration" data-save-input
+                    min="1" placeholder="Duration of the membership in days">
                 </div>
-				<div class="modal-footer">
-					<button class="btn modal-btn-confirm" type="submit">Register</button>
-					<button class="btn modal-btn-cancel" type="button" onclick="hideCreateMembershipModal()">Cancel</button>
-				</div>
-                <div class="modal-error-message" data-modal-error-message></div>
-            </form>
-        </main>
 
-        <!-- Footer Section -->
-        <%- include("partials/footer") %>
+                <!-- FIXME: add style -->
+                <div>
+                  <label for="membershipLevel" class="modal-fields">Privilege Level: </label>
+                  <select id="membershipLevel" name="level" class="dropdown" data-save-input
+                    onchange="updatePrivilegeClass('membershipLevel', 'privilegeClass')" default="1">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  <span id="privilegeClass" data-save-input class="modal-fields">Bronze</span>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn modal-btn-confirm" type="submit">Register</button>
+                  <button class="btn modal-btn-cancel" type="button"
+                    onclick="hideCreateMembershipModal()">Cancel</button>
+                </div>
+              </div>
+              <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+
+            <form class="modal edit-item-modal" action="/memberships/update" method="POST" data-edit-membership-modal>
+              <div class="modal-header">
+                <h2>Edit Membership</h2>
+                <button class="close-btn" type="button" onclick="hideEditMembershipModal()">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div class="modal-fields">
+                  <label for="usernameEdit">Username: </label>
+                  <input type="text" id="usernameEdit" name="username" autocomplete="username" aria-label="Username"
+                    data-username-edit readonly>
+                  <input type="hidden" id="playerIDEdit" name="playerID" data-player-id-edit>
+                </div>
+                <div class="modal-fields">
+                  <label for="issueDateEdit">Issue Date: </label>
+                  <input type="date" id="issueDateEdit" name="issueDate" aria-label="Issue Date" data-issue-date-edit>
+                  <input type="hidden" id="issueDateEditOriginal" name="issueDateOriginal">
+                </div>
+                <div class="modal-fields">
+                  <label for="daysRemainingEdit">Days Remaining: </label>
+                  <input type="number" id="daysRemainingEdit" name="daysRemaining" aria-label="Days Remaining" data-days-remaining-edit>
+                </div>
+                <div class="modal-fields">
+                  <label for="membershipLevelEdit">Privilege Level: </label>
+                  <select name="level" id="membershipLevelEdit" class="dropdown" default="1" data-level-edit onchange="updatePrivilegeClass('membershipLevelEdit', 'privilegeClassEdit')" data-privilege-level-edit>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  <span id="privilegeClassEdit" class="modal-fields">Bronze</span>
+                </div>
+                <div class="modal-fields">
+                  <label for="statusEdit">Status: </label>
+                  <select id="statusEdit" name="status" class="dropdown" data-status-edit>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn modal-btn-confirm" type="submit">Update</button>
+                  <button class="btn modal-btn-cancel" type="button" onclick="hideEditMembershipModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+              </div>
+
+            </form>
+          </main>
+
+
+
+          <!-- Footer Section -->
+          <%- include("partials/footer") %>
     </div>
-</body>
+  </body>
+
 </html>
+
