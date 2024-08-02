@@ -38,6 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
+	// Make the Element Read Only
+	document.querySelectorAll("[data-read-only]")?.forEach((element) => {
+		element.style.cursor = "not-allowed";
+	});
+
 	// Add event listeners to sort data on click
 	document.querySelector("[data-dropdown]")?.addEventListener("change", async (e) => {
 		window.location.href = `${window.location.pathname}?order=${e.target.value}`;

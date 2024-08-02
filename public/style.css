@@ -69,6 +69,10 @@ body .btn:hover {
 	background: var(--login-blue);
 }
 
+body :disabled {
+	background: #d9d9d9; 
+}
+
 body {
 	background-color: var(--grey1);
 }
@@ -427,6 +431,10 @@ body.openedModal {
 	height: 270px;
 	overflow-y: auto;
 	scroll-snap-type: y mandatory;
+}
+
+.grid-main .main-body .scrollable-table.full-page {
+	height: 500px;
 }
 
 .grid-main .main-body .table {
