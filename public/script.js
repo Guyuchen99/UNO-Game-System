@@ -38,11 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
-	// Make the Element Read Only
-	document.querySelectorAll("[data-read-only]")?.forEach((element) => {
-		element.style.cursor = "not-allowed";
-	});
-
 	// Add event listeners to sort data on click
 	document.querySelector("[data-dropdown]")?.addEventListener("change", async (e) => {
 		window.location.href = `${window.location.pathname}?order=${e.target.value}`;
@@ -51,6 +46,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Restore dropdown state
 	const [key, value] = window.location.search.substring(1).split("=");
 	document.querySelector("[data-dropdown]").value = value || "recent";
+
+	// Add Different Color for Status Display
+	document.querySelectorAll("[data-status]")?.forEach((element) => {
+		if (element.dataset.status === "Active") {
+			element.style.color = "#008040";
+		} else if (element.dataset.status === "Expired") {
+			element.style.color = "#f5222d";
+		}
+	});
 });
 
 /* =================================================================================================== */

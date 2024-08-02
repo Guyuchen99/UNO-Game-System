@@ -59,7 +59,7 @@
 										<td><%= element.membershipDaysRemaining %></td>
 										<td><%= element.membershipPrivilegeClass %></td>
 										<td><%= element.membershipPrivilegeLevel %></td>
-										<td><%= element.membershipStatus %></td>
+										<td data-status="<%= element.membershipStatus %>"><%= element.membershipStatus %></td>
 										<td>
 											<i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditMembershipModal('<%= element.playerID %>')" data-edit data-pointer-not-allowed></i>
 											<i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.playerID %>')" data-delete data-pointer-not-allowed></i>
