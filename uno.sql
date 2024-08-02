@@ -1,11 +1,3 @@
-DROP DATABASE IF EXISTS UNOGameSystem; 
-
-CREATE DATABASE IF NOT EXISTS UNOGameSystem; 
-
-USE UNOGameSystem; 
-
-
-
 CREATE TABLE IF NOT EXISTS PlayerUsernameAndEmail (
 	username VARCHAR(255) NOT NULL, 
     email VARCHAR(255) NOT NULL, 
@@ -382,26 +374,16 @@ VALUES
 INSERT IGNORE INTO PlayerLevel (experience_point, level) 
 VALUES 
 (0, 1),
-(999, 1),
-(1000, 2),
-(1999, 2),
-(2000, 3),
-(2999, 3),
-(3000, 4),
-(3999, 4),
-(4000, 5),
-(4999, 5),
-(5000, 6),
-(5999, 6),
-(6000, 7),
-(6999, 7),
-(7000, 8),
-(7999, 8),
-(8000, 9),
-(8999, 9),
-(9000, 10),
-(10000, 10);
-
+(1000, 1),
+(2000, 2),
+(3000, 3),
+(4000, 4),
+(5000, 5),
+(6000, 6),
+(7000, 7),
+(8000, 8),
+(9000, 9),
+(10000, 10); 
 
 INSERT IGNORE INTO Players (username, total_win, total_game_count, win_rate, experience_point, country, password) 
 VALUES 
@@ -437,34 +419,43 @@ VALUES
 INSERT IGNORE INTO Memberships (player_id, issue_date, expire_date, privilege_level)
 VALUES 
 (1, '2024-03-14', '2024-05-13', 3),
-(2, '2024-08-21', '2024-12-03', 5),
+(2, '2024-07-21', '2024-12-03', 5),
 (3, '2024-01-05', '2024-05-21', 2),
-(4, '2024-11-30', '2025-02-24', 1),
+(4, '2024-05-30', '2025-02-24', 1),
 (5, '2024-04-10', '2024-04-16', 4),
-(6, '2024-07-17', '2024-08-12', 3),
+(6, '2024-07-17', '2024-08-01', 3),
 (7, '2024-02-25', '2024-03-05', 5),
-(8, '2024-10-12', '2025-01-14', 1),
+(8, '2024-02-12', '2025-01-14', 3),
 (9, '2024-05-19', '2024-07-14', 2),
-(10, '2024-09-01', '2024-11-20', 4),
+(10, '2024-04-01', '2024-11-20', 5),
 (11, '2024-06-08', '2024-07-28', 3),
-(12, '2024-12-15', '2025-07-15', 5),
-(13, '2025-01-20', '2025-04-10', 1),
+(12, '2024-07-15', '2025-07-15', 5),
+(13, '2024-01-20', '2025-04-10', 1),
 (14, '2024-03-28', '2024-04-08', 2),
-(15, '2024-11-05', '2025-01-25', 4);
-
+(15, '2024-06-14', '2025-02-20', 4),
+(16, '2024-02-19', '2024-05-19', 5),
+(17, '2024-03-25', '2024-05-13', 1),
+(18, '2024-05-26', '2024-07-09', 2),
+(19, '2024-01-25', '2024-02-22', 4),
+(20, '2024-04-15', '2024-05-23', 5);
 
 INSERT IGNORE INTO Events (name, start_date, end_date, status) 
 VALUES 
-('Grand Tournament', DATE '2024-01-01', DATE '2024-01-31', 'Completed'),
-('Weekly Challenge', DATE '2024-02-01', DATE '2024-02-29', 'Completed'),
-('Holiday Special', DATE '2024-03-01', DATE '2024-03-31', 'Completed'),
-('Friendship Match', DATE '2024-04-01', DATE '2024-04-30', 'Completed'),
-('Ultimate Showdown', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
-('Ultimate Showdown1', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
-('Ultimate Showdown2', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
-('Ultimate Showdown3', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
-('Ultimate Showdown4', DATE '2024-05-01', DATE '2024-09-30', 'Active'),
-('Ultimate Showdown5', DATE '2024-05-01', DATE '2024-09-30', 'Active');
+('UNO Mania', '2024-07-30', '2024-08-01', 'Completed'),
+('Stack Attack', '2024-09-30', '2024-10-02', 'Upcoming'),
+('Wild Draw War', '2024-11-29', '2024-12-01', 'Upcoming'),
+('Color Change Clash', '2024-06-27', '2024-06-29', 'Active'),
+('Reverse Madness', '2024-03-12', '2024-03-14', 'Completed'),
+('Zero Swap Spectacle', '2024-10-25', '2024-10-27', 'Upcoming'),
+('Wild Card Weekend', '2024-02-05', '2024-02-07', 'Completed'),
+('Color Blast', '2024-11-15', '2024-11-17', 'Upcoming'),
+('UNO Championship Series', '2024-12-24', '2024-12-26', 'Upcoming'),
+('Epic Duel', '2024-07-01', '2024-07-31', 'Active'),
+('Grand Tournament', '2024-01-01', '2024-01-31', 'Completed'),
+('Weekly Challenge',  '2024-02-01', '2024-02-29', 'Completed'),
+('Holiday Special',  '2024-03-01',  '2024-03-31', 'Completed'),
+('Friendship Match',  '2024-04-01',  '2024-04-30', 'Completed'),
+('Ultimate Showdown',  '2024-05-01',  '2024-09-30', 'Active');
 
 INSERT IGNORE INTO Stores (player_id, num_of_items) 
 VALUES 
@@ -647,10 +638,15 @@ VALUES
 INSERT IGNORE INTO PlayerParticipateEvents (player_id, event_id) 
 VALUES 
 (1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(5, 1); 
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10);
 
 INSERT IGNORE INTO PlayerInvolveMatches (player_id, match_id) 
 VALUES 

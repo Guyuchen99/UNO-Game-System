@@ -14,13 +14,13 @@ exports.getAllMemberships = async (order) => {
 			orderByClause = "m.issue_date DESC";
 			break;
 		case "daysRemaining":
-			orderByClause = "m.expire_date DESC";
+			orderByClause = "membershipDaysRemaining DESC, m.status, m.issue_date DESC";
 			break;
 		case "privilegeLevel":
-			orderByClause = "mpc.privilege_level DESC";
+			orderByClause = "mpc.privilege_level DESC, m.issue_date DESC, m.status";
 			break;
 		case "status":
-			orderByClause = "m.status";
+			orderByClause = "m.status, m.issue_date DESC, mpc.privilege_level DESC";
 			break;
 		default:
 			orderByClause = "m.issue_date DESC";
@@ -37,7 +37,11 @@ exports.getAllMemberships = async (order) => {
 				m.expire_date AS membershipExpireDate,
 				mpc.privilege_class AS membershipPrivilegeClass,
 				m.privilege_level AS membershipPrivilegeLevel,
-				m.status AS membershipStatus
+				m.status AS membershipStatus,
+				CASE 
+					WHEN m.status = 'active' THEN DATEDIFF(m.expire_date, m.issue_date)
+					ELSE 0
+				END AS membershipDaysRemaining
 			FROM Memberships m
 			JOIN Players p ON m.player_id = p.player_id
 			JOIN MembershipPrivilegeClass mpc ON m.privilege_level = mpc.privilege_level
@@ -49,7 +53,7 @@ exports.getAllMemberships = async (order) => {
 			playerID: element.playerID,
 			membershipIssueDate: formatInTimeZone(element.membershipIssueDate, vancouverTimeZone, "yyyy-MM-dd"),
 			membershipExpireDate: formatInTimeZone(element.membershipExpireDate, vancouverTimeZone, "yyyy-MM-dd"),
-			membershipDaysRemaining: getDaysRemaining(new Date(element.membershipIssueDate), new Date(element.membershipExpireDate)),
+			membershipDaysRemaining: element.membershipDaysRemaining,
 			membershipPrivilegeClass: element.membershipPrivilegeClass,
 			membershipPrivilegeLevel: element.membershipPrivilegeLevel,
 			membershipStatus: element.membershipStatus,
@@ -78,7 +82,8 @@ exports.getMembershipDataByPlayerID = async (playerID) => {
 		`;
 
 		const [results] = await db.promise().query(myQuery, [playerID]);
-		results[0].membershipDaysRemaining = getDaysRemaining(new Date(), new Date(results[0].membershipExpireDate));
+		results[0].membershipIssueDate = formatInTimeZone(results[0].membershipIssueDate, vancouverTimeZone, "yyyy-MM-dd"); 
+		results[0].membershipExpireDate = formatInTimeZone(results[0].membershipExpireDate, vancouverTimeZone, "yyyy-MM-dd"); 
 
 		return results[0];
 	} catch (error) {

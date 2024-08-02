@@ -6,9 +6,9 @@ const logError = (functionName) => `OH NO! Error with ${functionName} in Models:
 exports.getNumOfActivePlayers = async () => {
 	try {
 		const [results] = await db.promise().query(`
-      SELECT COUNT(*) AS activePlayers 
-      FROM Players
-    `);
+			SELECT COUNT(*) AS activePlayers 
+			FROM Players
+		`);
 
 		return results[0].activePlayers;
 	} catch (error) {
@@ -20,10 +20,10 @@ exports.getNumOfActivePlayers = async () => {
 exports.getNumOfActiveEvents = async () => {
 	try {
 		const [results] = await db.promise().query(`
-      SELECT COUNT(*) AS activeEvents
-      FROM Events
-      WHERE status = "Active"
-    `);
+			SELECT COUNT(*) AS activeEvents
+			FROM Events
+			WHERE status = "Active"
+    	`);
 
 		return results[0].activeEvents;
 	} catch (error) {
@@ -35,10 +35,10 @@ exports.getNumOfActiveEvents = async () => {
 exports.getNumOfActiveMatches = async () => {
 	try {
 		const [results] = await db.promise().query(`
-      SELECT COUNT(*) AS activeMatches
-      FROM Matches
-      WHERE status = "In Process"
-    `);
+			SELECT COUNT(*) AS activeMatches
+			FROM Matches
+			WHERE status = "In Process"
+    	`);
 
 		return results[0].activeMatches;
 	} catch (error) {
@@ -50,11 +50,11 @@ exports.getNumOfActiveMatches = async () => {
 exports.getRevenue = async () => {
 	try {
 		const [results] = await db.promise().query(`
-      SELECT SUM(iop.original_price) AS revenue
-      FROM PlayerContainItems pi
-      JOIN Items i ON pi.item_id = i.item_id
-      JOIN ItemOriginalPrice iop ON i.quality = iop.quality;
-  `);
+			SELECT SUM(iop.original_price) AS revenue
+			FROM PlayerContainItems pi
+			JOIN Items i ON pi.item_id = i.item_id
+			JOIN ItemOriginalPrice iop ON i.quality = iop.quality;
+  		`);
 
 		return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(results[0].revenue);
 	} catch (error) {
@@ -91,17 +91,17 @@ exports.getAllPlayers = async (order) => {
 
 	try {
 		const [results] = await db.promise().query(`
-      SELECT
-        player_id AS playerID,
-        username AS username, 
-        total_win AS totalWin,
-        total_game_count AS totalGameCount,
-        win_rate AS winRate,
-        experience_point AS experiencePoint,
-        country AS country
-      FROM Players 
-      ORDER BY ${orderByClause}; 
-    `);
+			SELECT
+				player_id AS playerID,
+				username AS username, 
+				total_win AS totalWin,
+				total_game_count AS totalGameCount,
+				win_rate AS winRate,
+				experience_point AS experiencePoint,
+				country AS country
+			FROM Players 
+			ORDER BY ${orderByClause}; 
+    	`);
 
 		return results;
 	} catch (error) {
@@ -113,15 +113,15 @@ exports.getAllPlayers = async (order) => {
 exports.getPlayerDataByID = async (playerID) => {
 	try {
 		const myQuery = `
-      SELECT 
-        p.player_id AS playerID, 
-        p.username AS username, 
-        p.country AS country, 
-        pue.email AS email
-      FROM Players p
-      JOIN PlayerUsernameAndEmail pue ON p.username = pue.username
-      WHERE p.player_id = ? 
-    `;
+			SELECT 
+				p.player_id AS playerID, 
+				p.username AS username, 
+				p.country AS country, 
+				pue.email AS email
+			FROM Players p
+			JOIN PlayerUsernameAndEmail pue ON p.username = pue.username
+			WHERE p.player_id = ? 
+    	`;
 		const [results] = await db.promise().query(myQuery, [playerID]);
 
 		return results[0];
