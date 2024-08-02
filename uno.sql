@@ -35,13 +35,13 @@ CREATE TABLE IF NOT EXISTS MembershipPrivilegeClass (
     PRIMARY KEY (privilege_level)
 );
 
-CREATE TABLE IF NOT EXISTS MembershipInPlayer (
+CREATE TABLE IF NOT EXISTS Memberships (
     membership_id INT AUTO_INCREMENT,
     player_id INT NOT NULL,
-    issue_time DATE NOT NULL,
-    expire_time DATE NOT NULL,
+    issue_date DATE NOT NULL,
+    expire_date DATE NOT NULL,
     privilege_level INT NOT NULL,
-    status VARCHAR(255) DEFAULT 'Active',
+    status VARCHAR(255), 
     PRIMARY KEY (membership_id),
 	FOREIGN KEY (player_id) REFERENCES Players (player_id) 
 		ON DELETE CASCADE
@@ -407,7 +407,7 @@ VALUES
 (4, 'Platinum'),
 (5, 'Diamond'); 
 
-INSERT IGNORE INTO MembershipInPlayer (player_id, issue_time, expire_time, privilege_level)
+INSERT IGNORE INTO Memberships (player_id, issue_date, expire_date, privilege_level)
 VALUES 
 (1, DATE '2024-01-01', DATE '2024-01-31', 1),
 (2, DATE '2024-02-01', DATE '2024-02-29', 2),

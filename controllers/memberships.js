@@ -13,7 +13,6 @@ exports.loadMemberships = async (req, res) => {
 
 	try {
 		const recentMemberships = await membershipsModel.getAllMemberships(order);
-
 		res.render("memberships", { recentMemberships });
 	} catch (error) {
 		console.error(logError("loadMemberships"), error);
@@ -26,7 +25,6 @@ exports.fetchMembershipData = async (req, res) => {
 
 	try {
 		const results = await membershipsModel.getMembershipDataByPlayerID(playerID);
-
 		res.status(200).json(results);
 	} catch (error) {
 		console.error(logError("fetchMembershipData"), error);
@@ -39,14 +37,13 @@ exports.checkMembershipExistence = async (req, res) => {
 
 	try {
 		const playerID = await dashboardModel.getPlayerID(username);
-
 		const membershipExistence = await membershipsModel.isPlayerMembershipRegistered(playerID);
 
 		if (!membershipExistence) {
 			return res.status(200).send(`OH YES! ${username} does not have a membership yet!`);
 		}
 
-		return res.status(400).send(`OH NO! ${username} already have a membership!`);
+		return res.status(400).send(`OH NO! ${username} already has a membership!`);
 	} catch (error) {
 		console.error(logError("checkMembershipExistence"), error);
 		res.status(500).send(resError("checkMembershipExistence"));
@@ -60,8 +57,8 @@ exports.updateMembership = async (req, res) => {
 		const results = await membershipsModel.getMembershipDataByPlayerID(playerID);
 		const updates = {};
 
-		if (expireDate !== results.membershipExpireTime) {
-			updates.expire_time = expireDate;
+		if (expireDate !== results.membershipExpireDate) {
+			updates.expire_date = expireDate;
 		}
 
 		if (privilegeLevel !== results.membershipPrivilegeLevel) {
@@ -98,7 +95,6 @@ exports.deleteMembership = async (req, res) => {
 
 	try {
 		await membershipsModel.deleteMembershipByPlayerID(playerID);
-
 		res.status(200).send("OH YES! Membership Deleted Successfully");
 	} catch (error) {
 		console.error(logError("deleteMembership"), error);

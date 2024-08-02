@@ -11,19 +11,19 @@ exports.getAllMemberships = async (order) => {
 
 	switch (order) {
 		case "recent":
-			orderByClause = "mp.issue_time DESC";
+			orderByClause = "m.issue_date DESC";
 			break;
 		case "daysRemaining":
-			orderByClause = "mp.expire_time DESC";
+			orderByClause = "m.expire_date DESC";
 			break;
 		case "privilegeLevel":
 			orderByClause = "mpc.privilege_level DESC";
 			break;
 		case "status":
-			orderByClause = "mp.status";
+			orderByClause = "m.status";
 			break;
 		default:
-			orderByClause = "mp.issue_time DESC";
+			orderByClause = "m.issue_date DESC";
 	}
 
 	try {
@@ -33,29 +33,29 @@ exports.getAllMemberships = async (order) => {
 			SELECT 
 				p.username AS username,
 				p.player_id AS playerID,
-				mp.issue_time AS membershipIssueTime,
-				mp.expire_time AS membershipExpireTime,
+				m.issue_date AS membershipIssueDate,
+				m.expire_date AS membershipExpireDate,
 				mpc.privilege_class AS membershipPrivilegeClass,
-				mp.privilege_level AS membershipPrivilegeLevel,
-				mp.status AS membershipStatus
-			FROM MembershipInPlayer mp
-			JOIN Players p ON mp.player_id = p.player_id
-			JOIN MembershipPrivilegeClass mpc ON mp.privilege_level = mpc.privilege_level
+				m.privilege_level AS membershipPrivilegeLevel,
+				m.status AS membershipStatus
+			FROM Memberships m
+			JOIN Players p ON m.player_id = p.player_id
+			JOIN MembershipPrivilegeClass mpc ON m.privilege_level = mpc.privilege_level
 			ORDER BY ${orderByClause}; 
     	`);
 
 		return results.map((element) => ({
 			username: element.username,
 			playerID: element.playerID,
-			membershipIssueTime: formatInTimeZone(element.membershipIssueTime, vancouverTimeZone, "yyyy-MM-dd"),
-			membershipExpireTime: formatInTimeZone(element.membershipExpireTime, vancouverTimeZone, "yyyy-MM-dd"),
-			membershipDaysRemaining: getDaysRemaining(new Date(element.membershipIssueTime), new Date(element.membershipExpireTime)),
+			membershipIssueDate: formatInTimeZone(element.membershipIssueDate, vancouverTimeZone, "yyyy-MM-dd"),
+			membershipExpireDate: formatInTimeZone(element.membershipExpireDate, vancouverTimeZone, "yyyy-MM-dd"),
+			membershipDaysRemaining: getDaysRemaining(new Date(element.membershipIssueDate), new Date(element.membershipExpireDate)),
 			membershipPrivilegeClass: element.membershipPrivilegeClass,
 			membershipPrivilegeLevel: element.membershipPrivilegeLevel,
 			membershipStatus: element.membershipStatus,
 		}));
 	} catch (error) {
-		console.error(logError("getRecentMemberships"), error.message);
+		console.error(logError("getAllMemberships"), error.message);
 		throw error;
 	}
 };
@@ -66,19 +66,19 @@ exports.getMembershipDataByPlayerID = async (playerID) => {
 			SELECT 
 				p.player_id AS playerID,
 				p.username AS username,
-				mp.issue_time AS membershipIssueTime,
-				mp.expire_time AS membershipExpireTime,
+				m.issue_date AS membershipIssueDate,
+				m.expire_date AS membershipExpireDate,
 				mpc.privilege_class AS membershipPrivilegeClass,
-				mp.privilege_level AS membershipPrivilegeLevel,
-				mp.status AS membershipStatus
-			FROM MembershipInPlayer mp
-			JOIN Players p ON mp.player_id = p.player_id
-			JOIN MembershipPrivilegeClass mpc ON mp.privilege_level = mpc.privilege_level
-			WHERE mp.player_id = ?;
+				m.privilege_level AS membershipPrivilegeLevel,
+				m.status AS membershipStatus
+			FROM Memberships m
+			JOIN Players p ON m.player_id = p.player_id
+			JOIN MembershipPrivilegeClass mpc ON m.privilege_level = mpc.privilege_level
+			WHERE m.player_id = ?;
 		`;
 
 		const [results] = await db.promise().query(myQuery, [playerID]);
-		results[0].membershipDaysRemaining = getDaysRemaining(new Date(), new Date(results[0].membershipExpireTime));
+		results[0].membershipDaysRemaining = getDaysRemaining(new Date(), new Date(results[0].membershipExpireDate));
 
 		return results[0];
 	} catch (error) {
@@ -89,11 +89,11 @@ exports.getMembershipDataByPlayerID = async (playerID) => {
 
 exports.isPlayerMembershipRegistered = async (playerID) => {
 	try {
-		const [results] = await db.promise().query("SELECT membership_id FROM MembershipInPlayer WHERE player_id = ?", [playerID]);
+		const [results] = await db.promise().query("SELECT membership_id FROM Memberships WHERE player_id = ?", [playerID]);
 
 		return results.length > 0;
 	} catch (error) {
-		console.error(logError("isUsernameRegistered"), error);
+		console.error(logError("isPlayerMembershipRegistered"), error);
 		throw error;
 	}
 };
@@ -103,28 +103,27 @@ exports.updateMembershipByPlayerID = async (playerID, updates) => {
 		const columnNames = Object.keys(updates);
 		const columnValues = Object.values(updates);
 
-		if (updates.expire_time) {
-			let issueTimeUTC = new Date();
+		if (updates.expire_date) {
+			const issueDateUTC = new Date();
+			const expireDateUTC = new Date(`${updates.expire_date}T00:00:00-07:00`);
 
-			let expireTimeUTC = new Date(`${updates.expire_time}T00:00:00-07:00`);
-
-			const status = issueTimeUTC < expireTimeUTC ? "Active" : "Expired";
+			const status = issueDateUTC < expireDateUTC ? "Active" : "Expired";
 			columnNames.push("status");
 			columnValues.push(status);
 
-			issueDateVancouver = formatInTimeZone(issueTimeUTC, vancouverTimeZone, "yyyy-MM-dd");
-			columnNames.push("issue_time");
+			const issueDateVancouver = formatInTimeZone(issueDateUTC, vancouverTimeZone, "yyyy-MM-dd");
+			columnNames.push("issue_date");
 			columnValues.push(issueDateVancouver);
 
-			expireDateVancouver = formatInTimeZone(expireTimeUTC, vancouverTimeZone, "yyyy-MM-dd");
-			columnNames.push("expire_time");
+			const expireDateVancouver = formatInTimeZone(expireDateUTC, vancouverTimeZone, "yyyy-MM-dd");
+			columnNames.push("expire_date");
 			columnValues.push(expireDateVancouver);
 		}
 
 		const setClause = columnNames.map((element) => `${element} = ?`).join(", ");
 
 		if (setClause) {
-			const myQuery = `UPDATE MembershipInPlayer SET ${setClause} WHERE player_id = ?`;
+			const myQuery = `UPDATE Memberships SET ${setClause} WHERE player_id = ?`;
 			columnValues.push(playerID);
 
 			await db.promise().query(myQuery, columnValues);
@@ -141,10 +140,10 @@ exports.registerMembership = async (playerID, duration, privilegeLevel) => {
 		const currentDate = new Date();
 		const expireDate = new Date(new Date().getTime() + duration * 24 * 60 * 60 * 1000);
 
-		await db.promise().query("INSERT INTO MembershipInPlayer SET ?", {
+		await db.promise().query("INSERT INTO Memberships SET ?", {
 			player_id: playerID,
-			issue_time: currentDate,
-			expire_time: expireDate,
+			issue_date: currentDate,
+			expire_date: expireDate,
 			privilege_level: privilegeLevel,
 			status: "Active",
 		});
@@ -158,7 +157,7 @@ exports.registerMembership = async (playerID, duration, privilegeLevel) => {
 
 exports.deleteMembershipByPlayerID = async (playerID) => {
 	try {
-		await db.promise().query("DELETE FROM MembershipInPlayer WHERE player_id = ?", [playerID]);
+		await db.promise().query("DELETE FROM Memberships WHERE player_id = ?", [playerID]);
 
 		console.log("OH YES! Membership Deleted Successfully!");
 	} catch (error) {
@@ -169,14 +168,14 @@ exports.deleteMembershipByPlayerID = async (playerID) => {
 
 async function updateMembershipStatus() {
 	try {
-		const [results] = await db.promise().query("SELECT * FROM MembershipInPlayer");
+		const [results] = await db.promise().query("SELECT * FROM Memberships");
 
 		results.forEach(async (element) => {
-			const issueTimeUTC = new Date();
-			const expireTimeUTC = element.expire_time;
-			const status = issueTimeUTC < expireTimeUTC ? "Active" : "Expired";
+			const issueDateUTC = new Date();
+			const expireDateUTC = element.expire_date;
+			const status = issueDateUTC < expireDateUTC ? "Active" : "Expired";
 
-			await db.promise().query("UPDATE MembershipInPlayer SET status = ? WHERE player_id = ?", [status, element.player_id]);
+			await db.promise().query("UPDATE Memberships SET status = ? WHERE player_id = ?", [status, element.player_id]);
 		});
 	} catch (error) {
 		console.error(logError("updateMembershipStatus"), error.message);

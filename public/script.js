@@ -268,13 +268,13 @@ async function showEditMembershipModal(playerID) {
 		privilegeLevelInput.value = membershipData.membershipPrivilegeLevel;
 		privilegeClassInput.innerHTML = membershipData.membershipPrivilegeClass;
 
-		const issueDateValue = new Date(Date.parse(membershipData.membershipIssueTime));
+		const issueDateValue = new Date(Date.parse(membershipData.membershipIssueDate));
 		const year = issueDateValue.getFullYear();
 		const month = (issueDateValue.getMonth() + 1).toString().padStart(2, "0");
 		const day = issueDateValue.getDate().toString().padStart(2, "0");
 		issueDateInput.value = `${year}-${month}-${day}`;
 
-		const expireDateValue = new Date(Date.parse(membershipData.membershipExpireTime));
+		const expireDateValue = new Date(Date.parse(membershipData.membershipExpireDate));
 		const expireYear = expireDateValue.getFullYear();
 		const expireMonth = (expireDateValue.getMonth() + 1).toString().padStart(2, "0");
 		const expireDay = expireDateValue.getDate().toString().padStart(2, "0");
