@@ -4,130 +4,147 @@ const logError = (functionName) => `OH NO! Error with ${functionName} in Control
 const resError = (functionName) => `OH NO! Internal Server Error with ${functionName} in Controllers:`;
 
 exports.loadDashboard = async (req, res) => {
-  if (!req.loginStatus) {
-    return res.redirect("/login");
-  }
+	if (!req.loginStatus) {
+		return res.redirect("/login");
+	}
 
-  const { order } = req.query;
+	const { order } = req.query;
 
-  try {
-    const [activePlayers, activeEvents, activeMatches, revenue, recentPlayers] = await Promise.all([
-      dashboardModel.getNumOfActivePlayers(),
-      dashboardModel.getNumOfActiveEvents(),
-      dashboardModel.getNumOfActiveMatches(),
-      dashboardModel.getRevenue(),
-      dashboardModel.getAllPlayers(order),
-    ]);
+	try {
+		const [activePlayers, activeEvents, activeMatches, revenue, recentPlayers] = await Promise.all([
+			dashboardModel.getNumOfActivePlayers(),
+			dashboardModel.getNumOfActiveEvents(),
+			dashboardModel.getNumOfActiveMatches(),
+			dashboardModel.getRevenue(),
+			dashboardModel.getAllPlayers(order),
+		]);
 
-    res.render("dashboard", {
-      activePlayers,
-      activeEvents,
-      activeMatches,
-      revenue,
-      recentPlayers,
-    });
-  } catch (error) {
-    console.error(logError("loadDashboard"), error);
-    res.status(500).send(resError("loadDashboard"));
-  }
+		res.render("dashboard", {
+			activePlayers,
+			activeEvents,
+			activeMatches,
+			revenue,
+			recentPlayers,
+		});
+	} catch (error) {
+		console.error(logError("loadDashboard"), error);
+		res.status(500).send(resError("loadDashboard"));
+	}
+};
+
+exports.fetchPlayerID = async (req, res) => {
+	const { username } = req.query;
+
+	try {
+		const results = await dashboardModel.getPlayerID(username);
+
+		if (!results) {
+			return res.status(404).send(`OH NO! ${username} does not exist!`);
+		}
+
+		return res.status(200).json(results);
+	} catch (error) {
+		console.error(logError("loadEditModal"), error);
+		res.status(500).send(resError("loadEditModal"));
+	}
 };
 
 exports.fetchPlayerData = async (req, res) => {
-  const { playerID } = req.query;
+	const { playerID } = req.query;
 
-  try {
-    const results = await dashboardModel.getPlayerDataByID(playerID);
+	try {
+		const results = await dashboardModel.getPlayerDataByID(playerID);
 
-    res.status(200).json(results);
-  } catch (error) {
-    console.error(logError("loadEditModal"), error);
-    res.status(500).send(resError("loadEditModal"));
-  }
+		res.status(200).json(results);
+	} catch (error) {
+		console.error(logError("loadEditModal"), error);
+		res.status(500).send(resError("loadEditModal"));
+	}
 };
 
 exports.checkFormInput = async (req, res) => {
-  const { username, email } = req.query;
+	const { username, email } = req.query;
 
-  try {
-    const usernameAvailable = await dashboardModel.isUsernameAvailable(username);
-    const emailAvailable = await dashboardModel.isEmailAvailable(email);
+	try {
+		const usernameAvailable = await dashboardModel.isUsernameAvailable(username);
+		const emailAvailable = await dashboardModel.isEmailAvailable(email);
 
-    if (!usernameAvailable) {
-      return res.status(409).send(`OH NO! ${username} already taken!`);
-    }
+		if (!usernameAvailable) {
+			return res.status(409).send(`OH NO! ${username} already taken!`);
+		}
 
-    if (!emailAvailable) {
-      return res.status(409).send(`OH NO! ${email} already taken!`);
-    }
+		if (!emailAvailable) {
+			return res.status(409).send(`OH NO! ${email} already taken!`);
+		}
 
-    return res.status(200).send("OH YES! Username and Email Available");
-  } catch (error) {
-    console.error(logError("loadCreateModal"), error);
-    res.status(500).send(resError("loadCreateModal"));
-  }
+		return res.status(200).send("OH YES! Username and Email Available");
+	} catch (error) {
+		console.error(logError("loadCreateModal"), error);
+		res.status(500).send(resError("loadCreateModal"));
+	}
 };
 
 exports.updatePlayer = async (req, res) => {
-  const { playerID, username, email, newPassword, confirmPassword, country } = req.body;
+	const { playerID, username, email, newPassword, country } = req.body;
 
-  try {
-    const results = await dashboardModel.getPlayerDataByID(playerID);
-    const updates = {};
+	try {
+		const results = await dashboardModel.getPlayerDataByID(playerID);
+		const updates = {};
 
-    if (username !== results.username) {
-      updates.username = username;
-    }
+		if (username !== results.username) {
+			updates.username = username;
+		}
 
-    if (email !== results.email) {
-      updates.email = email;
-    }
+		if (email !== results.email) {
+			updates.email = email;
+		}
 
-    if (country !== results.country) {
-      updates.country = country;
-    }
+		if (country !== results.country) {
+			updates.country = country;
+		}
 
-    if (newPassword) {
-      updates.password = newPassword;
-    }
+		if (newPassword) {
+			updates.password = newPassword;
+		}
 
-    if (updates.username || updates.email) {
-      await dashboardModel.updatePlayerUsernameAndEmail(updates.username || results.username, updates.email || results.email, results.username);
-      delete updates.username;
-      delete updates.email;
-    }
+		if (updates.username || updates.email) {
+			await dashboardModel.updatePlayerUsernameAndEmail(updates.username || results.username, updates.email || results.email, results.username);
+			delete updates.username;
+			delete updates.email;
+		}
 
-    if (Object.keys(updates).length > 0) {
-      await dashboardModel.updatePlayerByID(playerID, updates);
-    }
+		if (Object.keys(updates).length > 0) {
+			await dashboardModel.updatePlayerByID(playerID, updates);
+		}
 
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.error(logError("updatePlayer"), error);
-    res.status(500).send(resError("updatePlayer"));
-  }
+		res.redirect("/dashboard");
+	} catch (error) {
+		console.error(logError("updatePlayer"), error);
+		res.status(500).send(resError("updatePlayer"));
+	}
 };
 
 exports.registerPlayer = async (req, res) => {
-  const { username, password, confirmPassword, email, country } = req.body;
+	const { username, password, email, country } = req.body;
 
-  try {
-    await dashboardModel.registerPlayer(username, password, email, country);
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.error(logError("registerPlayer"), error);
-    res.status(500).send(resError("registerPlayer"));
-  }
+	try {
+		await dashboardModel.registerPlayer(username, password, email, country);
+		res.redirect("/dashboard");
+	} catch (error) {
+		console.error(logError("registerPlayer"), error);
+		res.status(500).send(resError("registerPlayer"));
+	}
 };
 
 exports.deletePlayer = async (req, res) => {
-  const { item: username } = req.body;
+	const { item: username } = req.body;
 
-  try {
-    await dashboardModel.deletePlayerByUsername(username);
+	try {
+		await dashboardModel.deletePlayerByUsername(username);
 
-    res.status(200).send(`OH YES! ${username} Deleted Successfully!`);
-  } catch (error) {
-    console.error(logError("deletePlayer"), error);
-    res.status(500).send(resError("deletePlayer"));
-  }
+		res.status(200).send(`OH YES! ${username} Deleted Successfully!`);
+	} catch (error) {
+		console.error(logError("deletePlayer"), error);
+		res.status(500).send(resError("deletePlayer"));
+	}
 };

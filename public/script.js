@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// Add event listeners to sort data on click
 	document.querySelector("[data-dropdown]")?.addEventListener("change", async (e) => {
-		window.location.href = `/dashboard?order=${e.target.value}`;
+		window.location.href = `${window.location.pathname}?order=${e.target.value}`;
 	});
 
 	// Restore dropdown state
@@ -189,7 +189,6 @@ document.querySelector("[data-edit-player-modal]")?.addEventListener("submit", a
 	}
 
 	hideModalErrorMessage("[data-edit-player-modal]");
-
 	e.target.submit();
 });
 
@@ -220,6 +219,75 @@ function hideEditPlayerModal() {
 
 	clearPasswordFields("[data-edit-player-modal]");
 	hideModalErrorMessage("[data-edit-player-modal]");
+	hideModal();
+}
+
+/* =================================================================================================== */
+/* =================================================================================================== */
+/* Edit Membership Modal Section Below ------------------------------------------------------------------- */
+/* =================================================================================================== */
+/* =================================================================================================== */
+
+document.querySelector("[data-edit-membership-modal")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
+
+	if (isFieldsEmpty("[data-edit-membership-modal]", ["[data-username]"])) {
+		displayModalErrorMessage("[data-edit-membership-modal]", "Username cannot be empty.. Please try again!");
+		return;
+	}
+
+	const issueDateInput = document.querySelector("[data-edit-membership-modal] [data-issue-date]");
+	const expireDateInput = document.querySelector("[data-edit-membership-modal] [data-expire-date]");
+
+	if (expireDateInput.value < issueDateInput.value) {
+		displayModalErrorMessage("[data-edit-membership-modal]", "Invalid Expire Date... Please try again!");
+		return;
+	}
+
+	hideModalErrorMessage("[data-edit-membership-modal]");
+	e.target.submit();
+});
+
+async function showEditMembershipModal(playerID) {
+	const playerIDInput = document.querySelector("[data-edit-membership-modal] [data-player-id]");
+	const usernameInput = document.querySelector("[data-edit-membership-modal] [data-username]");
+	const issueDateInput = document.querySelector("[data-edit-membership-modal] [data-issue-date]");
+	const expireDateInput = document.querySelector("[data-edit-membership-modal] [data-expire-date]");
+	const privilegeLevelInput = document.querySelector("[data-edit-membership-modal] [data-privilege-level]");
+	const privilegeClassInput = document.querySelector("[data-edit-membership-modal] [data-privilege-class]");
+
+	const membershipData = await fetchMembershipData(playerID);
+	if (membershipData) {
+		playerIDInput.value = membershipData.playerID;
+		usernameInput.value = membershipData.username;
+		privilegeLevelInput.value = membershipData.membershipPrivilegeLevel;
+		privilegeClassInput.innerHTML = membershipData.membershipPrivilegeClass;
+
+		const issueDateValue = new Date(Date.parse(membershipData.membershipIssueTime));
+		const year = issueDateValue.getFullYear();
+		const month = (issueDateValue.getMonth() + 1).toString().padStart(2, "0");
+		const day = issueDateValue.getDate().toString().padStart(2, "0");
+		issueDateInput.value = `${year}-${month}-${day}`;
+
+		const expireDateValue = new Date(Date.parse(membershipData.membershipExpireTime));
+		const expireYear = expireDateValue.getFullYear();
+		const expireMonth = (expireDateValue.getMonth() + 1).toString().padStart(2, "0");
+		const expireDay = expireDateValue.getDate().toString().padStart(2, "0");
+		expireDateInput.value = `${expireYear}-${expireMonth}-${expireDay}`;
+	}
+
+	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
+	editMembershipModal.classList.add("openedModal");
+
+	showModal();
+	localStorage.setItem("modalState", "editMembershipModalOpened");
+}
+
+function hideEditMembershipModal() {
+	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
+	editMembershipModal.classList.remove("openedModal");
+
+	hideModalErrorMessage("[data-edit-membership-modal]");
 	hideModal();
 }
 
@@ -282,67 +350,49 @@ function hideCreatePlayerModal() {
 /* =================================================================================================== */
 /* =================================================================================================== */
 
-// document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
-// 	e.preventDefault();
+document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
 
-// 	if (await isUserHasMembership()) {
-// 		displayModalErrorMessage("[data-create-membership-modal]", "Membership already exists... Please try again!");
-// 		return;
-// 	}
+	if (isFieldsEmpty("[data-create-membership-modal]", ["[data-username]", "[data-membership-duration]"])) {
+		displayModalErrorMessage("[data-create-membership-modal]", "Form Incomplete... Please try again!");
+		return;
+	}
 
-// 	clearFormData();
-// 	hideModalErrorMessage("[data-create-membership-modal]");
-// 	e.target.submit();
-// });
+	if (!(await fetchPlayerID("[data-create-membership-modal]"))) {
+		displayModalErrorMessage("[data-create-membership-modal]", "Username doesn't exist... Please try again!");
+		return;
+	}
 
-// async function isUserHasMembership() {
-// 	const username = document.querySelector("[data-username]").value;
-// 	const response = await fetch(`/memberships/check-membership?username=${username}`);
-// 	return response.ok;
-// }
+	if (!(await isUserWithoutMembership("[data-create-membership-modal]"))) {
+		displayModalErrorMessage("[data-create-membership-modal]", "Membership already exists... Please edit instead!");
+		return;
+	}
 
-// function showCreateMembershipModal() {
-// 	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
-// 	createMembershipModal.classList.add("openedModal");
+	if (isDurationValid("[data-create-membership-modal]")) {
+		displayModalErrorMessage("[data-create-membership-modal]", "Invalid Duration... Please try again!");
+		return;
+	}
 
-// 	showModal();
-// 	localStorage.setItem("modalState", "createMembershipModalOpened");
-// }
+	clearFormData();
+	hideModalErrorMessage("[data-create-membership-modal]");
+	e.target.submit();
+});
 
-// function hideCreateMembershipModal() {
-// 	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
-// 	createMembershipModal.classList.remove("openedModal");
+function showCreateMembershipModal() {
+	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
+	createMembershipModal.classList.add("openedModal");
 
-// 	hideModalErrorMessage("[data-create-membership-modal]");
-// 	hideModal();
-// }
+	showModal();
+	localStorage.setItem("modalState", "createMembershipModalOpened");
+}
 
-// function updatePrivilegeClass() {
-// 	const privilegeLevel = document.querySelector("[data-memberber-level]");
-// 	const privilegeClass = document.querySelector("[data-privilege-class]");
+function hideCreateMembershipModal() {
+	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
+	createMembershipModal.classList.remove("openedModal");
 
-// 	let currentClass;
-
-// 	switch (privilegeLevel.value) {
-// 		case "1":
-// 			currentClass = "Bronze";
-// 			break;
-// 		case "2":
-// 			currentClass = "Silver";
-// 			break;
-// 		case "3":
-// 			currentClass = "Gold";
-// 			break;
-// 		case "4":
-// 			currentClass = "Platinum";
-// 			break;
-// 		case "5":
-// 			currentClass = "Diamond";
-// 			break;
-// 	}
-
-// 	privilegeClass.innerHTML = currentClass;
-// }
+	hideModalErrorMessage("[data-create-membership-modal]");
+	hideModal();
+}
 
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -423,6 +473,50 @@ function clearFormData() {
 	localStorage.removeItem("formData");
 }
 
+function isDurationValid(modalType) {
+	const membershipDuration = document.querySelector(`${modalType} [data-membership-duration]`).value;
+	currentDate = new Date();
+	expireDate = new Date(new Date().getTime() + membershipDuration * 24 * 60 * 60 * 1000);
+	return isNaN(expireDate);
+}
+
+function updatePrivilegeClass(modalType) {
+	const privilegeLevel = document.querySelector(`${modalType} [data-privilege-level]`);
+	const privilegeClass = document.querySelector(`${modalType} [data-privilege-class]`);
+
+	let currentClass;
+
+	switch (privilegeLevel.value) {
+		case "1":
+			currentClass = "Bronze";
+			break;
+		case "2":
+			currentClass = "Silver";
+			break;
+		case "3":
+			currentClass = "Gold";
+			break;
+		case "4":
+			currentClass = "Platinum";
+			break;
+		case "5":
+			currentClass = "Diamond";
+			break;
+	}
+
+	privilegeClass.innerHTML = currentClass;
+}
+
+// Helper Function to Fetch Player Data in any modal
+async function fetchPlayerID(modalType) {
+	const username = document.querySelector(`${modalType} [data-username]`).value;
+	const response = await fetch(`/dashboard/fetch-playerID?username=${username}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
 // Helper Function to Fetch Player Data to Display in Edit Player Modal
 async function fetchPlayerData(playerID) {
 	const response = await fetch(`/dashboard/edit-modal/fetch-data?playerID=${playerID}`);
@@ -446,156 +540,24 @@ async function isEmailAvailable(modalType) {
 	return response.ok;
 }
 
+// Helper Function to Fetch Membership Data to Display in Edit Membership Modal
+async function fetchMembershipData(playerID) {
+	const response = await fetch(`/memberships/edit-modal/fetch-data?playerID=${playerID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
+// Helper Function to Check Whether the Membership can be Created in Create Membership Modal
+async function isUserWithoutMembership(modalType) {
+	const username = document.querySelector(`${modalType} [data-username]`).value;
+	const response = await fetch(`/memberships/create-modal/check-membership?username=${username}`);
+	return response.ok;
+}
+
 /* =================================================================================================== */
 /* =================================================================================================== */
 /* Perrry Below ---------------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
-function showCreateMembershipModal() {
-	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
-	createMembershipModal.classList.add("openedModal");
-
-	const modalErrorMessage = document.querySelector("[data-modal-error-message");
-	modalErrorMessage?.classList.add("openedModal");
-
-	showModal();
-	localStorage.setItem("modalState", "createMembershipModalOpened");
-}
-
-// Hide the Create Player Modal
-function hideCreateMembershipModal() {
-	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
-	createMembershipModal.classList.remove("openedModal");
-
-	const modalErrorMessage = document.querySelector("[data-modal-error-message");
-	modalErrorMessage?.classList.remove("openedModal");
-
-	hideModal();
-	hideModalErrorMessage("[data-create-membership-modal]");
-}
-
-function updatePrivilegeClass(levelElement, classElement) {
-	const privilegeLevel = document.getElementById(levelElement).value.toString();
-	console.log(privilegeLevel);
-	const privilegeClass = document.getElementById(classElement);
-	console.log(privilegeClass);
-	let level = "";
-	switch (privilegeLevel) {
-		case "1":
-			level = "Bronze";
-			break;
-		case "2":
-			level = "Silver";
-			break;
-		case "3":
-			level = "Gold";
-			break;
-		case "4":
-			level = "Platinum";
-			break;
-		case "5":
-			level = "Diamond";
-	}
-	privilegeClass.innerHTML = level;
-}
-
-document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
-	e.preventDefault();
-
-	if (await isUserHasMembership()) {
-		displayModalErrorMessage("[data-create-membership-modal]", "Invalid user, aborted.");
-		return;
-	}
-
-	clearFormData();
-	hideModalErrorMessage("[data-create-membership-modal]");
-	e.target.submit();
-});
-
-/**
- * Check if the user has a membership.
- * If so, the new membership should not be created.
- */
-async function isUserHasMembership() {
-	const username = document.getElementById("usernameCreate").value;
-	const response = await fetch(`/memberships/check-membership?username=${username}`);
-	return response.ok;
-}
-
-async function fetchMembershipData(playerID) {
-	const response = await fetch(`/memberships/fetch?playerID=${playerID}`);
-	if (response.ok) {
-		return response.json();
-	} else {
-		return null;
-	}
-}
-
-async function showEditMembershipModal(playerID) {
-	// const playerIDInput = document.querySelector("[data-player-id]");
-	// const usernameInput = document.querySelector("[data-username-edit]");
-	// const emailInput = document.querySelector("[data-email-edit]");
-	// const countryInput = document.querySelector("[data-country-edit]");
-	const playerIDInput = document.getElementById("playerIDEdit");
-	const username = document.getElementById("usernameEdit");
-	const issueDate = document.getElementById("issueDateEdit");
-	const daysRemaining = document.getElementById("daysRemainingEdit");
-	const membershipLevel = document.getElementById("membershipLevelEdit");
-	const privilegeClass = document.getElementById("privilegeClassEdit");
-	const status = document.getElementById("statusEdit");
-
-	const membershipData = await fetchMembershipData(playerID);
-	if (membershipData) {
-		username.value = membershipData.username;
-		playerIDInput.value = membershipData.playerID;
-		daysRemaining.value = membershipData.membershipDaysRemaining;
-		membershipLevel.value = membershipData.membershipPrivilegeLevel;
-		privilegeClass.innerHTML = membershipData.membershipPrivilegeClass;
-		status.value = membershipData.membershipStatus;
-
-		// handle issue date issue
-		const issueDateValue = new Date(Date.parse(membershipData.membershipIssueTime));
-		const year = issueDateValue.getFullYear();
-		const month = (issueDateValue.getMonth() + 1).toString().padStart(2, "0");
-		const day = issueDateValue.getDate().toString().padStart(2, "0");
-		issueDate.value = `${year}-${month}-${day}`;
-	}
-
-	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
-	editMembershipModal.classList.add("openedModal");
-
-	showModal();
-	localStorage.setItem("modalState", "editMembershipModalOpened");
-}
-
-function hideEditMembershipModal() {
-	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
-	editMembershipModal.classList.remove("openedModal");
-
-	hideModalErrorMessage("[data-edit-membership-modal]");
-	hideModal();
-}
-
-document.querySelector("[data-edit-membership-modal")?.addEventListener("submit", async function (e) {
-	e.preventDefault();
-	usernameEdit = document.getElementById("usernameEdit");
-	issueDateEdit = document.getElementById("issueDateEdit");
-	daysRemainingEdit = document.getElementById("daysRemainingEdit");
-	privilegeLevelEdit = document.getElementById("membershipLevelEdit");
-	statusEdit = document.getElementById("statusEdit");
-
-	// if any of the field is empty, display error message
-	if (
-		usernameEdit.value === "" ||
-		issueDateEdit.value === "" ||
-		daysRemainingEdit.value === "" ||
-		privilegeLevelEdit.value === "" ||
-		statusEdit.value === ""
-	) {
-		console.log("Captured");
-		displayModalErrorMessage("[data-edit-membership-modal]", "Form Incomplete... Please try again!");
-		return;
-	}
-	hideModalErrorMessage("[data-edit-membership-modal]");
-	e.target.submit();
-});
