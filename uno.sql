@@ -1,3 +1,11 @@
+DROP DATABASE IF EXISTS UNOGameSystem; 
+
+CREATE DATABASE IF NOT EXISTS UNOGameSystem; 
+
+USE UNOGameSystem; 
+
+
+
 CREATE TABLE IF NOT EXISTS PlayerUsernameAndEmail (
 	username VARCHAR(255) NOT NULL, 
     email VARCHAR(255) NOT NULL, 
@@ -354,50 +362,69 @@ VALUES
 ('Happy Professor', 'happy_professor@student.ubc.ca'),
 ('Poor Student', 'poor_student@student.ubc.ca'),
 ('Selfish Engineer', 'selfish_engineer@student.ubc.ca'),
-('Dangerous Salesman', 'dangerous_salesman@student.ubc.ca'),
-('Handsome Programmer1', 'handsome_programmer1@student.ubc.ca'),
-('Happy Professor1', 'happy_professor1@student.ubc.ca'),
-('Poor Student1', 'poor_student1@student.ubc.ca'),
-('Selfish Engineer1', 'selfish_engineer1@student.ubc.ca'),
-('Dangerous Salesman1', 'dangerous_salesman2@student.ubc.ca'),
-('Handsome Programmer2', 'handsome_programmer2@student.ubc.ca'),
-('Happy Professor2', 'happy_professor2@student.ubc.ca'),
-('Poor Student2', 'poor_student2@student.ubc.ca'),
-('Selfish Engineer2', 'selfish_engineer2@student.ubc.ca'),
-('Dangerous Salesman2', 'dangerous_salesman2@student.ubc.ca'); 
+('Dangerous Salesman', 'dangerous_salesman@student.ubc.ca'), 
+('Reliable Developer', 'reliable_developer@student.ubc.ca'),
+('Brilliant Analyst', 'brilliant_analyst@student.ubc.ca'),
+('Talented Artist', 'talented_artist@student.ubc.ca'),
+('Ambitious Entrepreneur', 'ambitious_entrepreneur@student.ubc.ca'),
+('Passionate Teacher', 'passionate_teacher@student.ubc.ca'),
+('Skilled Mechanic', 'skilled_mechanic@student.ubc.ca'),
+('Friendly Receptionist', 'friendly_receptionist@student.ubc.ca'),
+('Hardworking Farmer', 'hardworking_farmer@student.ubc.ca'),
+('Insightful Consultant', 'insightful_consultant@student.ubc.ca'),
+('Curious Researcher', 'curious_researcher@student.ubc.ca'),
+('Expert Technician', 'expert_technician@student.ubc.ca'),
+('Organized Librarian', 'organized_librarian@student.ubc.ca'),
+('Creative Writer', 'creative_writer@student.ubc.ca'),
+('Brave Soldier', 'brave_soldier@student.ubc.ca'),
+('Efficient Assistant', 'efficient_assistant@student.ubc.ca');
 
 INSERT IGNORE INTO PlayerLevel (experience_point, level) 
 VALUES 
 (0, 1),
-(1000, 1),
-(2000, 2),
-(3000, 3),
-(4000, 4),
-(5000, 5),
-(6000, 6),
-(7000, 7),
-(8000, 8),
-(9000, 9),
-(10000, 10); 
+(999, 1),
+(1000, 2),
+(1999, 2),
+(2000, 3),
+(2999, 3),
+(3000, 4),
+(3999, 4),
+(4000, 5),
+(4999, 5),
+(5000, 6),
+(5999, 6),
+(6000, 7),
+(6999, 7),
+(7000, 8),
+(7999, 8),
+(8000, 9),
+(8999, 9),
+(9000, 10),
+(10000, 10);
+
 
 INSERT IGNORE INTO Players (username, total_win, total_game_count, win_rate, experience_point, country, password) 
 VALUES 
-('Handsome Programmer', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
-('Happy Professor', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
-('Poor Student', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
-('Selfish Engineer', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
-('Dangerous Salesman', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'),
-('Handsome Programmer1', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
-('Happy Professor1', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
-('Poor Student1', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
-('Selfish Engineer1', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
-('Dangerous Salesman1', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'),
-('Handsome Programmer2', 10, 20, 0.5, 3000, 'Canada', 'sdjfhsjfhskdfjh'), 
-('Happy Professor2', 15, 25, 0.6, 5000, 'India', 'fduhe9fhwe9f8y9'),
-('Poor Student2', 8, 10, 0.8, 8000, 'China', 'fdsjfhkjbvs9v'), 
-('Selfish Engineer2', 12, 13, 0.92, 9000, 'USA', 'fskjbvkjdsvb9'), 
-('Dangerous Salesman2', 20, 27, 0.74, 10000, 'Japan', 'ackajbasvsvspvsv'); 
-
+('Reliable Developer', 5, 15, 0.33, 2000, 'Canada', 'xhjanjwnfewhfohuenee'), 
+('Brilliant Analyst', 7, 18, 0.39, 4000, 'India', 'qpicuniqxmeuhrhbdndeqw'), 
+('Talented Artist', 9, 22, 0.41, 6000, 'China', 'fjfepopqwnfvnsiuewoine'), 
+('Ambitious Entrepreneur', 13, 19, 0.68, 7000, 'USA', 'voeiwjoencoieiownw'), 
+('Passionate Teacher', 11, 21, 0.52, 8000, 'Japan', 'aapciwjcapwijecawocwe'),
+('Skilled Mechanic', 14, 30, 0.47, 9000, 'Canada', 'xaowijenchnceoaurhrcawe'), 
+('Friendly Receptionist', 4, 12, 0.33, 2000, 'India', 'fijrewnncvsuhgbwerwe'), 
+('Hardworking Farmer', 6, 17, 0.35, 2000, 'China', 'skaekcjmaoeiwrityf'), 
+('Insightful Consultant', 17, 26, 0.65, 7000, 'USA', 'xmjeawodwekvorf'), 
+('Curious Researcher', 3, 14, 0.21, 2000, 'Japan', 'epwckewoenflvroewnew'), 
+('Expert Technician', 16, 24, 0.67, 6000, 'Canada', 'finceuwnnmekcjew'), 
+('Organized Librarian', 19, 32, 0.59, 8000, 'India', 'xeofheoehqoqnveoqpq'), 
+('Creative Writer', 18, 29, 0.62, 7000, 'China', 'spfaekfnldvjewouehnrtt'), 
+('Brave Soldier', 21, 28, 0.75, 8000, 'USA', 'gpeoewjnvuweiue'), 
+('Efficient Assistant', 22, 33, 0.67, 9000, 'Japan', 'vpaiwejfnaovuywqppj'),
+('Handsome Programmer', 10, 20, 0.5, 3000, 'Canada', 'srvasevrsvaesrbasrtythfr'), 
+('Happy Professor', 15, 25, 0.6, 5000, 'India', 'vjvosijuaosinvaoeijrsaevr'),
+('Poor Student', 8, 10, 0.8, 8000, 'China', 'Sfsdfuyesiufahekjeof'), 
+('Selfish Engineer', 12, 13, 0.92, 9000, 'USA', 'voefhnownfhvseowenfw'), 
+('Dangerous Salesman', 20, 27, 0.74, 10000, 'Japan', 'pqweopqoccmuhqwciuq');
 
 INSERT IGNORE INTO MembershipPrivilegeClass (privilege_level, privilege_class) 
 VALUES 
@@ -409,11 +436,22 @@ VALUES
 
 INSERT IGNORE INTO Memberships (player_id, issue_date, expire_date, privilege_level)
 VALUES 
-(1, DATE '2024-01-01', DATE '2024-01-31', 1),
-(2, DATE '2024-02-01', DATE '2024-02-29', 2),
-(3, DATE '2024-03-01', DATE '2024-03-31', 3),
-(4, DATE '2024-04-01', DATE '2024-04-30', 4),
-(5, DATE '2024-05-01', DATE '2024-05-31', 5);
+(1, '2024-03-14', '2024-05-13', 3),
+(2, '2024-08-21', '2024-12-03', 5),
+(3, '2024-01-05', '2024-05-21', 2),
+(4, '2024-11-30', '2025-02-24', 1),
+(5, '2024-04-10', '2024-04-16', 4),
+(6, '2024-07-17', '2024-08-12', 3),
+(7, '2024-02-25', '2024-03-05', 5),
+(8, '2024-10-12', '2025-01-14', 1),
+(9, '2024-05-19', '2024-07-14', 2),
+(10, '2024-09-01', '2024-11-20', 4),
+(11, '2024-06-08', '2024-07-28', 3),
+(12, '2024-12-15', '2025-07-15', 5),
+(13, '2025-01-20', '2025-04-10', 1),
+(14, '2024-03-28', '2024-04-08', 2),
+(15, '2024-11-05', '2025-01-25', 4);
+
 
 INSERT IGNORE INTO Events (name, start_date, end_date, status) 
 VALUES 

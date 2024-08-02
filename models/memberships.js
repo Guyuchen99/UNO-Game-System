@@ -186,6 +186,10 @@ async function updateMembershipStatus() {
 function getDaysRemaining(issueDate, expireDate) {
 	const daysRemaining = differenceInDays(expireDate, issueDate);
 
+	if (expireDate < new Date()) {
+		return 0;
+	}
+
 	if (daysRemaining > 0) {
 		return daysRemaining;
 	}
