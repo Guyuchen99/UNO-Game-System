@@ -20,41 +20,77 @@
 
         <!-- Main Section -->
         <main class="grid-main">
-            <div class="main-body">
+            <div class="main-body" data-main-body>
                 <div class="table-container-primary">
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT MATCHES</h2>
                         <div class="table-button-list">
-                            <button class="table-btn add-btn"><i class="bx bx-plus"></i>Create Match</button>
-                            <button class="table-btn">View All</button>
+                            <button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Match</button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Match ID</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Winner</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% locals.recentMatches.forEach(element => { %>
-                            <tr>
-                                <td><%= element.matchId %></td>
-                                <td><%= element.matchStartTime %></td>
-                                <td><%= element.matchEndTime %></td>
-                                <td><%= element.matchWinner %></td>
-                                <td><%= element.matchStatus %></td>
-                                <td class="table-btn-td"><button class="table-btn">View Details</button></td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+
+                    <div class="scrollable-table full-page">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Match ID</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Winner</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% locals.recentMatches.forEach(element => { %>
+                                <tr>
+                                    <td><%= element.matchID %></td>
+                                    <td><%= element.matchStartTime %></td>
+                                    <td><%= element.matchEndTime %></td>
+                                    <td><%= element.matchWinner %></td>
+                                    <td data-status="<%= element.matchStatus %>"><%= element.matchStatus %></td>
+                                    <td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchId %>')" data-pointer-not-allowed>View Details</button></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <form class="modal create-item-modal" action="/matches/register" method="POST" data-create-match-modal>
+                <div class="modal-header">
+                    <h2>Create New Match</h2>
+                    <button class="close-btn" type="button" onclick="hideCreateMatchModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <label for="numOfPlayersCreate">Number of Players: </label>
+						<div class="modal-dropdown-container">
+							<select id="numOfPlayersCreate" name="numOfPlayers" class="half-width dropdown" default="2" data-number-of-players data-save-input>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							</select>
+						</div>
+                    </div>
+                    <template id="modal-fields-template">
+                        <div class="modal-fields" data-template-generated>
+                            <label></label>
+                            <input type="text" autocomplete="username" aria-label="Username" data-username data-save-input>
+                        </div>
+                    </template>
+                </div>
+				<div class="modal-footer">
+					<button class="btn modal-btn-confirm" type="submit">Begin</button>
+					<button class="btn modal-btn-cancel" type="button" onclick="hideCreateMatchModal()">Cancel</button>
+				</div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+
+            <!-- Search Result Section -->
+            <div class="search-result" data-search-result></div>
+
         </main>
 
         <!-- Footer Section -->

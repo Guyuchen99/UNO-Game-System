@@ -18,7 +18,7 @@ exports.getRecentMatches = async () => {
     `);
 
     return results.map((element) => ({
-      matchId: element.matchID,
+      matchID: element.matchID,
       matchStartTime: formatInTimeZone(element.matchStartTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz"),
       matchEndTime: element.matchEndTime ? formatInTimeZone(element.matchEndTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz") : "TBD",
       matchWinner: element.matchWinner || "TDB",

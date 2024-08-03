@@ -58,5 +58,6 @@ router.get("/events", authController.isLoggedIn, eventsController.loadEvents);
 
 
 router.get("/matches", authController.isLoggedIn, matchesController.loadMatches);
+router.post("/matches/register", matchesController.registerMatches);
 
 module.exports = router;
