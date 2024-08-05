@@ -20,84 +20,211 @@
 
         <!-- Main Section -->
         <main class="grid-main">
-            <div class="main-body">
+            <div class="main-body" data-main-body>
                 <div class="table-container-secondary">
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT STORES</h2>
-                        <div class="table-button-list">
-                            <button class="table-btn">View All</button>
-                        </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Store ID</th>
-                                <th>Number of Items</th>
-                                <th>Linked To</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% locals.recentStores.forEach(element => { %>
+                    <div class="scrollable-table one-third-page">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td><%= element.storeID %></td>
-                                    <td><%= element.numOfItems %></td>
-                                    <td><%= element.username %></td>
-                                    <td class="table-btn-td"><button class="table-btn">View Available Store Items</button></td>
+                                    <th>Store ID</th>
+                                    <th>Number of Items</th>
+                                    <th>Linked To</th>
+                                    <th>Actions</th>
                                 </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <% locals.recentStores.forEach(element => { %>
+                                    <tr>
+                                        <td><%= element.storeID %></td>
+                                        <td><%= element.numOfItems %></td>
+                                        <td><%= element.username %></td>
+                                        <td class="table-btn-td"><button class="table-btn" onclick="showStoreItemsDetails('<%= element.storeID %>')" data-pointer-not-allowed>View Available Store Items</button></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <br><br>
                 <div class="table-container-secondary">
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT ITEMS</h2>
-                        <div class="table-button-list">
-                            <select name="selector" id="selector" class="dropdown">
-                                <option value="Filter">Filter</option>
-                                <option value="Win Rate">Quality</option>
-                                <option value="Win Rate">Current Price</option>
-                                <option value="Win Rate">Original Price</option>
-                                <option value="Win Rate">Applied Promotion</option>
-                                <option value="Win Rate">Discount</option>
-                            </select>
-                            <button class="table-btn add-btn"><i class="bx bx-plus"></i>Create Item</button>
-                            <button class="table-btn">View All</button>
+                        <div class="table-btn-list">
+							<div class="dropdown-container">
+                                <p class="dropdown-title">Sort By:</p> 
+								<select name="selector" class="dropdown" data-dropdown-sort data-pointer-not-allowed>
+                                    <option value="recent" selected>Recent</option>
+                                    <option value="quality">Quality</option>
+                                    <option value="currentPrice">Current Price</option>
+                                    <option value="discount">Discount</option>
+								</select>
+                            </div>
+                            <button class="table-btn add-btn" onclick="showCreateItemModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Item</button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Quality</th>
-                                <th>Current Price</th>
-                                <th>Original Price</th>
-                                <th>Applied Promotion</th>
-                                <th>Discount</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% locals.recentItems.forEach(element => { %>
+                    <div class="scrollable-table two-third-page">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td><%= element.itemName %></td>
-                                    <td><%= element.itemQuality %></td>
-                                    <td><%= element.itemCurrentPrice %></td>
-                                    <td><%= element.itemOriginalPrice %></td>
-                                    <td><%= element.itemAppliedPromotion %></td>
-                                    <td><%= element.itemDiscount %></td>
-                                    <td>
-                                        <i class='bx bx-log-in add' aria-label="Add"></i>
-                                        <i class='bx bxs-edit edit' aria-label="Edit"></i>
-                                        <i class='bx bx-trash delete' aria-label="Delete"></i>
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Quality</th>
+                                    <th>Current Price</th>
+                                    <th>Original Price</th>
+                                    <th>Applied Promotion</th>
+                                    <th>Discount</th>
+                                    <th>Actions</th>
                                 </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <% locals.recentItems.forEach(element => { %>
+                                    <tr>
+                                        <td><%= element.itemName %></td>
+                                        <td><%= element.itemQuality %></td>
+                                        <td><%= element.itemCurrentPrice %></td>
+                                        <td><%= element.itemOriginalPrice %></td>
+                                        <td><%= element.itemAppliedPromotion %></td>
+                                        <td><%= element.itemDiscount %></td>
+                                        <td>
+                                            <i class="bx bx-log-in add" aria-label="Add" onclick="showInsertItemModal('<%= element.itemID %>')" data-insert data-pointer-not-allowed></i>
+                                            <i class="bx bxs-edit edit" aria-label="Edit" onclick="showEditItemModal('<%= element.itemID %>')" data-edit data-pointer-not-allowed></i>
+                                            <i class="bx bx-trash delete" aria-label="Delete" onclick="showDeleteItemModal('<%= element.itemID %>')" data-delete data-pointer-not-allowed></i>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <div class="store-items-details" data-store-items-details>
+                <div class="store-items-details-header" data-store-items-details-header>
+                    <h2>Available Items in Store</h2>
+                    <button class="close-btn" type="button" onclick="hideStoreItemsDetails()">&times;</button>
+                </div>
+                <div class="scrollable-table" data-store-item-details-table>
+
+                </div>
+            </div>
+
+            <div class="modal delete-item-modal" data-delete-item-modal>
+                <h1>&#9888;</h1>
+                <h2>Are you sure?</h2>
+                <p>This action cannot be undone. All values <br> associated with this field will be lost.</p>
+                <button class="btn modal-btn-delete" type="button" data-conform-delete>Delete Item</button>
+                <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
+            </div>
+
+            <form class="modal edit-item-modal" action="/store-items/update" method="POST" data-edit-item-modal>
+                <div class="modal-header">
+                    <h2>Edit Item</h2>
+                    <button class="close-btn" type="button" onclick="hideEditItemModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <input type="hidden" name="itemID" data-item-id>
+                        <input type="hidden" name="originalName" data-original-name>
+                        <label for="nameEditItem">Name: </label>
+                        <input type="text" id="nameEditItem" name="name" autocomplete="off" aria-label="Item Name" data-name>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="qualityEditItem">Quality: </label>
+                        <select id="qualityEditItem" name="quality" class="dropdown" data-quality>
+                            <option value="Common" selected>Common</option>
+                            <option value="Uncommon">Uncommon</option>
+                            <option value="Rare">Rare</option>
+                            <option value="Epic">Epic</option>
+                            <option value="Legendary">Legendary</option>
+                        </select>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="appliedPromotionEditItem">Applied Promotion: </label>
+                        <div class="modal-dropdown-container">
+                            <select id="appliedPromotionEditItem" name="appliedPromotion" class="dropdown half-width" data-applied-promotion>
+                                <option value="New Year Sale" selected>New Year Sale</option>
+                                <option value="Christmas Sale">Christmas Sale</option>
+                                <option value="Summer Sale">Summer Sale</option>
+                                <option value="Autumn Sale">Autumn Sale</option>
+                                <option value="Winter Sale">Winter Sale</option>
+                                <option value="Spring Sale">Spring Sale</option>
+                            </select>
+                            <span data-discount></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Update</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideEditItemModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+
+            <form class="modal insert-item-modal" action="/store-items/insert" method="POST" data-insert-item-modal>
+                <div class="modal-header">
+                    <h2>Insert Item to Player's Store</h2>
+                    <button class="close-btn" type="button" onclick="hideInsertItemModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <input type="hidden" name="itemID" data-item-id>
+                        <label for="usernameInsertItem">Username: </label>
+                        <input type="text" id="usernameInsertItem" name="username" aria-label="Username" data-username data-save-input>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Insert</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideInsertItemModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+
+            <form class="modal create-item-modal" action="/store-items/register" method="POST" data-create-item-modal>
+                <div class="modal-header">
+                    <h2>Add New Item</h2>
+                    <button class="close-btn" type="button" onclick="hideCreateItemModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <label for="nameCreateItem">Name: </label>
+                        <input type="text" id="nameCreateItem" name="name" autocomplete="off" aria-label="Item Name" data-name data-save-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="qualityCreateItem">Quality: </label>
+                        <select id="qualityCreateItem" name="quality" class="dropdown" data-quality data-save-input>
+                            <option value="Common" selected>Common</option>
+                            <option value="Uncommon">Uncommon</option>
+                            <option value="Rare">Rare</option>
+                            <option value="Epic">Epic</option>
+                            <option value="Legendary">Legendary</option>
+                        </select>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="appliedPromotionCreateItem">Applied Promotion: </label>
+                        <div class="modal-dropdown-container">
+                            <select id="appliedPromotionCreateItem" name="appliedPromotion" class="dropdown half-width" data-applied-promotion data-save-input>
+                                <option value="New Year Sale" selected>New Year Sale</option>
+                                <option value="Christmas Sale">Christmas Sale</option>
+                                <option value="Summer Sale">Summer Sale</option>
+                                <option value="Autumn Sale">Autumn Sale</option>
+                                <option value="Winter Sale">Winter Sale</option>
+                                <option value="Spring Sale">Spring Sale</option>
+                            </select>
+                            <span data-discount></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Register</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideCreateItemModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+
+            <!-- Search Result Section -->
+            <div class="search-result" data-search-result></div>
         </main>
 
         <!-- Footer Section -->

@@ -1,7 +1,7 @@
 const dashboardModel = require("../models/dashboard");
 
-const logError = (functionName) => `OH NO! Error with ${functionName} in Controllers:`;
-const resError = (functionName) => `OH NO! Internal Server Error with ${functionName} in Controllers:`;
+const logError = (functionName) => `OH NO! Error with ${functionName} in Dashboard Controllers:`;
+const resError = (functionName) => `OH NO! Internal Server Error with ${functionName} in Dashboard Controllers:`;
 
 exports.loadDashboard = async (req, res) => {
 	if (!req.loginStatus) {
@@ -36,7 +36,7 @@ exports.fetchPlayerID = async (req, res) => {
 	const { username } = req.query;
 
 	try {
-		const results = await dashboardModel.getPlayerID(username);
+		const results = await dashboardModel.getPlayerIDByUsername(username);
 
 		if (!results) {
 			return res.status(404).send(`OH NO! ${username} does not exist!`);
@@ -44,8 +44,8 @@ exports.fetchPlayerID = async (req, res) => {
 
 		return res.status(200).json(results);
 	} catch (error) {
-		console.error(logError("loadEditModal"), error);
-		res.status(500).send(resError("loadEditModal"));
+		console.error(logError("fetchPlayerID"), error);
+		res.status(500).send(resError("fetchPlayerID"));
 	}
 };
 
@@ -57,8 +57,8 @@ exports.fetchPlayerData = async (req, res) => {
 
 		res.status(200).json(results);
 	} catch (error) {
-		console.error(logError("loadEditModal"), error);
-		res.status(500).send(resError("loadEditModal"));
+		console.error(logError("fetchPlayerData"), error);
+		res.status(500).send(resError("fetchPlayerData"));
 	}
 };
 
@@ -67,20 +67,21 @@ exports.checkFormInput = async (req, res) => {
 
 	try {
 		const usernameAvailable = await dashboardModel.isUsernameAvailable(username);
-		const emailAvailable = await dashboardModel.isEmailAvailable(email);
 
 		if (!usernameAvailable) {
 			return res.status(409).send(`OH NO! ${username} already taken!`);
 		}
 
+		const emailAvailable = await dashboardModel.isEmailAvailable(email);
+
 		if (!emailAvailable) {
 			return res.status(409).send(`OH NO! ${email} already taken!`);
 		}
 
-		return res.status(200).send("OH YES! Username and Email Available");
+		return res.status(200).send("OH YES! No Errors in Form Input!");
 	} catch (error) {
-		console.error(logError("loadCreateModal"), error);
-		res.status(500).send(resError("loadCreateModal"));
+		console.error(logError("checkFormInput"), error);
+		res.status(500).send(resError("checkFormInput"));
 	}
 };
 

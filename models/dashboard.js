@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const db = require("../config/db");
 
-const logError = (functionName) => `OH NO! Error with ${functionName} in Models:`;
+const logError = (functionName) => `OH NO! Error with ${functionName} in Dashboard Models:`;
 
 exports.getNumOfActivePlayers = async () => {
 	try {
@@ -106,6 +106,17 @@ exports.getAllPlayers = async (order) => {
 		return results;
 	} catch (error) {
 		console.error(logError("getAllPlayers"), error);
+		throw error;
+	}
+};
+
+exports.getPlayerIDByUsername = async (username) => {
+	try {
+		const [results] = await db.promise().query("SELECT player_id FROM Players WHERE username = ?", [username]);
+
+		return results[0]?.player_id;
+	} catch (error) {
+		console.error(logError("getPlayerIDByUsername"), error);
 		throw error;
 	}
 };
@@ -222,17 +233,6 @@ exports.deletePlayerByUsername = async (username) => {
 		console.log("OH YES! Player Deleted Successfully!");
 	} catch (error) {
 		console.error(logError("deletePlayerByUsername"), error);
-		throw error;
-	}
-};
-
-exports.getPlayerID = async (username) => {
-	try {
-		const [results] = await db.promise().query("SELECT player_id FROM Players WHERE username = ?", [username]);
-
-		return results[0]?.player_id;
-	} catch (error) {
-		console.error(logError("isUsernameAvailable"), error);
 		throw error;
 	}
 };

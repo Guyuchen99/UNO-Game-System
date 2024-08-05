@@ -4,7 +4,7 @@ const { differenceInDays } = require("date-fns");
 
 const vancouverTimeZone = "America/Vancouver";
 
-const logError = (functionName) => `OH NO! Error with ${functionName} in Models:`;
+const logError = (functionName) => `OH NO! Error with ${functionName} in Memberships Models:`;
 
 exports.getAllMemberships = async (order) => {
 	let orderByClause;

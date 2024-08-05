@@ -1,8 +1,8 @@
 const dashboardModel = require("../models/dashboard");
 const membershipsModel = require("../models/memberships");
 
-const logError = (functionName) => `OH NO! Error with ${functionName} in Controllers:`;
-const resError = (functionName) => `OH NO! Internal Server Error with ${functionName} in Controllers:`;
+const logError = (functionName) => `OH NO! Error with ${functionName} in Memberships Controllers:`;
+const resError = (functionName) => `OH NO! Internal Server Error with ${functionName} in Memberships Controllers:`;
 
 exports.loadMemberships = async (req, res) => {
 	if (!req.loginStatus) {
@@ -36,7 +36,7 @@ exports.checkMembershipExistence = async (req, res) => {
 	const { username } = req.query;
 
 	try {
-		const playerID = await dashboardModel.getPlayerID(username);
+		const playerID = await dashboardModel.getPlayerIDByUsername(username);
 		const membershipExistence = await membershipsModel.isPlayerMembershipRegistered(playerID);
 
 		if (!membershipExistence) {
@@ -80,7 +80,7 @@ exports.registerMembership = async (req, res) => {
 	const { username, duration, privilegeLevel } = req.body;
 
 	try {
-		const playerID = await dashboardModel.getPlayerID(username);
+		const playerID = await dashboardModel.getPlayerIDByUsername(username);
 		await membershipsModel.registerMembership(playerID, duration, privilegeLevel);
 
 		res.redirect("/memberships");

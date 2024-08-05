@@ -1,100 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNO Game System Admin</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="icon" href="/UNO.icon" type="image/x-icon">
-    <script defer src="/script.js"></script>
-</head>
-<body>
-    <div id="grid-container">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>UNO Game System Admin</title>
+		<link rel="stylesheet" href="/style.css" />
+		<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
+		<link rel="icon" href="/UNO.icon" type="image/x-icon" />
+		<script defer src="/script.js"></script>
+	</head>
+	<body>
+		<div id="grid-container">
+			<!-- Header Section  -->
+			<%- include("partials/header") %>
 
-        <!-- Header Section  -->
-        <%- include("partials/header") %>
+			<!-- Sidebar Section  -->
+			<%- include("partials/sidebar") %>
 
-        <!-- Sidebar Section  -->
-        <%- include("partials/sidebar") %>
-
-        <!-- Main Section -->
-        <main class="grid-main">
-            <div class="main-body" data-main-body>
-                <div class="table-container-primary">
-                    <div class="main-body-header">
-                        <h2 class="main-title">RECENT MATCHES</h2>
-                        <div class="table-button-list">
-                            <button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Match</button>
-                        </div>
-                    </div>
-
-                    <div class="scrollable-table full-page">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Match ID</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Winner</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% locals.recentMatches.forEach(element => { %>
-                                <tr>
-                                    <td><%= element.matchID %></td>
-                                    <td><%= element.matchStartTime %></td>
-                                    <td><%= element.matchEndTime %></td>
-                                    <td><%= element.matchWinner %></td>
-                                    <td data-status="<%= element.matchStatus %>"><%= element.matchStatus %></td>
-                                    <td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchId %>')" data-pointer-not-allowed>View Details</button></td>
-                                </tr>
-                                <% }) %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <form class="modal create-item-modal" action="/matches/register" method="POST" data-create-match-modal>
-                <div class="modal-header">
-                    <h2>Create New Match</h2>
-                    <button class="close-btn" type="button" onclick="hideCreateMatchModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-fields">
-                        <label for="numOfPlayersCreate">Number of Players: </label>
-						<div class="modal-dropdown-container">
-							<select id="numOfPlayersCreate" name="numOfPlayers" class="half-width dropdown" default="2" data-number-of-players data-save-input>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-							</select>
+			<!-- Main Section -->
+			<main class="grid-main">
+				<div class="main-body" data-main-body>
+					<div class="table-container-primary">
+						<div class="main-body-header">
+							<h2 class="main-title">RECENT MATCHES</h2>
+							<div class="table-btn-list">
+								<button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed>
+									<i class="bx bx-plus"></i>Create Match
+								</button>
+							</div>
 						</div>
-                    </div>
-                    <template id="modal-fields-template">
-                        <div class="modal-fields" data-template-generated>
-                            <label></label>
-                            <input type="text" autocomplete="username" aria-label="Username" data-username data-save-input>
-                        </div>
-                    </template>
-                </div>
-				<div class="modal-footer">
-					<button class="btn modal-btn-confirm" type="submit">Begin</button>
-					<button class="btn modal-btn-cancel" type="button" onclick="hideCreateMatchModal()">Cancel</button>
+
+						<div class="scrollable-table full-page">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Match ID</th>
+										<th>Start Time</th>
+										<th>End Time</th>
+										<th>Winner</th>
+										<th>Status</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% locals.recentMatches.forEach(element => { %>
+									<tr>
+										<td><%= element.matchID %></td>
+										<td><%= element.matchStartTime %></td>
+										<td><%= element.matchEndTime %></td>
+										<td><%= element.matchWinner %></td>
+										<td data-status="<%= element.matchStatus %>"><%= element.matchStatus %></td>
+										<td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchId %>')" data-pointer-not-allowed>View Details</button></td>
+									</tr>
+									<% }) %>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
-                <div class="modal-error-message" data-modal-error-message></div>
-            </form>
 
-            <!-- Search Result Section -->
-            <div class="search-result" data-search-result></div>
+				<form class="modal create-item-modal" action="/matches/register" method="POST" data-create-match-modal>
+					<div class="modal-header">
+						<h2>Create New Match</h2>
+						<button class="close-btn" type="button" onclick="hideCreateMatchModal()">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="modal-fields">
+							<label for="numOfPlayersCreate">Number of Players: </label>
+							<div class="modal-dropdown-container">
+								<select id="numOfPlayersCreate" name="numOfPlayers" class="half-width dropdown" default="2" data-number-of-players data-save-input>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+								</select>
+							</div>
+						</div>
+						<template id="modal-fields-template">
+							<div class="modal-fields" data-template-generated>
+								<label></label>
+								<input type="text" autocomplete="username" aria-label="Username" data-username data-save-input />
+							</div>
+						</template>
+					</div>
+					<div class="modal-footer">
+						<button class="btn modal-btn-confirm" type="submit">Begin</button>
+						<button class="btn modal-btn-cancel" type="button" onclick="hideCreateMatchModal()">Cancel</button>
+					</div>
+					<div class="modal-error-message" data-modal-error-message></div>
+				</form>
 
-        </main>
+				<!-- View Match Details Section -->
+				<div class="match-details" data-match-detials>
 
-        <!-- Footer Section -->
-        <%- include("partials/footer") %>
-    </div>
-</body>
+					<div class="match-details-header">
+						<div class="match-details-title">
+							<h2>UNO Match History Log</h2>
+							<button class="close-btn" type="button" onclick="hideMatchDetailsModal()">&times;</button>
+						</div>
+
+                        <div class="match-details-basic-information">
+                            <p>Match ID: 3</p>
+                            <p>Start Time: 2024-08-04 16:00:00</p>
+                            <p>End Time: 2024-08-04 16:45:00</p>
+                            <p>Winner: Dangerous Salesman</p>
+                        </div>
+                        <div class="match-details-player-information">
+                            <h2>Players</h2>
+                            <ul>
+                                <li>Dangerous Salesman (CANADA)</li>
+                                <li>Poor Student (USA)</li>
+                                <li>Happy Farmer (JAPAN)</li>
+                                <li>Selfish Engineer (CHINA)</li>
+                            </ul>
+                        </div>
+					</div>
+					<div class="match-details-body">
+                        <div class="table-container-header">
+                            <h2>Match Actions</h2>
+                        </div>
+                        <div class="scrollable-table">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Player</th>
+                                        <th>Action</th>
+                                        <th>Additional Info</th>
+                                        <th>Cards in Hand</th>
+                                        <th>Cards in Deck</th>
+                                        <th>Current Direction</th>
+                                        <th>Next Turn</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2024-08-04 16:00:00 PDT</td>
+                                        <td>System</td>
+                                        <td>Game Start</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Full</td>
+                                        <td>Clockwise</td>
+                                        <td>Dangerous Salesman</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-08-04 16:01:00 PDT</td>
+                                        <td>Dangerous Salesman</td>
+                                        <td>Play Card</td>
+                                        <td>Red 3 <br> Red 7</td>
+                                        <td>5 Cards</td>
+                                        <td>80 Cards</td>
+                                        <td>Clockwise</td>
+                                        <td>Poor Student</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-08-04 16:02:00 PDT</td>
+                                        <td>Poor Student</td>
+                                        <td>Play Card</td>
+                                        <td>Red 5</td>
+                                        <td>6 Cards</td>
+                                        <td>80 Cards</td>
+                                        <td>Clockwise</td>
+                                        <td>Happy Farmer</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-08-04 16:02:00 PDT</td>
+                                        <td>Poor Student</td>
+                                        <td>Play Card</td>
+                                        <td>Red 5</td>
+                                        <td>6 Cards</td>
+                                        <td>80 Cards</td>
+                                        <td>Clockwise</td>
+                                        <td>Happy Farmer</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-08-04 16:02:00 PDT</td>
+                                        <td>Poor Student</td>
+                                        <td>Play Card</td>
+                                        <td>Red 5</td>
+                                        <td>6 Cards</td>
+                                        <td>80 Cards</td>
+                                        <td>Clockwise</td>
+                                        <td>Happy Farmer</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-08-04 16:02:00 PTT</td>
+                                        <td>Poor Student</td>
+                                        <td>Play Card</td>
+                                        <td>Red 5</td>
+                                        <td>6 Cards</td>
+                                        <td>80 Cards</td>
+                                        <td>Clockwise</td>
+                                        <td>Happy Farmer</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+				</div>
+
+				<!-- Search Result Section -->
+				<div class="search-result" data-search-result></div>
+			</main>
+
+			<!-- Footer Section -->
+			<%- include("partials/footer") %>
+		</div>
+	</body>
 </html>

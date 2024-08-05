@@ -39,14 +39,21 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// Add event listeners to sort data on click
-	document.querySelector("[data-sort-dropdown]")?.addEventListener("change", async (e) => {
+	document.querySelector("[data-dropdown-sort]")?.addEventListener("change", async (e) => {
 		window.location.href = `${window.location.pathname}?order=${e.target.value}`;
 	});
 
 	// Restore dropdown state
 	const [key, value] = window.location.search.substring(1).split("=");
 	if (value) {
-		document.querySelector("[data-sort-dropdown]").value = value || "recent";
+		document.querySelector("[data-dropdown-sort]").value = value || "recent";
+	}
+
+	// Restore Store Items Details State
+	if (window.location.pathname === "/store-items" && localStorage.getItem("storeItemsState")) {
+		const modalState = localStorage.getItem("storeItemsState");
+		showStoreItemsDetails(modalState);
+		localStorage.removeItem("storeItemsState");
 	}
 
 	// Add Different Color for Status Display
@@ -60,12 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			element.style.color = "#f5222d";
 		}
 	});
-
-	// Initalizing for the Create Match Modal
-	initializeDefaultTemplatesForMatch();
-
-	const numOfPlayerDropdown = document.querySelector("[data-create-match-modal] [data-number-of-players]");
-	numOfPlayerDropdown.addEventListener("change", handlePlayerCountChangeForMatch);
 });
 
 /* =================================================================================================== */
@@ -163,7 +164,7 @@ function hideSearchResult() {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
-/* Delete Item Modal Section Below ------------------------------------------------------------------- */
+/* Delete Anything Modal Section Below --------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
 
@@ -174,7 +175,6 @@ function showDeleteItemModal(deleteItem) {
 	deleteItemModal.classList.add("openedModal");
 
 	showModal();
-	localStorage.setItem("modalState", "deleteItemModalOpened");
 }
 
 function hideDeleteItemModal() {
@@ -194,7 +194,7 @@ document.querySelector("[data-edit-player-modal]")?.addEventListener("submit", a
 	e.preventDefault();
 
 	if (isFieldsEmpty("[data-edit-player-modal]", ["[data-username]"])) {
-		displayModalErrorMessage("[data-edit-player-modal]", "Username cannot be empty.. Please try again!");
+		displayModalErrorMessage("[data-edit-player-modal]", "Username cannot be empty... Please try again!");
 		return;
 	}
 
@@ -208,20 +208,46 @@ document.querySelector("[data-edit-player-modal]")?.addEventListener("submit", a
 		return;
 	}
 
+	const originalUsernameInput = document.querySelector("[data-edit-player-modal] [data-original-username]");
+	const usernameInput = document.querySelector("[data-edit-player-modal] [data-username]");
+
+	if (originalUsernameInput.value !== usernameInput.value) {
+		const usernameAvailable = await isUsernameAvailable("[data-edit-player-modal]");
+		if (!usernameAvailable) {
+			displayModalErrorMessage("[data-edit-player-modal]", "Username is taken... Please try again!");
+			return;
+		}
+	}
+
+	const originalEmailInput = document.querySelector("[data-edit-player-modal] [data-original-email]");
+	const emailInput = document.querySelector("[data-edit-player-modal] [data-email]");
+
+	if (originalEmailInput.value !== emailInput.value) {
+		const emailAvailable = await isEmailAvailable("[data-edit-player-modal]");
+		if (!emailAvailable) {
+			displayModalErrorMessage("[data-edit-player-modal]", "Email is taken... Please try again!");
+			return;
+		}
+	}
+
 	hideModalErrorMessage("[data-edit-player-modal]");
 	e.target.submit();
 });
 
 async function showEditPlayerModal(playerID) {
 	const playerIDInput = document.querySelector("[data-edit-player-modal] [data-player-id]");
+	const originalUsernameInput = document.querySelector("[data-edit-player-modal] [data-original-username]");
 	const usernameInput = document.querySelector("[data-edit-player-modal] [data-username]");
+	const originalEmailInput = document.querySelector("[data-edit-player-modal] [data-original-email]");
 	const emailInput = document.querySelector("[data-edit-player-modal] [data-email]");
 	const countryInput = document.querySelector("[data-edit-player-modal] [data-country]");
 
 	const playerData = await fetchPlayerData(playerID);
 	if (playerData) {
 		playerIDInput.value = playerData.playerID;
+		originalUsernameInput.value = playerData.username;
 		usernameInput.value = playerData.username;
+		originalEmailInput.value = playerData.email;
 		emailInput.value = playerData.email;
 		countryInput.value = playerData.country;
 	}
@@ -230,7 +256,6 @@ async function showEditPlayerModal(playerID) {
 	editPlayerModal.classList.add("openedModal");
 
 	showModal();
-	localStorage.setItem("modalState", "editPlayerModalOpened");
 }
 
 function hideEditPlayerModal() {
@@ -244,6 +269,78 @@ function hideEditPlayerModal() {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
+/* Edit Item Modal Section Below --------------------------------------------------------------------- */
+/* =================================================================================================== */
+/* =================================================================================================== */
+
+document.querySelector("[data-edit-item-modal]")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
+
+	if (isFieldsEmpty("[data-edit-item-modal]", ["[data-name]"])) {
+		displayModalErrorMessage("[data-edit-item-modal]", "Name cannot be empty.. Please try again!");
+		return;
+	}
+
+	const originalItemNameInput = document.querySelector("[data-edit-item-modal] [data-original-name]");
+	const itemNameInput = document.querySelector("[data-edit-item-modal] [data-name]");
+
+	if (originalItemNameInput.value !== itemNameInput.value) {
+		const itemNameAvailable = await isItemNameAvailable("[data-edit-item-modal]");
+		if (!itemNameAvailable) {
+			displayModalErrorMessage("[data-edit-item-modal]", "Name is taken... Please try again!");
+			return;
+		}
+	}
+
+	hideModalErrorMessage("[data-edit-item-modal]");
+	e.target.submit();
+});
+
+async function showEditItemModal(itemID) {
+	const itemIDInput = document.querySelector("[data-edit-item-modal] [data-item-id]");
+	const originalItemNameInput = document.querySelector("[data-edit-item-modal] [data-original-name]");
+	const itemNameInput = document.querySelector("[data-edit-item-modal] [data-name]");
+	const qualityInput = document.querySelector("[data-edit-item-modal] [data-quality]");
+	const appliedPromotionInput = document.querySelector("[data-edit-item-modal] [data-applied-promotion]");
+	const discountInput = document.querySelector("[data-edit-item-modal] [data-discount]");
+
+	const itemData = await fetchItemData(itemID);
+	if (itemData) {
+		itemIDInput.value = itemData.itemID;
+		originalItemNameInput.value = itemData.itemName;
+		itemNameInput.value = itemData.itemName;
+		qualityInput.value = itemData.itemQuality;
+		appliedPromotionInput.value = itemData.itemAppliedPromotion;
+
+		const discount = await fetchItemDiscount(appliedPromotionInput.value);
+		if (discount !== 0) {
+			discountInput.innerHTML = `${discount}% OFF`;
+		}
+	}
+
+	appliedPromotionInput.addEventListener("change", async () => {
+		const discount = await fetchItemDiscount(appliedPromotionInput.value);
+		if (discount !== 0) {
+			discountInput.innerHTML = `${discount}% OFF`;
+		}
+	});
+
+	const editItemModal = document.querySelector("[data-edit-item-modal]");
+	editItemModal.classList.add("openedModal");
+
+	showModal();
+}
+
+function hideEditItemModal() {
+	const editItemModal = document.querySelector("[data-edit-item-modal]");
+	editItemModal.classList.remove("openedModal");
+
+	hideModalErrorMessage("[data-edit-item-modal]");
+	hideModal();
+}
+
+/* =================================================================================================== */
+/* =================================================================================================== */
 /* Edit Membership Modal Section Below ------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -252,7 +349,7 @@ document.querySelector("[data-edit-membership-modal")?.addEventListener("submit"
 	e.preventDefault();
 
 	if (isFieldsEmpty("[data-edit-membership-modal]", ["[data-username]"])) {
-		displayModalErrorMessage("[data-edit-membership-modal]", "Username cannot be empty.. Please try again!");
+		displayModalErrorMessage("[data-edit-membership-modal]", "Username cannot be empty... Please try again!");
 		return;
 	}
 
@@ -290,7 +387,6 @@ async function showEditMembershipModal(playerID) {
 	editMembershipModal.classList.add("openedModal");
 
 	showModal();
-	localStorage.setItem("modalState", "editMembershipModalOpened");
 }
 
 function hideEditMembershipModal() {
@@ -342,7 +438,6 @@ function showCreatePlayerModal() {
 	createPlayerModal.classList.add("openedModal");
 
 	showModal();
-	localStorage.setItem("modalState", "createPlayerModalOpened");
 }
 
 function hideCreatePlayerModal() {
@@ -356,6 +451,47 @@ function hideCreatePlayerModal() {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
+/* Create Item Modal Section Below ------------------------------------------------------------- */
+/* =================================================================================================== */
+/* =================================================================================================== */
+
+document.querySelector("[data-create-item-modal]")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
+
+	if (isFieldsEmpty("[data-create-item-modal]", ["[data-name]"])) {
+		displayModalErrorMessage("[data-create-item-modal]", "Name cannot be empty.. Please try again!");
+		return;
+	}
+
+	const itemNameAvailable = await isItemNameAvailable("[data-create-item-modal]");
+	if (!itemNameAvailable) {
+		displayModalErrorMessage("[data-create-item-modal]", "Name is taken... Please try again!");
+		return;
+	}
+
+	clearFormData();
+	hideModalErrorMessage("[data-create-item-modal]");
+	e.target.submit();
+});
+
+function showCreateItemModal() {
+	const createItemModal = document.querySelector("[data-create-item-modal]");
+	createItemModal.classList.add("openedModal");
+
+	initalizeAppliedPromotionForItem();
+	showModal();
+}
+
+function hideCreateItemModal() {
+	const createItemModal = document.querySelector("[data-create-item-modal]");
+	createItemModal.classList.remove("openedModal");
+
+	hideModalErrorMessage("[data-create-item-modal]");
+	hideModal();
+}
+
+/* =================================================================================================== */
+/* =================================================================================================== */
 /* Create Membership Modal Section Below ------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -363,7 +499,7 @@ function hideCreatePlayerModal() {
 document.querySelector("[data-create-membership-modal]")?.addEventListener("submit", async function (e) {
 	e.preventDefault();
 
-	if (isFieldsEmpty("[data-create-membership-modal]", ["[data-username]", "[data-membership-duration]"])) {
+	if (isFieldsEmpty("[data-create-membership-modal]", ["[data-username]", "[data-duration]"])) {
 		displayModalErrorMessage("[data-create-membership-modal]", "Form Incomplete... Please try again!");
 		return;
 	}
@@ -393,7 +529,6 @@ function showCreateMembershipModal() {
 	createMembershipModal.classList.add("openedModal");
 
 	showModal();
-	localStorage.setItem("modalState", "createMembershipModalOpened");
 }
 
 function hideCreateMembershipModal() {
@@ -406,7 +541,7 @@ function hideCreateMembershipModal() {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
-/* Create Match Modal Section Below ----------------------------------------------------------------- */
+/* Create Match Modal Section Below ------------------------------------------------------------------ */
 /* =================================================================================================== */
 /* =================================================================================================== */
 
@@ -431,8 +566,12 @@ function showCreateMatchModal() {
 	const createMatchModal = document.querySelector("[data-create-match-modal]");
 	createMatchModal.classList.add("openedModal");
 
+	initializeDefaultTemplatesForMatch();
+
+	const numOfPlayerDropdown = document.querySelector("[data-create-match-modal] [data-number-of-players]");
+	numOfPlayerDropdown.addEventListener("change", handlePlayerCountChangeForMatch);
+
 	showModal();
-	localStorage.setItem("modalState", "createMatchModalOpened");
 }
 
 function hideCreateMatchModal() {
@@ -441,6 +580,155 @@ function hideCreateMatchModal() {
 
 	hideModalErrorMessage("[data-create-match-modal]");
 	hideModal();
+}
+
+function showMatchDetailsModal(matchID) {
+	const matchDetailsModal = document.querySelector("[data-match-detials]");
+	matchDetailsModal.classList.add("openedModal");
+}
+
+function hideMatchDetailsModal() {
+	const matchDetailsModal = document.querySelector("[data-match-detials]");
+	matchDetailsModal.classList.remove("openedModal");
+}
+
+/* =================================================================================================== */
+/* =================================================================================================== */
+/* Insert Item Modal Section Below ------------------------------------------------------------------- */
+/* =================================================================================================== */
+/* =================================================================================================== */
+
+document.querySelector("[data-insert-item-modal]")?.addEventListener("submit", async function (e) {
+	e.preventDefault();
+
+	if (isFieldsEmpty("[data-insert-item-modal]", ["[data-username]"])) {
+		displayModalErrorMessage("[data-insert-item-modal]", "Username cannot be empty... Please try again!");
+		return;
+	}
+
+	const playerID = await fetchPlayerID("[data-insert-item-modal]");
+
+	if (!playerID) {
+		displayModalErrorMessage("[data-insert-item-modal]", "Username doesn't exist... Please try again!");
+		return;
+	}
+
+	const itemToInsert = document.querySelector("[data-insert-item-modal] [data-item-id]").value;
+
+	if (!(await isItemNotInPlayerStore(itemToInsert, playerID))) {
+		displayModalErrorMessage("[data-insert-item-modal]", "Item already in the store... Please try again!");
+		return;
+	}
+
+	clearFormData();
+	hideModalErrorMessage("[data-insert-item-modal]");
+	e.target.submit();
+});
+
+function showInsertItemModal(itemID) {
+	const itemToInsert = document.querySelector("[data-insert-item-modal] [data-item-id]");
+	itemToInsert.value = itemID;
+
+	const insertItemModal = document.querySelector("[data-insert-item-modal]");
+	insertItemModal.classList.add("openedModal");
+
+	showModal();
+}
+
+function hideInsertItemModal() {
+	const insertItemModal = document.querySelector("[data-insert-item-modal]");
+	insertItemModal.classList.remove("openedModal");
+
+	hideModalErrorMessage("[data-insert-item-modal]");
+	hideModal();
+}
+
+/* =================================================================================================== */
+/* =================================================================================================== */
+/* View Store Item Section Below --------------------------------------------------------------------- */
+/* =================================================================================================== */
+/* =================================================================================================== */
+
+async function showStoreItemsDetails(storeID) {
+	const storeItemsDetails = document.querySelector("[data-store-items-details]");
+	storeItemsDetails?.classList.add("openedModal");
+
+	const storeItemsDetailsHeader = document.querySelector("[data-store-items-details-header] h2");
+	storeItemsDetailsHeader.innerHTML = `Available Items in Store ${storeID}`;
+
+	const storeItemsDetailsTable = document.querySelector("[data-store-item-details-table]");
+	const storeItemsDetailsData = await fetchStoreItemDetails(storeID);
+
+	if (storeItemsDetailsData.length > 0) {
+		storeItemsDetailsTable.innerHTML = ` 
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Item ID</th>
+						<th>Name</th>
+						<th>Quality</th>
+						<th>Current Price</th>
+						<th>Original Price</th>
+						<th>Applied Promotion</th>
+						<th>Discount</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody data-store-items-details-table-body>
+
+				</tbody>
+			</table>
+		`;
+
+		const storeItemsDetailsTableBody = document.querySelector("[data-store-items-details-table-body]");
+
+		storeItemsDetailsData.forEach((element) => {
+			storeItemsDetailsTableBody.innerHTML += `
+				<tr>
+					<td>${element.itemID}</td>
+					<td>${element.itemName}</td>
+					<td>${element.itemQuality}</td>
+					<td>\$${element.itemCurrentPrice}</td>
+					<td>\$${element.itemOriginalPrice}</td>
+					<td>${element.itemAppliedPromotion}</td>
+					<td>${element.itemDiscount}% OFF</td>
+					<td>
+						<i class="bx bx-trash delete" aria-label="Delete" onclick="removeItemFromStore(${element.itemID}, ${storeID})"></i>
+					</td>
+				</tr>
+			`;
+		});
+	} else {
+		storeItemsDetailsTable.innerHTML = `<p>There are no items left in the store.</p>`;
+	}
+
+	showModal();
+}
+
+function hideStoreItemsDetails() {
+	const storeItemsDetails = document.querySelector("[data-store-items-details]");
+	storeItemsDetails?.classList.remove("openedModal");
+
+	resetStoreItemsDetails();
+	hideModal();
+}
+
+async function removeItemFromStore(itemID, storeID) {
+	const response = await fetch("/store-items/delete-store-item", {
+		method: "DELETE",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ storeID: storeID, itemID: itemID }),
+	});
+
+	if (response.ok) {
+		const storeItemsDetailsData = await fetchStoreItemDetails(storeID);
+		if (storeItemsDetailsData.length > 0) {
+			localStorage.setItem("storeItemsState", storeID);
+		}
+		window.location.reload();
+	} else {
+		console.error(`Failed to delete item ${itemID} in store`);
+	}
 }
 
 /* =================================================================================================== */
@@ -479,20 +767,22 @@ function hideModal() {
 	others.forEach((element) => {
 		element.classList.remove("openedModal");
 	});
-
-	localStorage.setItem("modalState", "closed");
 }
 
 function displayModalErrorMessage(modalType, message) {
 	const modalErrorMessage = document.querySelector(`${modalType} [data-modal-error-message]`);
-	modalErrorMessage.innerHTML = `&#9888; ${message}`;
-	modalErrorMessage.style.display = "flex";
+	if (modalErrorMessage) {
+		modalErrorMessage.innerHTML = `&#9888; ${message}`;
+		modalErrorMessage.style.display = "flex";
+	}
 }
 
 function hideModalErrorMessage(modalType) {
 	const modalErrorMessage = document.querySelector(`${modalType} [data-modal-error-message]`);
-	modalErrorMessage.innerHTML = "";
-	modalErrorMessage.style.display = "none";
+	if (modalErrorMessage) {
+		modalErrorMessage.innerHTML = "";
+		modalErrorMessage.style.display = "none";
+	}
 }
 
 function isFieldsEmpty(modalType, fieldsArray) {
@@ -518,12 +808,17 @@ function clearPasswordFields(modalType) {
 	}
 }
 
+function resetStoreItemsDetails() {
+	const storeItemsDetailsTable = document.querySelector("[data-store-item-details-table]");
+	storeItemsDetailsTable.innerHTML = "";
+}
+
 function clearFormData() {
 	localStorage.removeItem("formData");
 }
 
 function isDurationValid(modalType) {
-	const membershipDuration = document.querySelector(`${modalType} [data-membership-duration]`).value;
+	const membershipDuration = document.querySelector(`${modalType} [data-duration]`).value;
 	currentDate = new Date();
 	expireDate = new Date(new Date().getTime() + membershipDuration * 24 * 60 * 60 * 1000);
 	return isNaN(expireDate);
@@ -556,6 +851,22 @@ function updatePrivilegeClass(modalType) {
 	privilegeClass.innerHTML = currentClass;
 }
 
+async function initalizeAppliedPromotionForItem() {
+	const appliedPromotionInput = document.querySelector("[data-create-item-modal] [data-applied-promotion]");
+	const discountInput = document.querySelector("[data-create-item-modal] [data-discount]");
+	const discount = await fetchItemDiscount(appliedPromotionInput.value);
+	if (discount !== 0) {
+		discountInput.innerHTML = `${discount}% OFF`;
+	}
+
+	appliedPromotionInput.addEventListener("change", async () => {
+		const discount = await fetchItemDiscount(appliedPromotionInput.value);
+		if (discount !== 0) {
+			discountInput.innerHTML = `${discount}% OFF`;
+		}
+	});
+}
+
 function initializeDefaultTemplatesForMatch() {
 	const numOfPlayerDropdown = document.querySelector("[data-create-match-modal] [data-number-of-players]");
 	handlePlayerCountChangeForMatch({ target: numOfPlayerDropdown });
@@ -586,7 +897,7 @@ function handlePlayerCountChangeForMatch(e) {
 	}
 }
 
-// Helper Function to Fetch Player Data in any modal
+// Helper Function to Fetch PlayerID in Any Modal
 async function fetchPlayerID(modalType) {
 	const username = document.querySelector(`${modalType} [data-username]`).value;
 
@@ -597,20 +908,27 @@ async function fetchPlayerID(modalType) {
 	return null;
 }
 
-// Helper Function to Validate Multiple Usernames in any modal
-async function validateUsernames(usernames) {
-	const invalidUsernames = [];
+// Helper Function to Check Username Availability in Dashboard
+async function isUsernameAvailable(modalType) {
+	const username = document.querySelector(`${modalType} [data-username]`).value;
+	const response = await fetch(`/dashboard/check-input?username=${username}`);
+	return response.ok;
+}
 
-	await Promise.all(
-		usernames.map(async (username) => {
-			const response = await fetch(`/dashboard/fetch-playerID?username=${username}`);
-			if (!response.ok) {
-				invalidUsernames.push(username);
-			}
-		})
-	);
+// Helper Function to Check Username Availability in Dashboard
+async function isEmailAvailable(modalType) {
+	const email = document.querySelector(`${modalType} [data-email]`).value;
+	const response = await fetch(`/dashboard/check-input?email=${email}`);
+	return response.ok;
+}
 
-	return invalidUsernames;
+// Helper Function to Fetch Store Item Details
+async function fetchStoreItemDetails(storeID) {
+	const response = await fetch(`/store-items/fetch-store-items-details?storeID=${storeID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
 }
 
 // Helper Function to Fetch Player Data to Display in Edit Player Modal
@@ -622,18 +940,35 @@ async function fetchPlayerData(playerID) {
 	return null;
 }
 
-// Helper Function to Check Username Availability in Create Player Modal
-async function isUsernameAvailable(modalType) {
-	const username = document.querySelector(`${modalType} [data-username]`).value;
-	const response = await fetch(`/dashboard/create-modal/check-input?username=${username}`);
+// Helper Function to Fetch Discount Data in Store-Items
+async function fetchItemDiscount(appliedPromotion) {
+	const response = await fetch(`/store-items/fetch-discount?appliedPromotion=${appliedPromotion}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
+// Helper Function to Check Item Name Availability in Store-Items
+async function isItemNameAvailable(modalType) {
+	const itemName = document.querySelector(`${modalType} [data-name]`).value;
+	const response = await fetch(`/store-items/check-input?itemName=${itemName}`);
 	return response.ok;
 }
 
-// Helper Function to Check Username Availability in Create Player Modal
-async function isEmailAvailable(modalType) {
-	const email = document.querySelector(`${modalType} [data-email]`).value;
-	const response = await fetch(`/dashboard/create-modal/check-input?email=${email}`);
+// Helper Function to Check Whether the Item can be Inserted in Insert Item Modal
+async function isItemNotInPlayerStore(itemID, playerID) {
+	const response = await fetch(`/store-items/check-input?itemID=${itemID}&playerID=${playerID}`);
 	return response.ok;
+}
+
+// Helper Function to Fetch Item Data to Display in Edit Items Modal
+async function fetchItemData(itemID) {
+	const response = await fetch(`/store-items/edit-modal/fetch-data?itemID=${itemID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
 }
 
 // Helper Function to Fetch Membership Data to Display in Edit Membership Modal
@@ -650,6 +985,22 @@ async function isUserWithoutMembership(modalType) {
 	const username = document.querySelector(`${modalType} [data-username]`).value;
 	const response = await fetch(`/memberships/create-modal/check-membership?username=${username}`);
 	return response.ok;
+}
+
+// Helper Function to Validate Multiple Usernames in Matches
+async function validateUsernames(usernames) {
+	const invalidUsernames = [];
+
+	await Promise.all(
+		usernames.map(async (username) => {
+			const response = await fetch(`/dashboard/fetch-playerID?username=${username}`);
+			if (!response.ok) {
+				invalidUsernames.push(username);
+			}
+		})
+	);
+
+	return invalidUsernames;
 }
 
 /* =================================================================================================== */
