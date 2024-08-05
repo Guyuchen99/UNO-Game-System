@@ -105,9 +105,7 @@
                     <h2>Available Items in Store</h2>
                     <button class="close-btn" type="button" onclick="hideStoreItemsDetails()">&times;</button>
                 </div>
-                <div class="scrollable-table" data-store-item-details-table>
-
-                </div>
+                <div class="scrollable-table" data-store-item-details-table></div>
             </div>
 
             <div class="modal delete-item-modal" data-delete-item-modal>
@@ -144,12 +142,11 @@
                         <label for="appliedPromotionEditItem">Applied Promotion: </label>
                         <div class="modal-dropdown-container">
                             <select id="appliedPromotionEditItem" name="appliedPromotion" class="dropdown half-width" data-applied-promotion>
-                                <option value="New Year Sale" selected>New Year Sale</option>
+                                <option value="No Promotion" selected>No Promotion</option>
+                                <option value="Cyber Monday">Cyber Monday</option>
+                                <option value="Black Friday">Black Friday</option>
                                 <option value="Christmas Sale">Christmas Sale</option>
-                                <option value="Summer Sale">Summer Sale</option>
-                                <option value="Autumn Sale">Autumn Sale</option>
-                                <option value="Winter Sale">Winter Sale</option>
-                                <option value="Spring Sale">Spring Sale</option>
+                                <option value="New Year Sale">New Year Sale</option>
                             </select>
                             <span data-discount></span>
                         </div>
@@ -205,12 +202,11 @@
                         <label for="appliedPromotionCreateItem">Applied Promotion: </label>
                         <div class="modal-dropdown-container">
                             <select id="appliedPromotionCreateItem" name="appliedPromotion" class="dropdown half-width" data-applied-promotion data-save-input>
-                                <option value="New Year Sale" selected>New Year Sale</option>
+                                <option value="No Promotion" selected>No Promotion</option>
+                                <option value="Cyber Monday">Cyber Monday</option>
+                                <option value="Black Friday">Black Friday</option>
                                 <option value="Christmas Sale">Christmas Sale</option>
-                                <option value="Summer Sale">Summer Sale</option>
-                                <option value="Autumn Sale">Autumn Sale</option>
-                                <option value="Winter Sale">Winter Sale</option>
-                                <option value="Spring Sale">Spring Sale</option>
+                                <option value="New Year Sale">New Year Sale</option>
                             </select>
                             <span data-discount></span>
                         </div>

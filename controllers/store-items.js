@@ -41,7 +41,7 @@ exports.fetchDiscount = async (req, res) => {
 	try {
 		const results = await storeItemsModel.getDiscountByAppliedPromotion(appliedPromotion);
 
-		if (!results) {
+		if (results == null) {
 			return res.status(404).send(`OH NO! Discount for ${appliedPromotion} does not exist!`);
 		}
 

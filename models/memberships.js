@@ -64,6 +64,24 @@ exports.getAllMemberships = async (order) => {
 	}
 };
 
+exports.getPrivilegeClassByPrivilegeLevel = async (privilegeClass) => {
+	try {
+		const myQuery = `
+			SELECT 
+				mpc.privilege_class AS privilegeClass
+			FROM MembershipPrivilegeClass mpc
+			WHERE privilege_level = ?
+    	`;
+
+		const [results] = await db.promise().query(myQuery, [privilegeClass]);
+
+		return results[0]?.privilegeClass;
+	} catch (error) {
+		console.error(logError("getPrivilegeClassByPrivilegeLevel"), error);
+		throw error;
+	}
+};
+
 exports.getMembershipDataByPlayerID = async (playerID) => {
 	try {
 		const myQuery = `
@@ -82,8 +100,8 @@ exports.getMembershipDataByPlayerID = async (playerID) => {
 		`;
 
 		const [results] = await db.promise().query(myQuery, [playerID]);
-		results[0].membershipIssueDate = formatInTimeZone(results[0].membershipIssueDate, vancouverTimeZone, "yyyy-MM-dd"); 
-		results[0].membershipExpireDate = formatInTimeZone(results[0].membershipExpireDate, vancouverTimeZone, "yyyy-MM-dd"); 
+		results[0].membershipIssueDate = formatInTimeZone(results[0].membershipIssueDate, vancouverTimeZone, "yyyy-MM-dd");
+		results[0].membershipExpireDate = formatInTimeZone(results[0].membershipExpireDate, vancouverTimeZone, "yyyy-MM-dd");
 
 		return results[0];
 	} catch (error) {

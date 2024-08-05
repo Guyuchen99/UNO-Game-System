@@ -311,23 +311,12 @@ async function showEditItemModal(itemID) {
 		itemNameInput.value = itemData.itemName;
 		qualityInput.value = itemData.itemQuality;
 		appliedPromotionInput.value = itemData.itemAppliedPromotion;
-
-		const discount = await fetchItemDiscount(appliedPromotionInput.value);
-		if (discount !== 0) {
-			discountInput.innerHTML = `${discount}% OFF`;
-		}
 	}
-
-	appliedPromotionInput.addEventListener("change", async () => {
-		const discount = await fetchItemDiscount(appliedPromotionInput.value);
-		if (discount !== 0) {
-			discountInput.innerHTML = `${discount}% OFF`;
-		}
-	});
 
 	const editItemModal = document.querySelector("[data-edit-item-modal]");
 	editItemModal.classList.add("openedModal");
 
+	initalizeAppliedPromotionForItem("[data-edit-item-modal]");
 	showModal();
 }
 
@@ -371,7 +360,6 @@ async function showEditMembershipModal(playerID) {
 	const issueDateInput = document.querySelector("[data-edit-membership-modal] [data-issue-date]");
 	const expireDateInput = document.querySelector("[data-edit-membership-modal] [data-expire-date]");
 	const privilegeLevelInput = document.querySelector("[data-edit-membership-modal] [data-privilege-level]");
-	const privilegeClassInput = document.querySelector("[data-edit-membership-modal] [data-privilege-class]");
 
 	const membershipData = await fetchMembershipData(playerID);
 	if (membershipData) {
@@ -380,12 +368,12 @@ async function showEditMembershipModal(playerID) {
 		issueDateInput.value = membershipData.membershipIssueDate;
 		expireDateInput.value = membershipData.membershipExpireDate;
 		privilegeLevelInput.value = membershipData.membershipPrivilegeLevel;
-		privilegeClassInput.innerHTML = membershipData.membershipPrivilegeClass;
 	}
 
 	const editMembershipModal = document.querySelector("[data-edit-membership-modal]");
 	editMembershipModal.classList.add("openedModal");
 
+	initalizePrivilegeLevelForMembership("[data-edit-membership-modal]");
 	showModal();
 }
 
@@ -478,7 +466,7 @@ function showCreateItemModal() {
 	const createItemModal = document.querySelector("[data-create-item-modal]");
 	createItemModal.classList.add("openedModal");
 
-	initalizeAppliedPromotionForItem();
+	initalizeAppliedPromotionForItem("[data-create-item-modal]");
 	showModal();
 }
 
@@ -528,6 +516,7 @@ function showCreateMembershipModal() {
 	const createMembershipModal = document.querySelector("[data-create-membership-modal]");
 	createMembershipModal.classList.add("openedModal");
 
+	initalizePrivilegeLevelForMembership("[data-create-membership-modal]");
 	showModal();
 }
 
@@ -691,7 +680,7 @@ async function showStoreItemsDetails(storeID) {
 					<td>\$${element.itemCurrentPrice}</td>
 					<td>\$${element.itemOriginalPrice}</td>
 					<td>${element.itemAppliedPromotion}</td>
-					<td>${element.itemDiscount}% OFF</td>
+					<td>${element.itemDiscount === 0 ? "No Discount" : element.itemDiscount + "% OFF"}</td>
 					<td>
 						<i class="bx bx-trash delete" aria-label="Delete" onclick="removeItemFromStore(${element.itemID}, ${storeID})"></i>
 					</td>
@@ -824,44 +813,36 @@ function isDurationValid(modalType) {
 	return isNaN(expireDate);
 }
 
-function updatePrivilegeClass(modalType) {
-	const privilegeLevel = document.querySelector(`${modalType} [data-privilege-level]`);
-	const privilegeClass = document.querySelector(`${modalType} [data-privilege-class]`);
+async function initalizePrivilegeLevelForMembership(modalType) {
+	const privilegeLevelInput = document.querySelector(`${modalType} [data-privilege-level]`);
+	const privilegeClassInput = document.querySelector(`${modalType} [data-privilege-class]`);
 
-	let currentClass;
+	const privilegeClass = await fetchPrivilegeClass(privilegeLevelInput.value);
+	privilegeClassInput.innerHTML = privilegeClass;
 
-	switch (privilegeLevel.value) {
-		case "1":
-			currentClass = "Bronze";
-			break;
-		case "2":
-			currentClass = "Silver";
-			break;
-		case "3":
-			currentClass = "Gold";
-			break;
-		case "4":
-			currentClass = "Platinum";
-			break;
-		case "5":
-			currentClass = "Diamond";
-			break;
-	}
+	privilegeLevelInput.addEventListener("change", async () => {
+		const privilegeClass = await fetchPrivilegeClass(privilegeLevelInput.value);
 
-	privilegeClass.innerHTML = currentClass;
+		privilegeClassInput.innerHTML = privilegeClass;
+	});
 }
 
-async function initalizeAppliedPromotionForItem() {
-	const appliedPromotionInput = document.querySelector("[data-create-item-modal] [data-applied-promotion]");
-	const discountInput = document.querySelector("[data-create-item-modal] [data-discount]");
+async function initalizeAppliedPromotionForItem(modalType) {
+	const appliedPromotionInput = document.querySelector(`${modalType} [data-applied-promotion]`);
+	const discountInput = document.querySelector(`${modalType} [data-discount]`);
+
 	const discount = await fetchItemDiscount(appliedPromotionInput.value);
-	if (discount !== 0) {
+	if (discount === 0) {
+		discountInput.innerHTML = "";
+	} else {
 		discountInput.innerHTML = `${discount}% OFF`;
 	}
 
 	appliedPromotionInput.addEventListener("change", async () => {
 		const discount = await fetchItemDiscount(appliedPromotionInput.value);
-		if (discount !== 0) {
+		if (discount === 0) {
+			discountInput.innerHTML = "";
+		} else {
 			discountInput.innerHTML = `${discount}% OFF`;
 		}
 	});
@@ -971,6 +952,15 @@ async function fetchItemData(itemID) {
 	return null;
 }
 
+// Helper Function to Fetch Privilege Class in Store-Items
+async function fetchPrivilegeClass(privilegeLevel) {
+	const response = await fetch(`/memberships/fetch-privilege-class?privilegeLevel=${privilegeLevel}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
 // Helper Function to Fetch Membership Data to Display in Edit Membership Modal
 async function fetchMembershipData(playerID) {
 	const response = await fetch(`/memberships/edit-modal/fetch-data?playerID=${playerID}`);
@@ -1005,6 +995,6 @@ async function validateUsernames(usernames) {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
-/* Perrry Below ---------------------------------------------------------------------------- */
+/* Perrry Below -------------------------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */

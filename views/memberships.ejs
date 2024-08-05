@@ -103,14 +103,14 @@
                     <div class="modal-fields">
                         <label for="privilegeLevelEditMembership">Privilege Level: </label>
 						<div class="modal-dropdown-container">
-							<select id="privilegeLevelEditMembership" name="privilegeLevel" class="dropdown quarter-width" default="1" onchange="updatePrivilegeClass(`[data-edit-membership-modal]`)" data-privilege-level data-save-input>
+							<select id="privilegeLevelEditMembership" name="privilegeLevel" class="dropdown quarter-width" default="1" data-privilege-level>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
 								<option value="4">4</option>
 								<option value="5">5</option>
 							</select>
-							<span data-save-input data-privilege-class>Bronze</span>
+							<span data-privilege-class></span>
 						</div>
                     </div>
                 </div>
@@ -138,14 +138,14 @@
                     <div class="modal-fields">
                         <label for="privilegeLevelCreateMembership">Privilege Level: </label>
 						<div class="modal-dropdown-container">
-							<select id="privilegeLevelCreateMembership" name="privilegeLevel" class="half-width dropdown" default="1" onchange="updatePrivilegeClass(`[data-create-membership-modal]`)" data-privilege-level data-save-input>
+							<select id="privilegeLevelCreateMembership" name="privilegeLevel" class="half-width dropdown" default="1" data-privilege-level data-save-input>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
 								<option value="4">4</option>
 								<option value="5">5</option>
 							</select>
-							<span data-save-input data-privilege-class>Bronze</span>
+							<span data-privilege-class></span>
 						</div>
                     </div>
                 </div>

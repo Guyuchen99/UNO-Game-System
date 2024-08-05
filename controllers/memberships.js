@@ -20,6 +20,23 @@ exports.loadMemberships = async (req, res) => {
 	}
 };
 
+exports.fetchPrivilegeClass = async (req, res) => {
+	const { privilegeLevel } = req.query;
+
+	try {
+		const results = await membershipsModel.getPrivilegeClassByPrivilegeLevel(privilegeLevel);
+
+		if (results == null) {
+			return res.status(404).send(`OH NO! Privilege Class for ${privilegeLevel} does not exist!`);
+		}
+
+		return res.status(200).json(results);
+	} catch (error) {
+		console.error(logError("fetchPrivilegeClass"), error);
+		res.status(500).send(resError("fetchPrivilegeClass"));
+	}
+};
+
 exports.fetchMembershipData = async (req, res) => {
 	const { playerID } = req.query;
 

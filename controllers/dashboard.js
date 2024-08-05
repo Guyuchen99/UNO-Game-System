@@ -1,3 +1,4 @@
+const storeItemsModel = require("../models/store-items");
 const dashboardModel = require("../models/dashboard");
 
 const logError = (functionName) => `OH NO! Error with ${functionName} in Dashboard Controllers:`;
@@ -130,6 +131,10 @@ exports.registerPlayer = async (req, res) => {
 
 	try {
 		await dashboardModel.registerPlayer(username, password, email, country);
+
+		const playerID = await dashboardModel.getPlayerIDByUsername(username); 
+		await storeItemsModel.registerStore(playerID);
+		
 		res.redirect("/dashboard");
 	} catch (error) {
 		console.error(logError("registerPlayer"), error);

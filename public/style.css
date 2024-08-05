@@ -567,7 +567,6 @@ body.openedModal {
 	background-color: white;
 	padding: 1rem 0.75rem;
 	font-size: 1.5rem;
-	text-align: center;
 }
 
 .search-result .table td,
@@ -575,6 +574,10 @@ body.openedModal {
 .store-items-details .table td i {
 	padding: 0 0.75rem;
 	font-size: 1.5rem;
+}
+
+.store-items-details .table td:first-child, 
+.store-items-details .table td:last-child {
 	text-align: center;
 }
 
@@ -781,7 +784,7 @@ body.openedModal {
 }
 
 .modal-body .modal-fields .modal-dropdown-container > span {
-	padding: 1rem;
+	padding: 0 1rem; 
 }
 
 .modal-footer {

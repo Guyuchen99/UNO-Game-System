@@ -6,11 +6,8 @@ const resError = (functionName) => `OH NO! Internal Server Error with ${function
 exports.getSearchResults = async (req, res) => {
 	const { queryType, number } = req.query;
 
-	console.log(queryType);
-
 	try {
 		const results = await searchResultsModel.getSearchResultData(queryType, number);
-		console.log(results);
 
 		const columnNames = results.length > 0 ? Object.keys(results[0]) : [];
 

@@ -4,19 +4,21 @@ const logError = (functionName) => `OH NO! Error with ${functionName} in Models:
 
 const queryMap = {
 	"event-participants-count-by-number": (number) => `
-    SELECT e.name, COUNT(pe.player_id) AS participants
+    SELECT 
+      e.name AS event_name, 
+      COUNT(ppe.player_id) AS participants
     FROM Events e
-    JOIN PlayerParticipateEvents pe ON e.event_id = pe.event_id
+    JOIN PlayerParticipateEvents ppe ON e.event_id = ppe.event_id
     GROUP BY e.name
-    HAVING COUNT(pe.player_id) > ${number};
+    HAVING COUNT(ppe.player_id) > ${number};
   `,
 	"event-participants-count-by-country": () => `
     SELECT country, event_name, COUNT(player_id) AS participants
     FROM (
-      SELECT p.country, e.name AS event_name, pe.player_id
+      SELECT p.country, e.name AS event_name, ppe.player_id
       FROM Players p
-      JOIN PlayerParticipateEvents pe ON p.player_id = pe.player_id
-      JOIN Events e ON pe.event_id = e.event_id
+      JOIN PlayerParticipateEvents ppe ON p.player_id = ppe.player_id
+      JOIN Events e ON ppe.event_id = e.event_id
     ) AS country_event_participation
     GROUP BY country, event_name;
   `,
@@ -26,7 +28,7 @@ const queryMap = {
     WHERE NOT EXISTS (
       SELECT e.event_id
       FROM Events e
-      WHERE NOT EXISTS (
+      WHERE e.status = 'Completed' AND NOT EXISTS (
         SELECT pe.player_id
         FROM PlayerParticipateEvents pe
         WHERE pe.event_id = e.event_id AND pe.player_id = p.player_id

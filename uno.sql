@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS Events (
 CREATE TABLE IF NOT EXISTS Stores (
     store_id INT AUTO_INCREMENT,
     player_id INT NOT NULL,
-    num_of_items INT,
+    num_of_items INT DEFAULT 0,
     PRIMARY KEY (store_id),
     FOREIGN KEY (player_id) REFERENCES Players(player_id) 
 		ON DELETE CASCADE
@@ -85,10 +85,10 @@ CREATE TABLE IF NOT EXISTS ItemDiscount (
 
 CREATE TABLE IF NOT EXISTS Items (
     item_id INT AUTO_INCREMENT,
-    current_price INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+	name VARCHAR(255) NOT NULL,
     quality VARCHAR(255) NOT NULL,
-    applied_promotion VARCHAR(255),
+    applied_promotion VARCHAR(255) NOT NULL,
+	current_price INT NOT NULL,
     PRIMARY KEY (item_id),
     FOREIGN KEY (quality) REFERENCES ItemOriginalPrice(quality) 
 		ON DELETE CASCADE
@@ -490,25 +490,24 @@ VALUES
 
 INSERT IGNORE INTO ItemDiscount (applied_promotion, discount) 
 VALUES 
-('New Year Sale', 35),
-('Christmas Sale', 80),
-('Summer Sale', 20),
-('Winter Sale', 15),
-('Spring Sale', 25),
-('Autumn Sale', 30); 
+('No Promotion', 0),
+('Cyber Monday', 25),
+('Black Friday', 40),
+('Christmas Sale', 70),
+('New Year Sale', 35); 
 
 INSERT IGNORE INTO Items (current_price, name, quality, applied_promotion) 
 VALUES 
-(122, 'Red Card', 'Common', 'New Year Sale'),
-(187, 'Blue Card', 'Uncommon', 'Summer Sale'),
-(317, 'Green Card', 'Rare', 'Winter Sale'),
-(577, 'Yellow Card', 'Epic', 'Spring Sale'),
-(1097, 'Wild Card', 'Legendary', 'Autumn Sale'),
+(122, 'Red Card', 'Common', 'Cyber Monday'),
+(187, 'Blue Card', 'Uncommon', 'Black Friday'),
+(317, 'Green Card', 'Rare', 'Black Friday'),
+(577, 'Yellow Card', 'Epic', 'New Year Sale'),
+(1097, 'Wild Card', 'Legendary', 'New Year Sale'),
 (122, 'Dummy Item 1', 'Common', 'New Year Sale'),
-(187, 'Dummy Item 2', 'Uncommon', 'Summer Sale'),
-(317, 'Dummy Item 3', 'Rare', 'Winter Sale'),
-(577, 'Dummy Item 4', 'Epic', 'Spring Sale'),
-(1097, 'Dummy Item 5', 'Legendary', 'Autumn Sale');
+(187, 'Dummy Item 2', 'Uncommon', 'Cyber Monday'),
+(317, 'Dummy Item 3', 'Rare', 'Christmas Sale'),
+(577, 'Dummy Item 4', 'Epic', 'New Year Sale'),
+(1097, 'Dummy Item 5', 'Legendary', 'New Year Sale');
 
 INSERT IGNORE INTO StoreSellItems (store_id, item_id) 
 VALUES 
@@ -751,18 +750,42 @@ VALUES
 (1, 5), 
 (2, 5); 
 
-INSERT IGNORE INTO PlayerParticipateEvents (player_id, event_id) 
+INSERT INTO PlayerParticipateEvents (player_id, event_id) 
 VALUES 
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5),
-(1, 6),
-(1, 7),
-(1, 8),
-(1, 9),
-(1, 10);
+-- Player1 participates in all completed events
+(1, 1), -- UNO Mania (Completed)
+(1, 5), -- Reverse Madness (Completed)
+(1, 7), -- Wild Card Weekend (Completed)
+(1, 11), -- Grand Tournament (Completed)
+(1, 12), -- Weekly Challenge (Completed)
+(1, 13), -- Holiday Special (Completed)
+(1, 14), -- Friendship Match (Completed)
+-- Other players with partial participation
+(2, 1), 
+(3, 1), 
+(4, 1), 
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+-- Participation of other events
+(2, 5),
+(3, 5),
+(4, 5),
+(5, 5),
+(2, 7),
+(3, 7),
+(4, 7),
+(5, 7),
+(2, 11),
+(3, 11),
+(4, 11),
+(5, 11);
+
 
 INSERT IGNORE INTO PlayerInvolveMatches (player_id, match_id) 
 VALUES 

@@ -49,6 +49,7 @@ router.delete("/store-items/delete", storeItemsController.deleteItem);
 router.delete("/store-items/delete-store-item", storeItemsController.deleteStoreItem);
 
 router.get("/memberships", authController.isLoggedIn, membershipsController.loadMemberships);
+router.get("/memberships/fetch-privilege-class", membershipsController.fetchPrivilegeClass);
 router.get("/memberships/edit-modal/fetch-data", membershipsController.fetchMembershipData);
 router.get("/memberships/create-modal/check-membership", membershipsController.checkMembershipExistence);
 

@@ -65,7 +65,7 @@ exports.getAllItems = async (order) => {
 			itemCurrentPrice: "$" + element.itemCurrentPrice,
 			itemOriginalPrice: "$" + element.itemOriginalPrice,
 			itemAppliedPromotion: element.itemAppliedPromotion,
-			itemDiscount: element.itemDiscount + "% OFF",
+			itemDiscount: element.itemDiscount === 0 ? "No Discount" : element.itemDiscount + "% OFF",
 		}));
 	} catch (error) {
 		console.error(logError("getAllItems"), error);
@@ -114,7 +114,7 @@ exports.getDiscountByAppliedPromotion = async (appliedPromotion) => {
 
 		return results[0]?.itemDiscount;
 	} catch (error) {
-		console.error(logError("getItemDataByID"), error);
+		console.error(logError("getDiscountByAppliedPromotion"), error);
 		throw error;
 	}
 };
@@ -227,6 +227,18 @@ exports.updateItemByID = async (itemID, updates) => {
 		}
 	} catch (error) {
 		console.error(logError("updateItemByID"), error);
+		throw error;
+	}
+};
+
+exports.registerStore = async (playerID) => {
+	try {
+		await db.promise().query("INSERT INTO Stores SET ?", {
+			player_id: playerID,
+		});
+		console.log("OH YES! Store Registered Successfully!");
+	} catch (error) {
+		console.error(logError("registerStore"), error);
 		throw error;
 	}
 };
