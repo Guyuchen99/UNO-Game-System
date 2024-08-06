@@ -20,48 +20,124 @@
 
          <!-- Main Section -->
          <main class="grid-main">
-            <div class="main-body">
+            <div class="main-body" data-main-body>
                 <div class="table-container-primary">
                     <div class="main-body-header">
                         <h2 class="main-title">RECENT EVENTS</h2>
                         <div class="table-btn-list">
-                            <select name="selector" id="selector" class="dropdown">
-                                <option value="Filter">Filter by Number of Participants</option>
-                                <option value="Win Rate">Participants >= 10</option>
-                                <option value="Win Rate">Participants >= 30</option>
-                                <option value="Win Rate">Participants >= 50</option>
-                                <option value="Win Rate">Participants >= 100</option>
-                            </select>
-                            <button class="table-btn add-btn"><i class="bx bx-plus"></i>Create Event</button>
+                            <div class="dropdown-container">
+                                <p class="dropdown-title">Sort By:</p>
+                                <select name="selector" id="selector" class="dropdown" data-dropdown-sort data-pointer-not-allowed>
+                                    <option value="recent" selected>Recent</option>
+                                    <option value="startDate">Start Date</option>
+                                    <option value="endDate">End Date </option>
+                                    <option value="numOfParticipants">Number of Participants</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <button class="table-btn add-btn" onClick="showCreateEventModal()"><i class="bx bx-plus"></i>Create Event</button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Number of Participants</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% locals.recentEvents.forEach(element => { %>
+                    <div class="scrollable-table full-page">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td><%= element.eventName %></td>
-                                    <td><%= element.eventStartDate %></td>
-                                    <td><%= element.eventEndDate %></td>
-                                    <td><%= element.numOfParticipants %></td>
-                                    <td><%= element.eventStatus %></td>
-                                    <td><i class='bx bxs-edit edit' aria-label="Edit"></i>
-                                        <i class='bx bx-trash delete' aria-label="Delete"></i></td>
+                                    <th>Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Number of Participants</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <% locals.recentEvents.forEach(element => { %>
+                                    <tr>
+                                        <td><%= element.eventName %></td>
+                                        <td><%= element.eventStartDate %></td>
+                                        <td><%= element.eventEndDate %></td>
+                                        <td><%= element.numOfParticipants %></td>
+                                        <td data-status="<%= element.eventStatus %>"><%= element.eventStatus %></td>
+                                        <td>
+                                            <i class='bx bxs-edit edit' aria-label="Edit" onclick="showEditEventModal('<%= element.eventID %>')" data-edit data-pointer-not-allowed></i>
+                                            <i class='bx bx-trash delete' aria-label="Delete" onclick="showDeleteItemModal('<%= element.eventID %>')" data-delete data-pointer-not-allowed></i>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <div class="modal delete-item-modal" data-delete-item-modal>
+                <h1>&#9888;</h1>
+                <h2>Are you sure?</h2>
+                <p>This action cannot be undone. All values <br>associated with this field will be lost.</p>
+                <button class="btn modal-btn-delete" type="button" data-conform-delete>Delete Event</button>
+                <button class="btn modal-btn-cancel" type="button" onclick="hideDeleteItemModal()">Cancel</button>
+            </div>
+            
+            <form class="modal edit-item-modal" action="/events/update" method="POST" data-edit-event-modal>
+                <div class="modal-header">
+                    <h2>Edit Event</h2>
+                    <button class="close-btn" type="button" onclick="hideEditEventModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">                        
+                        <input type="hidden" name="eventID" data-event-id>
+                        <input type="hidden" name="originalName" data-original-name>
+                        <label for="nameEditEvent">Name: </label>
+                        <input type="text" id="nameEditEvent" name="name" autocomplete="off" aria-label="Event Name" data-name>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="startDateEditEvent">Start Date: </label>
+                        <input type="date" id="startDateEditEvent" name="startDate" autocomplete="off" aria-label="Start Date" data-start-date>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="endDateEditEvent">End Date: </label>
+                        <input type="date" id="endDateEditEvent" name="endDate" autocomplete="off" aria-label="End Date" data-end-date>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="participantsEditEvent">Number of Participants: </label>
+                        <input type="number" id="participantsEditEvent" name="participants" aria-label="Number of Participants" data-participants disabled>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Update</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideEditEventModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+            
+            <form class="modal create-item-modal" action="/events/register" method="POST" data-create-event-modal>
+                <div class="modal-header">
+                    <h2>Create New Event</h2>
+                    <button class="close-btn" type="button" onclick="hideCreateEventModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <label for="nameCreateEvent">Name: </label>
+                        <input type="text" id="nameCreateEvent" name="name" autocomplete="off" aria-label="Event Name" data-name data-save-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="startDateCreateEvent">Start Date: </label>
+                        <input type="date" id="startDateCreateEvent" name="startDate" autocomplete="off" aria-label="Start Date" data-start-date data-save-input>
+                    </div>
+                    <div class="modal-fields">
+                        <label for="endDateCreateEvent">End Date: </label>
+                        <input type="date" id="endDateCreateEvent" name="endDate" autocomplete="off" aria-label="End Date" data-end-date data-save-input>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Register</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideCreateEventModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
+
+            <!-- Search Result Section -->
+            <div class="search-result" data-search-result></div>
         </main>
 
         <!-- Footer Section -->

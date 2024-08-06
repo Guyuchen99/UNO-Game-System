@@ -98,7 +98,7 @@ exports.registerMembership = async (req, res) => {
 
 	try {
 		const playerID = await dashboardModel.getPlayerIDByUsername(username);
-		await membershipsModel.registerMembership(playerID, duration, privilegeLevel);
+		await membershipsModel.registerMembershipByPlayerID(playerID, duration, privilegeLevel);
 
 		res.redirect("/memberships");
 	} catch (error) {
@@ -112,6 +112,7 @@ exports.deleteMembership = async (req, res) => {
 
 	try {
 		await membershipsModel.deleteMembershipByPlayerID(playerID);
+
 		res.status(200).send("OH YES! Membership Deleted Successfully");
 	} catch (error) {
 		console.error(logError("deleteMembership"), error);

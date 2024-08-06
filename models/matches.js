@@ -8,20 +8,22 @@ const logError = (functionName) => `OH NO! Error with ${functionName} in Matches
 exports.getRecentMatches = async () => {
 	try {
 		const [results] = await db.promise().query(`
-      SELECT 
-          match_id AS matchID, 
-          start_time AS matchStartTime, 
-          end_time AS matchEndTime, 
-          winner AS matchWinner, 
-          status AS matchStatus
-      FROM Matches 
-      ORDER BY match_id DESC 
+			SELECT 
+				match_id AS matchID, 
+				start_time AS matchStartTime, 
+				end_time AS matchEndTime, 
+				winner AS matchWinner, 
+				status AS matchStatus
+			FROM Matches 
+			ORDER BY match_id DESC 
     `);
 
 		return results.map((element) => ({
 			matchID: element.matchID,
 			matchStartTime: formatInTimeZone(element.matchStartTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz"),
-			matchEndTime: element.matchEndTime ? formatInTimeZone(element.matchEndTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz") : "TBD",
+			matchEndTime: element.matchEndTime
+				? formatInTimeZone(element.matchEndTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz")
+				: "TBD",
 			matchWinner: element.matchWinner || "TDB",
 			matchStatus: element.matchStatus,
 		}));
@@ -33,23 +35,15 @@ exports.getRecentMatches = async () => {
 
 exports.registerMatches = async (players) => {
 	try {
-		const [match] = await db.promise().query("INSERT INTO Matches (end_time, winner) VALUES (NULL, NULL)");
+		const [results] = await db.promise().query("INSERT INTO Matches (end_time, winner) VALUES (NULL, NULL)");
 
-		const matchID = match.insertId;
+		const matchID = results.insertId;
 
 		players.forEach(async (element) => {
 			await db.promise().query("INSERT INTO PlayerInvolveMatches SET ?", {
 				match_id: matchID,
 				player_id: element,
 			});
-		});
-
-		const [deck] = await db.promise().query("INSERT INTO Decks (card_amount) VALUES 108)");
-		const deckID = deck.insertId;
-
-		await db.promise().query("INSERT INTO MatchHasDeck SET ?", {
-			match_id: matchID,
-			deck_id: deckID,
 		});
 
 		console.log("OH YES! Match Registered Successfully!");
@@ -62,19 +56,21 @@ exports.registerMatches = async (players) => {
 exports.getMatchBasicInfo = async (matchID) => {
 	try {
 		const myQuery = `
-      SELECT 
-        start_time AS matchStartTime, 
-        end_time AS matchEndTime, 
-        winner AS matchWinner
-      FROM Matches
-      WHERE match_id = ? 
+			SELECT 
+				start_time AS matchStartTime, 
+				end_time AS matchEndTime, 
+				winner AS matchWinner
+			FROM Matches
+			WHERE match_id = ? 
 		`;
 
 		const [results] = await db.promise().query(myQuery, [matchID]);
 
 		return results.map((element) => ({
 			matchStartTime: formatInTimeZone(element.matchStartTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz"),
-			matchEndTime: element.matchEndTime ? formatInTimeZone(element.matchEndTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz") : "TBD",
+			matchEndTime: element.matchEndTime
+				? formatInTimeZone(element.matchEndTime, timeZone, "yyyy-MM-dd HH:mm:ss zzz")
+				: "TBD",
 			matchWinner: element.matchWinner || "TDB",
 		}))[0];
 	} catch (error) {
@@ -86,12 +82,12 @@ exports.getMatchBasicInfo = async (matchID) => {
 exports.getMatchPlayersInfo = async (matchID) => {
 	try {
 		const myQuery = `
-      SELECT 
-        p.username AS username,
-        p.country AS country
-      FROM Players p
-      JOIN PlayerInvolveMatches pim ON p.player_id = pim.player_id
-      WHERE pim.match_id = ?; 
+			SELECT 
+				p.username AS username,
+				p.country AS country
+			FROM Players p
+			JOIN PlayerInvolveMatches pim ON p.player_id = pim.player_id
+			WHERE pim.match_id = ?; 
 		`;
 
 		const [results] = await db.promise().query(myQuery, [matchID]);
@@ -136,7 +132,7 @@ exports.getMatchDetails = async (matchID) => {
 				handInPlayerAndDeck.cardInHand -= 1;
 			} else if (action.action === "Draw") {
 				handInPlayerAndDeck.cardInHand += parseInt(action.additionalInfo.split(" ")[0]);
-				cardInDeck -= action.additionalInfo;
+				cardInDeck -= parseInt(action.additionalInfo.split(" ")[0]);
 			}
 
 			cardCounts[turn.playerID] = handInPlayerAndDeck;

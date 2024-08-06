@@ -27,7 +27,7 @@
                         <div class="table-btn-list">
 							<div class="dropdown-container">
                                 <p class="dropdown-title">Sort By:</p> 
-								<select name="selector" id="selector" class="dropdown" data-sort-dropdown data-pointer-not-allowed>
+								<select name="selector" id="selector" class="dropdown" data-dropdown-sort data-pointer-not-allowed>
 									<option value="recent">Recent</option>
 									<option value="daysRemaining">Days Remaining</option>
 									<option value="privilegeLevel">Privilege Level</option>
@@ -92,13 +92,12 @@
                         <input type="text" id="usernameEditMembership" name="username" autocomplete="username" aria-label="Username" data-username disabled>
                     </div>
                     <div class="modal-fields">
-                        <input type="hidden" id="issueDateOriginal" name="issueDateOriginal" data-issue-date-original>
                         <label for="issueDateEditMembership">Issue Date: </label>
                         <input type="date" id="issueDateEditMembership" name="issueDate" autocomplete="off" aria-label="Issue Date" data-issue-date disabled>
                     </div>
                     <div class="modal-fields">
                         <label for="expireDateEditMembership">Expire Date: </label>
-                        <input type="date" id="expireDateEditMembership" name="expireDate" aria-label="Expire Date" data-expire-date>
+                        <input type="date" id="expireDateEditMembership" name="expireDate" autocomplete="off" aria-label="Expire Date" data-expire-date>
                     </div>
                     <div class="modal-fields">
                         <label for="privilegeLevelEditMembership">Privilege Level: </label>

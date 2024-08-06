@@ -58,6 +58,12 @@ router.post("/memberships/register", membershipsController.registerMembership);
 router.delete("/memberships/delete", membershipsController.deleteMembership);
 
 router.get("/events", authController.isLoggedIn, eventsController.loadEvents);
+router.get("/events/edit-modal/fetch-data", eventsController.fetchEventData);
+router.get("/events/check-input", eventsController.checkFormInput);
+
+router.post("/events/update", eventsController.updateEvent);
+router.post("/events/register", eventsController.registerEvent);
+router.delete("/events/delete", eventsController.deleteEvent);
 
 router.get("/matches", authController.isLoggedIn, matchesController.loadMatches);
 router.get("/matches/fetch-match-basic-info", matchesController.fetchMatchBasicInfo);
