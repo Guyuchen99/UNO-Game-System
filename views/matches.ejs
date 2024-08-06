@@ -24,9 +24,7 @@
 						<div class="main-body-header">
 							<h2 class="main-title">RECENT MATCHES</h2>
 							<div class="table-btn-list">
-								<button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed>
-									<i class="bx bx-plus"></i>Create Match
-								</button>
+								<button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Match</button>
 							</div>
 						</div>
 
@@ -50,7 +48,7 @@
 										<td><%= element.matchEndTime %></td>
 										<td><%= element.matchWinner %></td>
 										<td data-status="<%= element.matchStatus %>"><%= element.matchStatus %></td>
-										<td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchId %>')" data-pointer-not-allowed>View Details</button></td>
+										<td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchID %>')" data-pointer-not-allowed>View Details</button></td>
 									</tr>
 									<% }) %>
 								</tbody>
@@ -89,31 +87,25 @@
 					<div class="modal-error-message" data-modal-error-message></div>
 				</form>
 
-				<!-- View Match Details Section -->
 				<div class="match-details" data-match-detials>
-
 					<div class="match-details-header">
 						<div class="match-details-title">
 							<h2>UNO Match History Log</h2>
 							<button class="close-btn" type="button" onclick="hideMatchDetailsModal()">&times;</button>
 						</div>
-
-                        <div class="match-details-basic-information">
-                            <p>Match ID: 3</p>
-                            <p>Start Time: 2024-08-04 16:00:00</p>
-                            <p>End Time: 2024-08-04 16:45:00</p>
-                            <p>Winner: Dangerous Salesman</p>
+                        <div class="match-details-basic-information" data-match-details-basic-information>
+                            <p data-match-id></p>
+                            <p data-match-start-time></p>
+                            <p data-match-end-time></p>
+                            <p data-match-winner></p>
                         </div>
-                        <div class="match-details-player-information">
+                        <div class="match-details-player-information" data-match-details-player-information>
                             <h2>Players</h2>
-                            <ul>
-                                <li>Dangerous Salesman (CANADA)</li>
-                                <li>Poor Student (USA)</li>
-                                <li>Happy Farmer (JAPAN)</li>
-                                <li>Selfish Engineer (CHINA)</li>
-                            </ul>
+                            <ul data-match-players-list></ul>
                         </div>
 					</div>
+
+
 					<div class="match-details-body">
                         <div class="table-container-header">
                             <h2>Match Actions</h2>
@@ -132,67 +124,28 @@
                                         <th>Next Turn</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody data-match-details-table-body>
                                     <tr>
-                                        <td>2024-08-04 16:00:00 PDT</td>
+                                        <td data-match-starting-time></td>
                                         <td>System</td>
                                         <td>Game Start</td>
                                         <td></td>
                                         <td></td>
                                         <td>Full</td>
                                         <td>Clockwise</td>
-                                        <td>Dangerous Salesman</td>
+                                        <td data-match-starting-player></td>
                                     </tr>
+   
                                     <tr>
-                                        <td>2024-08-04 16:01:00 PDT</td>
-                                        <td>Dangerous Salesman</td>
-                                        <td>Play Card</td>
-                                        <td>Red 3 <br> Red 7</td>
-                                        <td>5 Cards</td>
-                                        <td>80 Cards</td>
-                                        <td>Clockwise</td>
-                                        <td>Poor Student</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-08-04 16:02:00 PDT</td>
-                                        <td>Poor Student</td>
-                                        <td>Draw Card</td>
-                                        <td>Draw 1 Card</td>
-                                        <td>8 Cards</td>
-                                        <td>79 Cards</td>
-                                        <td>Clockwise</td>
-                                        <td>Happy Farmer</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-08-04 16:02:00 PDT</td>
-                                        <td>Poor Student</td>
-                                        <td>Play Card</td>
-                                        <td>Red 5</td>
-                                        <td>6 Cards</td>
-                                        <td>79 Cards</td>
-                                        <td>Clockwise</td>
-                                        <td>Happy Farmer</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-08-04 16:02:00 PDT</td>
-                                        <td>Poor Student</td>
-                                        <td>Skip Turn</td>
+                                        <td>2024-08-05 11:02:00 PDT</td>
+                                        <td>System</td>
+                                        <td>Game End</td>
                                         <td></td>
-                                        <td>7 Cards</td>
-                                        <td>79 Cards</td>
-                                        <td>Clockwise</td>
-                                        <td>Happy Farmer</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-08-04 16:02:00 PTT</td>
-                                        <td>Poor Student</td>
-                                        <td>Play Card</td>
-                                        <td>Red 5</td>
-                                        <td>6 Cards</td>
-                                        <td>79 Cards</td>
-                                        <td>Clockwise</td>
-                                        <td>Happy Farmer</td>
-                                    </tr>
+                                        <td></td>
+                                        <td>74 Cards</td>
+                                        <td>Counter Clockwise</td>
+                                        <td></td>
+                                    </tr> 
                                 </tbody>
                             </table>
                         </div>

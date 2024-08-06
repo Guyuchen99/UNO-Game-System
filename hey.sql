@@ -85,9 +85,9 @@ CREATE TABLE IF NOT EXISTS Matches (
     status VARCHAR(255) DEFAULT 'In Process',
     PRIMARY KEY (match_id)
 ); 
-INSERT IGNORE INTO Matches (end_time, winner, status) 
+INSERT IGNORE INTO Matches (start_time, end_time, winner, status) 
 VALUES 
-('2024-07-27 12:30:00', 'Reliable Developer', 'Completed');
+('2024-08-05 10:49:00', '2024-08-05 11:01:00', 'Reliable Developer', 'Completed');
 
 -- Create PlayerInvolveMatches table and insert data
 CREATE TABLE IF NOT EXISTS PlayerInvolveMatches (
@@ -383,19 +383,19 @@ CREATE TABLE IF NOT EXISTS TurnBelongsToPlayerAndMatch (
 ); 
 INSERT IGNORE INTO TurnBelongsToPlayerAndMatch (turn_id, player_id, match_id, turn_order, time_stamp)
 VALUES 
-(1, 1, 1, 'clockwise', '2024-08-05 10:49:00'), -- Reliable Developer plays
-(2, 2, 1, 'clockwise', '2024-08-05 10:50:00'), -- Brilliant Analyst loses turn
-(3, 1, 1, 'clockwise', '2024-08-05 10:51:00'), -- Reliable Developer plays
-(4, 2, 1, 'clockwise', '2024-08-05 10:52:00'), -- Brilliant Analyst plays
-(5, 1, 1, 'clockwise', '2024-08-05 10:53:00'), -- Reliable Developer plays
-(6, 2, 1, 'clockwise', '2024-08-05 10:54:00'), -- Brilliant Analyst draws
-(7, 1, 1, 'clockwise', '2024-08-05 10:55:00'), -- Reliable Developer plays
-(8, 2, 1, 'counter clockwise', '2024-08-05 10:56:00'), -- Brilliant Analyst plays
-(9, 1, 1, 'counter clockwise', '2024-08-05 10:57:00'), -- Reliable Developer plays
-(10, 2, 1, 'counter clockwise', '2024-08-05 10:58:00'), -- Brilliant Analyst draws
-(11, 1, 1, 'counter clockwise', '2024-08-05 10:59:00'), -- Reliable Developer plays
-(12, 2, 1, 'counter clockwise', '2024-08-05 11:00:00'), -- Brilliant Analyst loses turn
-(13, 1, 1, 'counter clockwise', '2024-08-05 11:01:00'); -- Reliable Developer plays
+(1, 1, 1, 'Clockwise', '2024-08-05 10:49:00'), -- Reliable Developer plays
+(2, 2, 1, 'Clockwise', '2024-08-05 10:50:00'), -- Brilliant Analyst loses turn
+(3, 1, 1, 'Clockwise', '2024-08-05 10:51:00'), -- Reliable Developer plays
+(4, 2, 1, 'Clockwise', '2024-08-05 10:52:00'), -- Brilliant Analyst plays
+(5, 1, 1, 'Clockwise', '2024-08-05 10:53:00'), -- Reliable Developer plays
+(6, 2, 1, 'Clockwise', '2024-08-05 10:54:00'), -- Brilliant Analyst draws
+(7, 1, 1, 'Clockwise', '2024-08-05 10:55:00'), -- Reliable Developer plays
+(8, 2, 1, 'Counter Clockwise', '2024-08-05 10:56:00'), -- Brilliant Analyst plays
+(9, 1, 1, 'Counter Clockwise', '2024-08-05 10:57:00'), -- Reliable Developer plays
+(10, 2, 1, 'Counter Clockwise', '2024-08-05 10:58:00'), -- Brilliant Analyst draws
+(11, 1, 1, 'Counter Clockwise', '2024-08-05 10:59:00'), -- Reliable Developer plays
+(12, 2, 1, 'Counter Clockwise', '2024-08-05 11:00:00'), -- Brilliant Analyst loses turn
+(13, 1, 1, 'Counter Clockwise', '2024-08-05 11:01:00'); -- Reliable Developer plays
 
 -- Create PlayAction table and insert data
 CREATE TABLE IF NOT EXISTS PlayAction (

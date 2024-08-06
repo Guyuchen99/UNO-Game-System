@@ -132,9 +132,9 @@ exports.registerPlayer = async (req, res) => {
 	try {
 		await dashboardModel.registerPlayer(username, password, email, country);
 
-		const playerID = await dashboardModel.getPlayerIDByUsername(username); 
+		const playerID = await dashboardModel.getPlayerIDByUsername(username);
 		await storeItemsModel.registerStore(playerID);
-		
+
 		res.redirect("/dashboard");
 	} catch (error) {
 		console.error(logError("registerPlayer"), error);

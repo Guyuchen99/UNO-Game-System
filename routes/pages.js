@@ -60,6 +60,9 @@ router.delete("/memberships/delete", membershipsController.deleteMembership);
 router.get("/events", authController.isLoggedIn, eventsController.loadEvents);
 
 router.get("/matches", authController.isLoggedIn, matchesController.loadMatches);
+router.get("/matches/fetch-match-basic-info", matchesController.fetchMatchBasicInfo);
+router.get("/matches/fetch-match-players-info", matchesController.fetchMatchPlayersInfo);
+router.get("/matches/fetch-match-details", matchesController.fetchMatchDetails);
 router.post("/matches/register", matchesController.registerMatches);
 
 module.exports = router;
