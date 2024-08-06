@@ -1,3 +1,7 @@
+-- DROP DATABASE IF EXISTS UNOGameSystem;
+-- CREATE DATABASE IF NOT EXISTS UNOGameSystem;
+-- USE UNOGameSystem;
+
 CREATE TABLE IF NOT EXISTS PlayerUsernameAndEmail (
 	username VARCHAR(255) NOT NULL, 
     email VARCHAR(255) NOT NULL, 
@@ -17,16 +21,16 @@ CREATE TABLE IF NOT EXISTS Players (
     total_win INT DEFAULT 0,
     total_game_count INT DEFAULT 0,
     experience_point INT DEFAULT 0,
-	win_rate FLOAT DEFAULT 0,
+    win_rate FLOAT DEFAULT 0,
     country VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (player_id),
     FOREIGN KEY (username) REFERENCES PlayerUsernameAndEmail(username) 
-		ON DELETE CASCADE 
+        ON DELETE CASCADE 
         ON UPDATE CASCADE,
     FOREIGN KEY (experience_point) REFERENCES PlayerLevel(experience_point) 
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS MembershipPrivilegeClass (
@@ -110,165 +114,6 @@ CREATE TABLE IF NOT EXISTS StoreSellItems (
 		ON UPDATE CASCADE
 ); 
 
-CREATE TABLE IF NOT EXISTS Matches (
-    match_id INT AUTO_INCREMENT,
-	start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    end_time TIMESTAMP,
-	winner VARCHAR(255),
-	status VARCHAR(255) DEFAULT 'In Process',
-    PRIMARY KEY (match_id)
-); 
-
-CREATE TABLE IF NOT EXISTS Decks (
-    deck_id INT AUTO_INCREMENT,
-    total_cards INT DEFAULT 108,
-    PRIMARY KEY (deck_id)
-); 
-
-CREATE TABLE IF NOT EXISTS CardInDeck (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL, 
-    has_played INT DEFAULT 0,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS WildCard (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS WildDraw4Card (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS NumberCard (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    number INT NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS SkipCard (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS ReverseCard (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS Draw2Card (
-    card_id INT NOT NULL,
-    deck_id INT NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    PRIMARY KEY (card_id, deck_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS HandInPlayerAndMatch (
-    hand_id INT NOT NULL,
-    player_id INT NOT NULL,
-    match_id INT NOT NULL,
-    card_amount INT NOT NULL,
-    PRIMARY KEY (hand_id, player_id, match_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS TurnInPlayerAndMatch (
-    turn_id INT NOT NULL,
-    player_id INT NOT NULL,
-    match_id INT NOT NULL,
-    turn_order VARCHAR(255) NOT NULL,
-    PRIMARY KEY (turn_id, player_id, match_id),
-    FOREIGN KEY (player_id) REFERENCES Players(player_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS ActionInTurn (
-    action_id INT NOT NULL,
-    turn_id INT NOT NULL,
-    player_id INT NOT NULL,
-    match_id INT NOT NULL,
-    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnInPlayerAndMatch(turn_id, player_id, match_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS SkipAction (
-    action_id INT NOT NULL,
-    turn_id INT NOT NULL,
-    player_id INT NOT NULL,
-    match_id INT NOT NULL,
-    PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS DrawAction (
-    action_id INT NOT NULL,
-    turn_id INT NOT NULL,
-    player_id INT NOT NULL,
-    match_id INT NOT NULL,
-    draw_amount INT NOT NULL,
-    PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
-CREATE TABLE IF NOT EXISTS PlayAction (
-    action_id INT NOT NULL,
-    turn_id INT NOT NULL,
-    player_id INT NOT NULL,
-    match_id INT NOT NULL,
-    PRIMARY KEY (action_id, turn_id, player_id, match_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES ActionInTurn(action_id, turn_id, player_id, match_id) 
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
-); 
-
 CREATE TABLE IF NOT EXISTS PlayerContainItems (
     player_id INT NOT NULL, 
     item_id INT NOT NULL, 
@@ -293,16 +138,45 @@ CREATE TABLE IF NOT EXISTS PlayerParticipateEvents (
         ON UPDATE CASCADE
 ); 
 
+CREATE TABLE IF NOT EXISTS Matches (
+    match_id INT AUTO_INCREMENT,
+    start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    end_time TIMESTAMP,
+    winner VARCHAR(255),
+    status VARCHAR(255) DEFAULT 'In Process',
+    PRIMARY KEY (match_id)
+); 
+
 CREATE TABLE IF NOT EXISTS PlayerInvolveMatches (
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     PRIMARY KEY (player_id, match_id),
     FOREIGN KEY (player_id) REFERENCES Players(player_id)
-		ON DELETE CASCADE
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
-		ON DELETE CASCADE
+        ON DELETE CASCADE
         ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS HandBelongsToPlayerAndMatch (
+    hand_id INT AUTO_INCREMENT,
+    player_id INT NOT NULL,
+    match_id INT NOT NULL,
+    card_amount INT DEFAULT 7,
+    PRIMARY KEY (hand_id, player_id, match_id),
+    FOREIGN KEY (player_id) REFERENCES Players(player_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS Decks (
+    deck_id INT AUTO_INCREMENT,
+    card_amount INT DEFAULT 108,
+    PRIMARY KEY (deck_id)
 ); 
 
 CREATE TABLE IF NOT EXISTS MatchHasDeck (
@@ -310,10 +184,80 @@ CREATE TABLE IF NOT EXISTS MatchHasDeck (
     deck_id INT NOT NULL UNIQUE,
     PRIMARY KEY (match_id, deck_id),
     FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
-		ON DELETE CASCADE
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) 
-		ON DELETE CASCADE
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS CardBelongsToDeck (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL, 
+    is_card_in_deck INT DEFAULT 1,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (deck_id) REFERENCES Decks(deck_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS NumberCard (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    number INT NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck(card_id, deck_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS SkipCard (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck (card_id, deck_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS ReverseCard (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck (card_id, deck_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS Draw2Card (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck (card_id, deck_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS WildCard (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck (card_id, deck_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS WildDraw4Card (
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    PRIMARY KEY (card_id, deck_id),
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck (card_id, deck_id) 
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 ); 
 
@@ -324,27 +268,75 @@ CREATE TABLE IF NOT EXISTS CardHeldByHand (
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     PRIMARY KEY (card_id, deck_id, hand_id, player_id, match_id),
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck(card_id, deck_id) 
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (hand_id, player_id, match_id) REFERENCES HandInPlayerAndMatch(hand_id, player_id, match_id)
-		ON DELETE CASCADE
+    FOREIGN KEY (hand_id, player_id, match_id) REFERENCES HandBelongsToPlayerAndMatch(hand_id, player_id, match_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 ); 
 
-CREATE TABLE IF NOT EXISTS PlayActionFromCard (
-    action_id INT NOT NULL,
+CREATE TABLE IF NOT EXISTS TurnBelongsToPlayerAndMatch (
+    turn_id INT NOT NULL AUTO_INCREMENT, 
+    player_id INT NOT NULL,
+    match_id INT NOT NULL,
+    turn_order VARCHAR(255) NOT NULL,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (turn_id, player_id, match_id),
+    FOREIGN KEY (player_id) REFERENCES Players(player_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (match_id) REFERENCES Matches(match_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS PlayAction (
     turn_id INT NOT NULL,
     player_id INT NOT NULL,
     match_id INT NOT NULL,
     card_id INT NOT NULL,
     deck_id INT NOT NULL,
-    PRIMARY KEY (action_id, turn_id, player_id, match_id, card_id, deck_id),
-    FOREIGN KEY (action_id, turn_id, player_id, match_id) REFERENCES PlayAction(action_id, turn_id, player_id, match_id) 
-		ON DELETE CASCADE
+    hand_id INT NOT NULL, 
+    PRIMARY KEY (turn_id, player_id, match_id),
+    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnBelongsToPlayerAndMatch(turn_id, player_id, match_id) 
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (card_id, deck_id) REFERENCES CardInDeck(card_id, deck_id) 
-		ON DELETE CASCADE
+    FOREIGN KEY (card_id, deck_id, hand_id, player_id, match_id) REFERENCES CardHeldByHand (card_id, deck_id, hand_id, player_id, match_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS DrawAction (
+    turn_id INT NOT NULL,
+    player_id INT NOT NULL,
+    match_id INT NOT NULL,
+    draw_amount INT NOT NULL,
+    PRIMARY KEY (turn_id, player_id, match_id),
+    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnBelongsToPlayerAndMatch(turn_id, player_id, match_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+); 
+
+CREATE TABLE IF NOT EXISTS CardsDrawnInTurn (
+    turn_id INT NOT NULL,
+    player_id INT NOT NULL,
+    match_id INT NOT NULL,
+    card_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    PRIMARY KEY (turn_id, player_id, match_id, card_id, deck_id),
+    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnBelongsToPlayerAndMatch(turn_id, player_id, match_id) 
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS TurnLostAction (
+    turn_id INT NOT NULL,
+    player_id INT NOT NULL,
+    match_id INT NOT NULL,
+    PRIMARY KEY (turn_id, player_id, match_id),
+    FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnBelongsToPlayerAndMatch(turn_id, player_id, match_id) 
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 ); 
 
@@ -456,6 +448,39 @@ VALUES
 ('Zero Swap Spectacle', '2024-10-25', '2024-10-27', 'Upcoming'),
 ('Color Blast', '2024-11-15', '2024-11-17', 'Upcoming'),
 ('UNO Championship Series', '2024-12-01', '2024-12-26', 'Upcoming');
+
+INSERT INTO PlayerParticipateEvents (player_id, event_id) 
+VALUES 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(2, 1), 
+(3, 1), 
+(4, 1), 
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+(2, 5),
+(3, 5),
+(4, 5),
+(5, 5),
+(2, 7),
+(3, 7),
+(4, 7),
+(5, 7),
+(2, 2),
+(3, 2),
+(4, 3),
+(5, 3);
 
 INSERT IGNORE INTO Stores (player_id, num_of_items) 
 VALUES 
@@ -587,143 +612,6 @@ VALUES
 (20, 11), (20, 12), (20, 13), (20, 14), (20, 15), (20, 16), (20, 17), (20, 18), (20, 19), (20, 20),
 (20, 21), (20, 22), (20, 23), (20, 24), (20, 25);
 
-
-
-
-
-
-
-
-
-INSERT IGNORE INTO Matches (end_time, winner, status) 
-VALUES 
-('2024-07-27 12:00:00', 'Handsome Programmer', 'Completed'), 
-('2024-07-27 12:00:00', 'Happy Professor', 'Completed'),
-('2024-07-27 12:00:00', 'Poor Student', 'Completed'), 
-('2024-07-27 12:00:00', 'Selfish Engineer', 'Completed'), 
-('2024-07-27 12:00:00', 'Dangerous Salesman', 'Completed'), 
-(NULL, NULL, DEFAULT),
-(NULL, NULL, DEFAULT), 
-(NULL, NULL, DEFAULT), 
-(NULL, NULL, DEFAULT); 
-
-INSERT IGNORE INTO Decks (total_cards) 
-VALUES 
-(108),
-(108),
-(108),
-(108),
-(108); 
-
-INSERT IGNORE INTO CardInDeck (card_id, deck_id, name, has_played) 
-VALUES 
-(1, 1, 'NAME', 0),
-(2, 1, 'NAME', 0),
-(3, 1, 'NAME', 0),
-(4, 1, 'NAME', 0),
-(5, 1, 'NAME', 0),
-(6, 2, 'NAME', 0),
-(7, 2, 'NAME', 0),
-(8, 2, 'NAME', 0),
-(9, 2, 'NAME', 0),
-(10, 2, 'NAME', 0); 
-
-INSERT IGNORE INTO WildCard (card_id, deck_id) 
-VALUES 
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(5, 1); 
-
-INSERT IGNORE INTO WildDraw4Card (card_id, deck_id) 
-VALUES 
-(6, 2),
-(7, 2),
-(8, 2),
-(9, 2),
-(10, 2); 
-
-INSERT IGNORE INTO NumberCard (card_id, deck_id, number, color) 
-VALUES 
-(1, 1, 1, 'Red'),
-(2, 1, 2, 'Blue'),
-(3, 1, 3, 'Green'),
-(4, 1, 4, 'Yellow'),
-(5, 1, 5, 'Red'); 
-
-INSERT IGNORE INTO SkipCard (card_id, deck_id, color) 
-VALUES 
-(6, 2, 'Red'),
-(7, 2, 'Blue'),
-(8, 2, 'Green'),
-(9, 2, 'Yellow'),
-(10, 2, 'Red'); 
-
-INSERT IGNORE INTO ReverseCard (card_id, deck_id, color) 
-VALUES 
-(1, 1, 'Red'),
-(2, 1, 'Blue'),
-(3, 1, 'Green'),
-(4, 1, 'Yellow'),
-(5, 1, 'Red'); 
-
-INSERT IGNORE INTO Draw2Card (card_id, deck_id, color) 
-VALUES 
-(6, 2, 'Red'),
-(7, 2, 'Blue'),
-(8, 2, 'Green'),
-(9, 2, 'Yellow'),
-(10, 2, 'Red'); 
-
-INSERT IGNORE INTO HandInPlayerAndMatch (hand_id, player_id, match_id, card_amount) 
-VALUES 
-(1, 1, 1, 7),
-(2, 2, 2, 7),
-(3, 3, 3, 7),
-(4, 4, 4, 7),
-(5, 5, 5, 7); 
-
-INSERT IGNORE INTO TurnInPlayerAndMatch (turn_id, player_id, match_id, turn_order) 
-VALUES 
-(1, 1, 1, 'clockwise'),
-(2, 2, 2, 'clockwise'),
-(3, 3, 3, 'clockwise'),
-(4, 4, 4, 'counter clockwise'),
-(5, 5, 5, 'counter clockwise'); 
-
-INSERT IGNORE INTO ActionInTurn (action_id, turn_id, player_id, match_id)
-VALUES
-(1, 1, 1, 1),
-(2, 2, 2, 2),
-(3, 3, 3, 3),
-(4, 4, 4, 4),
-(5, 5, 5, 5);
-
-INSERT IGNORE INTO SkipAction (action_id, turn_id, player_id, match_id)
-VALUES
-(1, 1, 1, 1),
-(2, 2, 2, 2),
-(3, 3, 3, 3),
-(4, 4, 4, 4),
-(5, 5, 5, 5);
-
-INSERT IGNORE INTO PlayAction (action_id, turn_id, player_id, match_id) 
-VALUES 
-(1, 1, 1, 1),
-(2, 2, 2, 2),
-(3, 3, 3, 3),
-(4, 4, 4, 4),
-(5, 5, 5, 5);
-
-INSERT IGNORE INTO DrawAction (action_id, turn_id, player_id, match_id, draw_amount) 
-VALUES 
-(1, 1, 1, 1, 2),
-(2, 2, 2, 2, 2),
-(3, 3, 3, 3, 2),
-(4, 4, 4, 4, 2),
-(5, 5, 5, 5, 2); 
-
 INSERT IGNORE INTO PlayerContainItems (player_id, item_id) 
 VALUES 
 (1, 1), (1, 6), 
@@ -747,75 +635,201 @@ VALUES
 (19, 25), (19, 21),
 (20, 3), (20, 13); 
 
-INSERT INTO PlayerParticipateEvents (player_id, event_id) 
+INSERT IGNORE INTO Matches (start_time, end_time, winner, status) 
 VALUES 
--- Player1 participates in all completed events
-(1, 1), -- UNO Mania (Completed)
-(1, 5), -- Reverse Madness (Completed)
-(1, 7), -- Wild Card Weekend (Completed)
-(1, 11), -- Grand Tournament (Completed)
-(1, 12), -- Weekly Challenge (Completed)
-(1, 13), -- Holiday Special (Completed)
-(1, 14), -- Friendship Match (Completed)
--- Other players with partial participation
-(2, 1), 
-(3, 1), 
-(4, 1), 
-(5, 1),
-(6, 1),
-(7, 1),
-(8, 1),
-(9, 1),
-(10, 1),
-(11, 1),
-(12, 1),
--- Participation of other events
-(2, 5),
-(3, 5),
-(4, 5),
-(5, 5),
-(2, 7),
-(3, 7),
-(4, 7),
-(5, 7),
-(2, 11),
-(3, 11),
-(4, 11),
-(5, 11);
-
-
-
-
-
+('2024-08-05 10:49:00', '2024-08-05 11:01:00', 'Reliable Developer', 'Completed');
 
 INSERT IGNORE INTO PlayerInvolveMatches (player_id, match_id) 
 VALUES 
 (1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5); 
+(2, 1);
+
+INSERT IGNORE INTO HandBelongsToPlayerAndMatch (player_id, match_id) 
+VALUES 
+(1, 1),
+(2, 1);
+
+INSERT IGNORE INTO Decks (card_amount) 
+VALUES 
+(108);
 
 INSERT IGNORE INTO MatchHasDeck (match_id, deck_id) 
 VALUES 
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5); 
+(1, 1);
+
+INSERT INTO CardBelongsToDeck (card_id, deck_id, name) 
+VALUES
+(1, 1, 'Red 0'), 
+(2, 1, 'Red 1'), (3, 1, 'Red 1'), (4, 1, 'Red 2'), (5, 1, 'Red 2'),
+(6, 1, 'Red 3'), (7, 1, 'Red 3'), (8, 1, 'Red 4'), (9, 1, 'Red 4'),
+(10, 1, 'Red 5'), (11, 1, 'Red 5'), (12, 1, 'Red 6'), (13, 1, 'Red 6'),
+(14, 1, 'Red 7'), (15, 1, 'Red 7'), (16, 1, 'Red 8'), (17, 1, 'Red 8'),
+(18, 1, 'Red 9'), (19, 1, 'Red 9'),
+(20, 1, 'Yellow 0'),
+(21, 1, 'Yellow 1'), (22, 1, 'Yellow 1'), (23, 1, 'Yellow 2'), (24, 1, 'Yellow 2'),
+(25, 1, 'Yellow 3'), (26, 1, 'Yellow 3'), (27, 1, 'Yellow 4'), (28, 1, 'Yellow 4'),
+(29, 1, 'Yellow 5'), (30, 1, 'Yellow 5'), (31, 1, 'Yellow 6'), (32, 1, 'Yellow 6'),
+(33, 1, 'Yellow 7'), (34, 1, 'Yellow 7'), (35, 1, 'Yellow 8'), (36, 1, 'Yellow 8'),
+(37, 1, 'Yellow 9'), (38, 1, 'Yellow 9'),
+(39, 1, 'Green 0'),
+(40, 1, 'Green 1'), (41, 1, 'Green 1'), (42, 1, 'Green 2'), (43, 1, 'Green 2'),
+(44, 1, 'Green 3'), (45, 1, 'Green 3'), (46, 1, 'Green 4'), (47, 1, 'Green 4'),
+(48, 1, 'Green 5'), (49, 1, 'Green 5'), (50, 1, 'Green 6'), (51, 1, 'Green 6'),
+(52, 1, 'Green 7'), (53, 1, 'Green 7'), (54, 1, 'Green 8'), (55, 1, 'Green 8'),
+(56, 1, 'Green 9'), (57, 1, 'Green 9'),
+(58, 1, 'Blue 0'),
+(59, 1, 'Blue 1'), (60, 1, 'Blue 1'), (61, 1, 'Blue 2'), (62, 1, 'Blue 2'),
+(63, 1, 'Blue 3'), (64, 1, 'Blue 3'), (65, 1, 'Blue 4'), (66, 1, 'Blue 4'),
+(67, 1, 'Blue 5'), (68, 1, 'Blue 5'), (69, 1, 'Blue 6'), (70, 1, 'Blue 6'),
+(71, 1, 'Blue 7'), (72, 1, 'Blue 7'), (73, 1, 'Blue 8'), (74, 1, 'Blue 8'),
+(75, 1, 'Blue 9'), (76, 1, 'Blue 9'), 
+(77, 1, 'Red Skip'), (78, 1, 'Red Skip'),
+(79, 1, 'Yellow Skip'), (80, 1, 'Yellow Skip'),
+(81, 1, 'Green Skip'), (82, 1, 'Green Skip'),
+(83, 1, 'Blue Skip'), (84, 1, 'Blue Skip'),
+(85, 1, 'Red Reverse'), (86, 1, 'Red Reverse'),
+(87, 1, 'Yellow Reverse'), (88, 1, 'Yellow Reverse'),
+(89, 1, 'Green Reverse'), (90, 1, 'Green Reverse'),
+(91, 1, 'Blue Reverse'), (92, 1, 'Blue Reverse'),
+(93, 1, 'Red Draw 2'), (94, 1, 'Red Draw 2'),
+(95, 1, 'Yellow Draw 2'), (96, 1, 'Yellow Draw 2'),
+(97, 1, 'Green Draw 2'), (98, 1, 'Green Draw 2'),
+(99, 1, 'Blue Draw 2'), (100, 1, 'Blue Draw 2'), 
+(101, 1, 'Wild'), (102, 1, 'Wild'), (103, 1, 'Wild'), (104, 1, 'Wild'),
+(105, 1, 'Wild Draw 4'), (106, 1, 'Wild Draw 4'), (107, 1, 'Wild Draw 4'), (108, 1, 'Wild Draw 4');
+
+INSERT IGNORE INTO NumberCard (card_id, deck_id, number, color) 
+VALUES
+(1, 1, 0, 'Red'),
+(2, 1, 1, 'Red'), (3, 1, 1, 'Red'),
+(4, 1, 2, 'Red'), (5, 1, 2, 'Red'),
+(6, 1, 3, 'Red'), (7, 1, 3, 'Red'),
+(8, 1, 4, 'Red'), (9, 1, 4, 'Red'),
+(10, 1, 5, 'Red'), (11, 1, 5, 'Red'),
+(12, 1, 6, 'Red'), (13, 1, 6, 'Red'),
+(14, 1, 7, 'Red'), (15, 1, 7, 'Red'),
+(16, 1, 8, 'Red'), (17, 1, 8, 'Red'),
+(18, 1, 9, 'Red'), (19, 1, 9, 'Red'),
+(20, 1, 0, 'Yellow'),
+(21, 1, 1, 'Yellow'), (22, 1, 1, 'Yellow'),
+(23, 1, 2, 'Yellow'), (24, 1, 2, 'Yellow'),
+(25, 1, 3, 'Yellow'), (26, 1, 3, 'Yellow'),
+(27, 1, 4, 'Yellow'), (28, 1, 4, 'Yellow'),
+(29, 1, 5, 'Yellow'), (30, 1, 5, 'Yellow'),
+(31, 1, 6, 'Yellow'), (32, 1, 6, 'Yellow'),
+(33, 1, 7, 'Yellow'), (34, 1, 7, 'Yellow'),
+(35, 1, 8, 'Yellow'), (36, 1, 8, 'Yellow'),
+(37, 1, 9, 'Yellow'), (38, 1, 9, 'Yellow'),
+(39, 1, 0, 'Green'),
+(40, 1, 1, 'Green'), (41, 1, 1, 'Green'),
+(42, 1, 2, 'Green'), (43, 1, 2, 'Green'),
+(44, 1, 3, 'Green'), (45, 1, 3, 'Green'),
+(46, 1, 4, 'Green'), (47, 1, 4, 'Green'),
+(48, 1, 5, 'Green'), (49, 1, 5, 'Green'),
+(50, 1, 6, 'Green'), (51, 1, 6, 'Green'),
+(52, 1, 7, 'Green'), (53, 1, 7, 'Green'),
+(54, 1, 8, 'Green'), (55, 1, 8, 'Green'),
+(56, 1, 9, 'Green'), (57, 1, 9, 'Green'),
+(58, 1, 0, 'Blue'),
+(59, 1, 1, 'Blue'), (60, 1, 1, 'Blue'),
+(61, 1, 2, 'Blue'), (62, 1, 2, 'Blue'),
+(63, 1, 3, 'Blue'), (64, 1, 3, 'Blue'),
+(65, 1, 4, 'Blue'), (66, 1, 4, 'Blue'),
+(67, 1, 5, 'Blue'), (68, 1, 5, 'Blue'),
+(69, 1, 6, 'Blue'), (70, 1, 6, 'Blue'),
+(71, 1, 7, 'Blue'), (72, 1, 7, 'Blue'),
+(73, 1, 8, 'Blue'), (74, 1, 8, 'Blue'),
+(75, 1, 9, 'Blue'), (76, 1, 9, 'Blue');
+
+INSERT IGNORE INTO SkipCard (card_id, deck_id, color) 
+VALUES
+(77, 1, 'Red'), (78, 1, 'Red'),
+(79, 1, 'Yellow'), (80, 1, 'Yellow'),
+(81, 1, 'Green'), (82, 1, 'Green'),
+(83, 1, 'Blue'), (84, 1, 'Blue');
+
+INSERT IGNORE INTO ReverseCard (card_id, deck_id, color) 
+VALUES
+(85, 1, 'Red'), (86, 1, 'Red'),
+(87, 1, 'Yellow'), (88, 1, 'Yellow'),
+(89, 1, 'Green'), (90, 1, 'Green'),
+(91, 1, 'Blue'), (92, 1, 'Blue');
+
+INSERT IGNORE INTO Draw2Card (card_id, deck_id, color) 
+VALUES
+(93, 1, 'Red'), (94, 1, 'Red'),
+(95, 1, 'Yellow'), (96, 1, 'Yellow'),
+(97, 1, 'Green'), (98, 1, 'Green'),
+(99, 1, 'Blue'), (100, 1, 'Blue');
+
+INSERT IGNORE INTO WildCard (card_id, deck_id) 
+VALUES 
+(101, 1), (102, 1), (103, 1), (104, 1); 
+
+INSERT IGNORE INTO WildDraw4Card (card_id, deck_id) 
+VALUES 
+(105, 1), (106, 1), (107, 1), (108, 1);
 
 INSERT IGNORE INTO CardHeldByHand (card_id, deck_id, hand_id, player_id, match_id) 
 VALUES 
-(1, 1, 1, 1, 1),
-(2, 1, 2, 2, 2),
-(3, 1, 3, 3, 3),
-(4, 1, 4, 4, 4),
-(5, 1, 5, 5, 5); 
+(77, 1, 1, 1, 1),
+(6, 1, 1, 1, 1),
+(93, 1, 1, 1, 1),
+(101, 1, 1, 1, 1),
+(105, 1, 1, 1, 1),
+(81, 1, 1, 1, 1),
+(42, 1, 1, 1, 1),
+(18, 1, 2, 2, 1),
+(91, 1, 2, 2, 1),
+(1, 1, 2, 2, 1),
+(2, 1, 2, 2, 1),
+(3, 1, 2, 2, 1),
+(4, 1, 2, 2, 1),
+(5, 1, 2, 2, 1);
 
-INSERT IGNORE INTO PlayActionFromCard (action_id, turn_id, player_id, match_id, card_id, deck_id) 
+INSERT IGNORE INTO TurnBelongsToPlayerAndMatch (turn_id, player_id, match_id, turn_order, time_stamp)
 VALUES 
-(1, 1, 1, 1, 1, 1),
-(2, 2, 2, 2, 2, 1),
-(3, 3, 3, 3, 3, 1),
-(4, 4, 4, 4, 4, 1),
-(5, 5, 5, 5, 5, 1); 
+(1, 1, 1, 'Clockwise', '2024-08-05 10:49:00'), 
+(2, 2, 1, 'Clockwise', '2024-08-05 10:50:00'), 
+(3, 1, 1, 'Clockwise', '2024-08-05 10:51:00'), 
+(4, 2, 1, 'Clockwise', '2024-08-05 10:52:00'), 
+(5, 1, 1, 'Clockwise', '2024-08-05 10:53:00'), 
+(6, 2, 1, 'Clockwise', '2024-08-05 10:54:00'),
+(7, 1, 1, 'Clockwise', '2024-08-05 10:55:00'),
+(8, 2, 1, 'Counter Clockwise', '2024-08-05 10:56:00'), 
+(9, 1, 1, 'Counter Clockwise', '2024-08-05 10:57:00'),
+(10, 2, 1, 'Counter Clockwise', '2024-08-05 10:58:00'),
+(11, 1, 1, 'Counter Clockwise', '2024-08-05 10:59:00'),
+(12, 2, 1, 'Counter Clockwise', '2024-08-05 11:00:00'),
+(13, 1, 1, 'Counter Clockwise', '2024-08-05 11:01:00');
+
+INSERT IGNORE INTO PlayAction (turn_id, player_id, match_id, card_id, deck_id, hand_id)
+VALUES 
+(1, 1, 1, 77, 1, 1),
+(3, 1, 1, 6, 1, 1),
+(4, 2, 1, 18, 1, 2),
+(5, 1, 1, 93, 1, 1),
+(7, 1, 1, 101, 1, 1),
+(8, 2, 1, 91, 1, 2), 
+(9, 1, 1, 105, 1, 1), 
+(11, 1, 1, 81, 1, 1), 
+(13, 1, 1, 42, 1, 1); 
+
+INSERT IGNORE INTO DrawAction (turn_id, player_id, match_id, draw_amount)
+VALUES 
+(6, 2, 1, 2), 
+(10, 2, 1, 4);
+
+INSERT IGNORE INTO CardsDrawnInTurn (turn_id, player_id, match_id, card_id, deck_id)
+VALUES 
+(6, 2, 1, 95, 1),
+(6, 2, 1, 96, 1),
+(10, 2, 1, 67, 1),
+(10, 2, 1, 68, 1),
+(10, 2, 1, 69, 1),
+(10, 2, 1, 70, 1);
+
+INSERT IGNORE INTO TurnLostAction (turn_id, player_id, match_id)
+VALUES 
+(2, 2, 1),
+(12, 2, 1); 

@@ -33,9 +33,9 @@ exports.getRecentMatches = async () => {
 
 exports.registerMatches = async (players) => {
 	try {
-		const [result] = await db.promise().query("INSERT INTO Matches (end_time, winner) VALUES (NULL, NULL)");
+		const [match] = await db.promise().query("INSERT INTO Matches (end_time, winner) VALUES (NULL, NULL)");
 
-		const matchID = result.insertId;
+		const matchID = match.insertId;
 
 		players.forEach(async (element) => {
 			await db.promise().query("INSERT INTO PlayerInvolveMatches SET ?", {
@@ -43,6 +43,15 @@ exports.registerMatches = async (players) => {
 				player_id: element,
 			});
 		});
+
+		const [deck] = await db.promise().query("INSERT INTO Decks (card_amount) VALUES 108)");
+		const deckID = deck.insertId;
+
+		await db.promise().query("INSERT INTO MatchHasDeck SET ?", {
+			match_id: matchID,
+			deck_id: deckID,
+		});
+
 		console.log("OH YES! Match Registered Successfully!");
 	} catch (error) {
 		console.error(logError("registerMatches"), error);
@@ -126,7 +135,7 @@ exports.getMatchDetails = async (matchID) => {
 			if (action.action === "Play") {
 				handInPlayerAndDeck.cardInHand -= 1;
 			} else if (action.action === "Draw") {
-				handInPlayerAndDeck.cardInHand += action.additionalInfo;
+				handInPlayerAndDeck.cardInHand += parseInt(action.additionalInfo.split(" ")[0]);
 				cardInDeck -= action.additionalInfo;
 			}
 
@@ -202,7 +211,7 @@ const getDrawActionsDetails = async (matchID) => {
       SELECT 
         da.turn_id AS turnID,
         'Draw' AS action,
-        da.draw_amount AS additionalInfo
+        CONCAT(da.draw_amount, ' Cards Drawn') AS additionalInfo
       FROM DrawAction da
       WHERE da.match_id = ?; 
     `;

@@ -4,22 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const url = new URL(window.location.href);
 	const pathname = url.pathname;
 
-	// Restore form data
-	const formData = JSON.parse(localStorage.getItem("formData")) || {};
-	Object.keys(formData).forEach((element) => {
-		const input = document.getElementById(element);
-		if (input) {
-			input.value = formData[element];
-		}
-	});
-
-	// Add event listeners to save form data on change
-	document.querySelectorAll("[data-save-input]")?.forEach((element) => {
-		element.addEventListener("input", (e) => {
-			formData[e.target.id] = e.target.value;
-			localStorage.setItem("formData", JSON.stringify(formData));
-		});
-	});
+	initalizingForStoringFormData();
 
 	// Add event listeners to delete data on click
 	document.querySelector("[data-conform-delete]")?.addEventListener("click", async () => {
@@ -58,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// Add Different Color for Status Display
 	document.querySelectorAll("[data-status]")?.forEach((element) => {
-		// console.log(element);
 		if (element.dataset.status === "Active" || element.dataset.status === "In Process") {
 			element.style.color = "#008040";
 		} else if (element.dataset.status === "Expired") {
@@ -567,6 +551,7 @@ function showCreateMatchModal() {
 	const numOfPlayerDropdown = document.querySelector("[data-create-match-modal] [data-number-of-players]");
 	numOfPlayerDropdown.addEventListener("change", handlePlayerCountChangeForMatch);
 
+	initalizingForStoringFormData();
 	showModal();
 }
 
@@ -722,84 +707,6 @@ async function removeItemFromStore(itemID, storeID) {
 /* View Match Details Section Below ------------------------------------------------------------------ */
 /* =================================================================================================== */
 /* =================================================================================================== */
-// async function showMatchDetailsModal(matchID) {
-// 	const matchIDText = document.querySelector("[data-match-id]");
-// 	const matchStartTimeText = document.querySelector("[data-match-start-time]");
-// 	const matchEndTimeText = document.querySelector("[data-match-end-time]");
-// 	const matchWinnerText = document.querySelector("[data-match-winner]");
-// 	const matchStartingTime = document.querySelector("[data-match-starting-time]");
-
-// 	const matchBasicInfo = await fetchMatchBasicInfo(matchID);
-// 	if (matchBasicInfo) {
-// 		matchIDText.innerHTML = "Match ID: " + matchID;
-// 		matchStartTimeText.innerHTML = "Start Time: " + matchBasicInfo.matchStartTime;
-// 		matchEndTimeText.innerHTML = "End Time: " + matchBasicInfo.matchEndTime;
-// 		matchWinnerText.innerHTML = "Winner: " + matchBasicInfo.matchWinner;
-// 		matchStartingTime.innerHTML = matchBasicInfo.matchStartTime;
-// 	}
-
-// 	const matchStartingPlayer = document.querySelector("[data-match-starting-player]");
-// 	const matchPlayersList = document.querySelector("[data-match-players-list]");
-// 	const matchPlayersInfo = await fetchMatchPlayersInfo(matchID);
-
-// 	if (matchPlayersInfo) {
-// 		matchPlayersInfo.forEach((element) => {
-// 			const player = document.createElement("li");
-// 			player.innerHTML = element.username + " (" + element.country.toUpperCase() + ")";
-// 			matchPlayersList.appendChild(player);
-// 		});
-// 		matchStartingPlayer.innerHTML = matchPlayersInfo[0].username;
-// 	}
-
-// 	// Fetch match details
-// 	const matchDetailsTableBody = document.querySelector("[data-match-details-table-body]");
-// 	const matchDetails = await fetchMatchDetails(matchID);
-
-// 	// Clear existing rows before adding new ones
-// 	// matchDetailsTableBody.innerHTML = "";
-
-// 	matchDetails.forEach((element) => {
-// 		const row = document.createElement("tr");
-
-// 		const timeCell = document.createElement("td");
-// 		timeCell.textContent = element.timestamp;
-// 		row.appendChild(timeCell);
-
-// 		const playerCell = document.createElement("td");
-// 		playerCell.textContent = element.username;
-// 		row.appendChild(playerCell);
-
-// 		const actionCell = document.createElement("td");
-// 		actionCell.textContent = element.action;
-// 		row.appendChild(actionCell);
-
-// 		const additionalInfoCell = document.createElement("td");
-// 		additionalInfoCell.innerHTML = element.additionalInfo;
-// 		row.appendChild(additionalInfoCell);
-
-// 		const cardsInHandCell = document.createElement("td");
-// 		cardsInHandCell.textContent = element.cardInHand;
-// 		row.appendChild(cardsInHandCell);
-
-// 		const cardsInDeckCell = document.createElement("td");
-// 		cardsInDeckCell.textContent = element.cardInDeck;
-// 		row.appendChild(cardsInDeckCell);
-
-// 		const directionCell = document.createElement("td");
-// 		directionCell.textContent = element.currentDirection;
-// 		row.appendChild(directionCell);
-
-// 		const nextTurnCell = document.createElement("td");
-// 		nextTurnCell.textContent = element.nextTurn;
-// 		row.appendChild(nextTurnCell);
-
-// 		matchDetailsTableBody.appendChild(row);
-// 	});
-
-// 	const matchDetailsModal = document.querySelector("[data-match-detials]");
-// 	matchDetailsModal.classList.add("openedModal");
-// }
-
 async function showMatchDetailsModal(matchID) {
 	const matchIDText = document.querySelector("[data-match-id]");
 	const matchStartTimeText = document.querySelector("[data-match-start-time]");
@@ -984,6 +891,25 @@ function hideModal() {
 	const others = document.querySelectorAll("[data-pointer-not-allowed]");
 	others.forEach((element) => {
 		element.classList.remove("openedModal");
+	});
+}
+
+function initalizingForStoringFormData() {
+	// Restore form data
+	const formData = JSON.parse(localStorage.getItem("formData")) || {};
+	Object.keys(formData).forEach((element) => {
+		const input = document.getElementById(element);
+		if (input) {
+			input.value = formData[element];
+		}
+	});
+
+	// Add event listeners to save form data on change
+	document.querySelectorAll("[data-save-input]")?.forEach((element) => {
+		element.addEventListener("input", (e) => {
+			formData[e.target.id] = e.target.value;
+			localStorage.setItem("formData", JSON.stringify(formData));
+		});
 	});
 }
 
