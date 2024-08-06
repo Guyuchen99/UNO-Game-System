@@ -1,6 +1,6 @@
 const db = require("../config/db");
 const { format } = require("date-fns");
-const { formatInTimeZone } = require("date-fns-tz");
+const { toZonedTime, formatInTimeZone } = require("date-fns-tz");
 
 const vancouverTimeZone = "America/Vancouver";
 
@@ -17,7 +17,7 @@ exports.getRecentEvents = async (order) => {
 			orderByClause = "e.start_date, e.status, e.event_id DESC";
 			break;
 		case "endDate":
-			orderByClause = "e.end_date, e.status, e.event_id DESC";
+			orderByClause = "e.end_date DESC, e.status, e.event_id DESC";
 			break;
 		case "numOfParticipants":
 			orderByClause = "e.num_of_participants DESC";
@@ -37,17 +37,19 @@ exports.getRecentEvents = async (order) => {
 	}
 
 	try {
+		await updateEventStatus();
+
 		const [results] = await db.promise().query(`
-        SELECT 
-            e.event_id AS eventID, 
-            e.name AS eventName, 
-            e.start_date AS eventStartDate, 
-            e.end_date AS eventEndDate, 
-            e.num_of_participants AS numOfParticipants, 
-            e.status AS eventStatus
-        FROM Events e
-        ORDER BY ${orderByClause} 
-    `);
+            SELECT 
+                e.event_id AS eventID, 
+                e.name AS eventName, 
+                e.start_date AS eventStartDate, 
+                e.end_date AS eventEndDate, 
+                e.num_of_participants AS numOfParticipants, 
+                e.status AS eventStatus
+            FROM Events e
+            ORDER BY ${orderByClause} 
+        `);
 
 		return results.map((element) => ({
 			eventID: element.eventID,
@@ -105,8 +107,8 @@ exports.updateEventByID = async (eventID, updates) => {
 
 		if (updates.start_date || updates.end_date) {
 			const todayUTC = new Date();
-			const startDateUTC = new Date(`${updates.start_date}T00:00:00-07:00`);
-			const endDateUTC = new Date(`${updates.end_date}T00:00:00-07:00`);
+			const startDateUTC = toZonedTime(`${updates.start_date}T00:00:00`, vancouverTimeZone);
+			const endDateUTC = toZonedTime(`${updates.end_date}T00:00:00`, vancouverTimeZone);
 
 			let currentStatus;
 
@@ -147,8 +149,8 @@ exports.updateEventByID = async (eventID, updates) => {
 exports.registerEventByID = async (name, startDate, endDate) => {
 	try {
 		const todayUTC = new Date();
-		const startDateUTC = new Date(`${startDate}T00:00:00-07:00`);
-		const endDateUTC = new Date(`${endDate}T00:00:00-07:00`);
+		const startDateUTC = toZonedTime(`${startDate}T00:00:00`, vancouverTimeZone);
+		const endDateUTC = toZonedTime(`${endDate}T00:00:00`, vancouverTimeZone);
 
 		let currentStatus;
 
@@ -184,3 +186,30 @@ exports.deleteEventByID = async (eventID) => {
 		throw error;
 	}
 };
+
+async function updateEventStatus() {
+	try {
+		const [results] = await db.promise().query("SELECT * FROM Events");
+
+		results.forEach(async (element) => {
+			const todayUTC = new Date();
+			const startDateUTC = element.start_date;
+			const endDateUTC = element.end_date;
+
+			let currentStatus;
+
+			if (todayUTC < startDateUTC) {
+				currentStatus = "Upcoming";
+			} else if (endDateUTC < todayUTC) {
+				currentStatus = "Expired";
+			} else {
+				currentStatus = "Active";
+			}
+
+			await db.promise().query("UPDATE Events SET status = ? WHERE event_id = ?", [currentStatus, element.event_id]);
+		});
+	} catch (error) {
+		console.error(logError("updateMembershipStatus"), error.message);
+		throw error;
+	}
+}

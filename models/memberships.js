@@ -1,5 +1,5 @@
 const db = require("../config/db");
-const { formatInTimeZone } = require("date-fns-tz");
+const { toZonedTime, formatInTimeZone } = require("date-fns-tz");
 const { differenceInDays } = require("date-fns");
 
 const vancouverTimeZone = "America/Vancouver";
@@ -127,7 +127,7 @@ exports.updateMembershipByPlayerID = async (playerID, updates) => {
 
 		if (updates.expire_date) {
 			const issueDateUTC = new Date();
-			const expireDateUTC = new Date(`${updates.expire_date}T00:00:00-07:00`);
+			const expireDateUTC = toZonedTime(`${updates.expire_date}T00:00:00`, vancouverTimeZone);
 
 			const status = issueDateUTC < expireDateUTC ? "Active" : "Expired";
 			newUpdates.status = status;
