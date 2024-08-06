@@ -28,7 +28,7 @@
 							<div class="dropdown-container">
                                 <p class="dropdown-title">Sort By:</p> 
 								<select name="selector" id="selector" class="dropdown" data-dropdown-sort data-pointer-not-allowed>
-									<option value="recent">Recent</option>
+									<option value="recent" selected>Recent</option>
 									<option value="daysRemaining">Days Remaining</option>
 									<option value="privilegeLevel">Privilege Level</option>
 									<option value="status">Status</option>
@@ -37,7 +37,6 @@
                             <button class="table-btn add-btn" onclick="showCreateMembershipModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Membership</button>
                         </div>
                     </div>
-
 					<div class="scrollable-table full-page">
 						<table class="table">
 							<thead>
@@ -138,7 +137,7 @@
                         <label for="privilegeLevelCreateMembership">Privilege Level: </label>
 						<div class="modal-dropdown-container">
 							<select id="privilegeLevelCreateMembership" name="privilegeLevel" class="half-width dropdown" default="1" data-privilege-level data-save-input>
-								<option value="1">1</option>
+								<option value="1" selected>1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
 								<option value="4">4</option>

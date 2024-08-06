@@ -96,7 +96,7 @@ exports.getStoreItemsDetailsByStoreID = async (storeID) => {
 
 		return results;
 	} catch (error) {
-		console.error(logError("getStoreItemsByStoreID"), error);
+		console.error(logError("getStoreItemsDetailsByStoreID"), error);
 		throw error;
 	}
 };
@@ -205,9 +205,10 @@ exports.insertItem = async (storeID, itemID) => {
 		});
 
 		updateNumOfItemsInStore();
+
 		console.log("OH YES! Item Registered Successfully!");
 	} catch (error) {
-		console.error(logError("registerItem"), error);
+		console.error(logError("insertItem"), error);
 		throw error;
 	}
 };
@@ -236,6 +237,7 @@ exports.registerStore = async (playerID) => {
 		await db.promise().query("INSERT INTO Stores SET ?", {
 			player_id: playerID,
 		});
+
 		console.log("OH YES! Store Registered Successfully!");
 	} catch (error) {
 		console.error(logError("registerStore"), error);
@@ -251,6 +253,7 @@ exports.registerItem = async (name, quality, appliedPromotion, currentPrice) => 
 			applied_promotion: appliedPromotion,
 			current_price: currentPrice,
 		});
+
 		console.log("OH YES! Item Registered Successfully!");
 	} catch (error) {
 		console.error(logError("registerItem"), error);
@@ -261,6 +264,7 @@ exports.registerItem = async (name, quality, appliedPromotion, currentPrice) => 
 exports.deleteItemByID = async (itemID) => {
 	try {
 		await db.promise().query("DELETE FROM Items WHERE item_id = ?", [itemID]);
+
 		updateNumOfItemsInStore();
 
 		console.log("OH YES! Item Deleted Successfully!");
@@ -273,11 +277,12 @@ exports.deleteItemByID = async (itemID) => {
 exports.deleteStoreItem = async (storeID, itemID) => {
 	try {
 		await db.promise().query(`DELETE FROM StoreSellItems WHERE store_id = ? AND item_id = ?`, [storeID, itemID]);
+
 		updateNumOfItemsInStore();
 
 		console.log("OH YES! Item From Store Deleted Successfully!");
 	} catch (error) {
-		console.error(logError("deleteItemByID"), error);
+		console.error(logError("deleteStoreItem"), error);
 		throw error;
 	}
 };

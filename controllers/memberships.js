@@ -13,6 +13,7 @@ exports.loadMemberships = async (req, res) => {
 
 	try {
 		const recentMemberships = await membershipsModel.getAllMemberships(order);
+
 		res.render("memberships", { recentMemberships });
 	} catch (error) {
 		console.error(logError("loadMemberships"), error);
@@ -42,6 +43,7 @@ exports.fetchMembershipData = async (req, res) => {
 
 	try {
 		const results = await membershipsModel.getMembershipDataByPlayerID(playerID);
+
 		res.status(200).json(results);
 	} catch (error) {
 		console.error(logError("fetchMembershipData"), error);
@@ -98,6 +100,7 @@ exports.registerMembership = async (req, res) => {
 
 	try {
 		const playerID = await dashboardModel.getPlayerIDByUsername(username);
+
 		await membershipsModel.registerMembershipByPlayerID(playerID, duration, privilegeLevel);
 
 		res.redirect("/memberships");
@@ -112,7 +115,7 @@ exports.deleteMembership = async (req, res) => {
 
 	try {
 		await membershipsModel.deleteMembershipByPlayerID(playerID);
-
+        
 		res.status(200).send("OH YES! Membership Deleted Successfully");
 	} catch (error) {
 		console.error(logError("deleteMembership"), error);

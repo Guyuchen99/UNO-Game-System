@@ -25,6 +25,7 @@ exports.fetchEventData = async (req, res) => {
 
 	try {
 		const results = await eventsModel.getEventDataByID(eventID);
+
 		res.status(200).json(results);
 	} catch (error) {
 		console.error(logError("fetchEventData"), error);

@@ -488,7 +488,7 @@ function hideCreatePlayerModal() {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
-/* Create Item Modal Section Below ------------------------------------------------------------- */
+/* Create Item Modal Section Below ------------------------------------------------------------------- */
 /* =================================================================================================== */
 /* =================================================================================================== */
 
@@ -579,7 +579,7 @@ function hideCreateMembershipModal() {
 
 /* =================================================================================================== */
 /* =================================================================================================== */
-/* Create Event Modal Section Below ------------------------------------------------------------- */
+/* Create Event Modal Section Below ------------------------------------------------------------------ */
 /* =================================================================================================== */
 /* =================================================================================================== */
 
@@ -830,6 +830,7 @@ async function removeItemFromStore(itemID, storeID) {
 /* View Match Details Section Below ------------------------------------------------------------------ */
 /* =================================================================================================== */
 /* =================================================================================================== */
+
 async function showMatchDetailsModal(matchID) {
 	const matchIDText = document.querySelector("[data-match-id]");
 	const matchStartTimeText = document.querySelector("[data-match-start-time]");
@@ -894,8 +895,8 @@ async function showMatchDetailsModal(matchID) {
 	const matchDetails = await fetchMatchDetails(matchID);
 
 	if (matchDetails) {
+		// Add Match Details Rows
 		matchDetails.forEach((element) => {
-			// Add Match Details Rows
 			const row = document.createElement("tr");
 
 			const timeCell = document.createElement("td");
@@ -1164,7 +1165,6 @@ function handlePlayerCountChangeForMatch(e) {
 // Helper Function to Fetch PlayerID in Any Modal
 async function fetchPlayerID(modalType) {
 	const username = document.querySelector(`${modalType} [data-username]`).value;
-
 	const response = await fetch(`/dashboard/fetch-playerID?username=${username}`);
 	if (response.ok) {
 		return response.json();
@@ -1172,32 +1172,9 @@ async function fetchPlayerID(modalType) {
 	return null;
 }
 
-// Helper Function to Check Username Availability in Dashboard
-async function isUsernameAvailable(modalType) {
-	const username = document.querySelector(`${modalType} [data-username]`).value;
-	const response = await fetch(`/dashboard/check-input?username=${username}`);
-	return response.ok;
-}
-
-// Helper Function to Check Username Availability in Dashboard
-async function isEmailAvailable(modalType) {
-	const email = document.querySelector(`${modalType} [data-email]`).value;
-	const response = await fetch(`/dashboard/check-input?email=${email}`);
-	return response.ok;
-}
-
 // Helper Function to Fetch Store Item Details
 async function fetchStoreItemDetails(storeID) {
 	const response = await fetch(`/store-items/fetch-store-items-details?storeID=${storeID}`);
-	if (response.ok) {
-		return response.json();
-	}
-	return null;
-}
-
-// Helper Function to Fetch Player Data to Display in Edit Player Modal
-async function fetchPlayerData(playerID) {
-	const response = await fetch(`/dashboard/edit-modal/fetch-data?playerID=${playerID}`);
 	if (response.ok) {
 		return response.json();
 	}
@@ -1213,28 +1190,6 @@ async function fetchItemDiscount(appliedPromotion) {
 	return null;
 }
 
-// Helper Function to Check Item Name Availability in Store-Items
-async function isItemNameAvailable(modalType) {
-	const itemName = document.querySelector(`${modalType} [data-name]`).value;
-	const response = await fetch(`/store-items/check-input?itemName=${itemName}`);
-	return response.ok;
-}
-
-// Helper Function to Check Whether the Item can be Inserted in Insert Item Modal
-async function isItemNotInPlayerStore(itemID, playerID) {
-	const response = await fetch(`/store-items/check-input?itemID=${itemID}&playerID=${playerID}`);
-	return response.ok;
-}
-
-// Helper Function to Fetch Item Data to Display in Edit Items Modal
-async function fetchItemData(itemID) {
-	const response = await fetch(`/store-items/edit-modal/fetch-data?itemID=${itemID}`);
-	if (response.ok) {
-		return response.json();
-	}
-	return null;
-}
-
 // Helper Function to Fetch Privilege Class in Store-Items
 async function fetchPrivilegeClass(privilegeLevel) {
 	const response = await fetch(`/memberships/fetch-privilege-class?privilegeLevel=${privilegeLevel}`);
@@ -1242,54 +1197,6 @@ async function fetchPrivilegeClass(privilegeLevel) {
 		return response.json();
 	}
 	return null;
-}
-
-// Helper Function to Fetch Membership Data to Display in Edit Membership Modal
-async function fetchMembershipData(playerID) {
-	const response = await fetch(`/memberships/edit-modal/fetch-data?playerID=${playerID}`);
-	if (response.ok) {
-		return response.json();
-	}
-	return null;
-}
-
-// Helper Function to Check Whether the Membership can be Created in Create Membership Modal
-async function isUserWithoutMembership(modalType) {
-	const username = document.querySelector(`${modalType} [data-username]`).value;
-	const response = await fetch(`/memberships/create-modal/check-membership?username=${username}`);
-	return response.ok;
-}
-
-// Helper Function to Fetch Event Data to Display in Edit Event Modal
-async function fetchEventData(eventID) {
-	const response = await fetch(`/events/edit-modal/fetch-data?eventID=${eventID}`);
-	if (response.ok) {
-		return response.json();
-	}
-	return null;
-}
-
-// Helper Function to Check Event Name Availability in Events
-async function isEventNameAvailable(modalType) {
-	const eventName = document.querySelector(`${modalType} [data-name]`).value;
-	const response = await fetch(`/events/check-input?eventName=${eventName}`);
-	return response.ok;
-}
-
-// Helper Function to Validate Multiple Usernames in Matches
-async function validateUsernames(usernames) {
-	const invalidUsernames = [];
-
-	await Promise.all(
-		usernames.map(async (username) => {
-			const response = await fetch(`/dashboard/fetch-playerID?username=${username}`);
-			if (!response.ok) {
-				invalidUsernames.push(username);
-			}
-		})
-	);
-
-	return invalidUsernames;
 }
 
 // Helper Function to Fetch Match Details in Matches
@@ -1322,8 +1229,95 @@ async function fetchMatchPlayersInfo(matchID) {
 	}
 }
 
-/* =================================================================================================== */
-/* =================================================================================================== */
-/* Perrry Below -------------------------------------------------------------------------------------- */
-/* =================================================================================================== */
-/* =================================================================================================== */
+// Helper Fuction to Fetch Player Data to Display in Edit Player Modal
+async function fetchPlayerData(playerID) {
+	const response = await fetch(`/dashboard/edit-modal/fetch-data?playerID=${playerID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
+// Helper Function to Fetch Item Data to Display in Edit Items Modal
+async function fetchItemData(itemID) {
+	const response = await fetch(`/store-items/edit-modal/fetch-data?itemID=${itemID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
+// Helper Function to Fetch Membership Data to Display in Edit Membership Modal
+async function fetchMembershipData(playerID) {
+	const response = await fetch(`/memberships/edit-modal/fetch-data?playerID=${playerID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
+// Helper Function to Fetch Event Data to Display in Edit Event Modal
+async function fetchEventData(eventID) {
+	const response = await fetch(`/events/edit-modal/fetch-data?eventID=${eventID}`);
+	if (response.ok) {
+		return response.json();
+	}
+	return null;
+}
+
+// Helper Function to Check Username Availability in Dashboard
+async function isUsernameAvailable(modalType) {
+	const username = document.querySelector(`${modalType} [data-username]`).value;
+	const response = await fetch(`/dashboard/check-input?username=${username}`);
+	return response.ok;
+}
+
+// Helper Function to Check Username Availability in Dashboard
+async function isEmailAvailable(modalType) {
+	const email = document.querySelector(`${modalType} [data-email]`).value;
+	const response = await fetch(`/dashboard/check-input?email=${email}`);
+	return response.ok;
+}
+
+// Helper Function to Check Item Name Availability in Store-Items
+async function isItemNameAvailable(modalType) {
+	const itemName = document.querySelector(`${modalType} [data-name]`).value;
+	const response = await fetch(`/store-items/check-input?itemName=${itemName}`);
+	return response.ok;
+}
+
+// Helper Function to Check Whether the Item can be Inserted in Insert Item Modal
+async function isItemNotInPlayerStore(itemID, playerID) {
+	const response = await fetch(`/store-items/check-input?itemID=${itemID}&playerID=${playerID}`);
+	return response.ok;
+}
+
+// Helper Function to Check Whether the Membership can be Created in Create Membership Modal
+async function isUserWithoutMembership(modalType) {
+	const username = document.querySelector(`${modalType} [data-username]`).value;
+	const response = await fetch(`/memberships/create-modal/check-membership?username=${username}`);
+	return response.ok;
+}
+
+// Helper Function to Check Event Name Availability in Events
+async function isEventNameAvailable(modalType) {
+	const eventName = document.querySelector(`${modalType} [data-name]`).value;
+	const response = await fetch(`/events/check-input?eventName=${eventName}`);
+	return response.ok;
+}
+
+// Helper Function to Validate Multiple Usernames in Matches
+async function validateUsernames(usernames) {
+	const invalidUsernames = [];
+
+	await Promise.all(
+		usernames.map(async (username) => {
+			const response = await fetch(`/dashboard/fetch-playerID?username=${username}`);
+			if (!response.ok) {
+				invalidUsernames.push(username);
+			}
+		})
+	);
+
+	return invalidUsernames;
+}

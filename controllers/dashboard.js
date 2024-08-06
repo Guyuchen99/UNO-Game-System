@@ -133,6 +133,7 @@ exports.registerPlayer = async (req, res) => {
 		await dashboardModel.registerPlayer(username, password, email, country);
 
 		const playerID = await dashboardModel.getPlayerIDByUsername(username);
+
 		await storeItemsModel.registerStore(playerID);
 
 		res.redirect("/dashboard");

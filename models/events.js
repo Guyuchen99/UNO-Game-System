@@ -4,7 +4,7 @@ const { toZonedTime, formatInTimeZone } = require("date-fns-tz");
 
 const vancouverTimeZone = "America/Vancouver";
 
-const logError = (functionName) => `OH NO! Error with ${functionName} in Memberships Models:`;
+const logError = (functionName) => `OH NO! Error with ${functionName} in Events Models:`;
 
 exports.getRecentEvents = async (order) => {
 	let orderByClause;
@@ -60,7 +60,7 @@ exports.getRecentEvents = async (order) => {
 			eventStatus: element.eventStatus,
 		}));
 	} catch (error) {
-		console.error("OH NO! Error fetching recent events:", error.message);
+		console.error(logError("getRecentEvents"), error);
 		throw error;
 	}
 };
@@ -209,7 +209,7 @@ async function updateEventStatus() {
 			await db.promise().query("UPDATE Events SET status = ? WHERE event_id = ?", [currentStatus, element.event_id]);
 		});
 	} catch (error) {
-		console.error(logError("updateMembershipStatus"), error.message);
+		console.error(logError("updateEventStatus"), error);
 		throw error;
 	}
 }

@@ -43,7 +43,6 @@ exports.logout = async (req, res) => {
 	}, 1000);
 };
 
-// Middleware
 exports.isLoggedIn = (req, res, next) => {
 	if (req.cookies.myCookie) {
 		req.loginStatus = true;

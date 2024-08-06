@@ -96,6 +96,7 @@ exports.insertItem = async (req, res) => {
 		const storeID = await storeItemsModel.getStoreIDByPlayerID(playerID);
 
 		await storeItemsModel.insertItem(storeID, itemID);
+        
 		res.status(200).redirect("/store-items");
 	} catch (error) {
 		console.error(logError("insertItem"), error);
@@ -149,6 +150,7 @@ exports.registerItem = async (req, res) => {
 		const currentPrice = originalPrice * (1 - discount / 100);
 
 		await storeItemsModel.registerItem(name, quality, appliedPromotion, currentPrice);
+        
 		res.status(200).redirect("/store-items");
 	} catch (error) {
 		console.error(logError("registerItem"), error);

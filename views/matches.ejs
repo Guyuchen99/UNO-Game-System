@@ -1,143 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>UNO Game System Admin</title>
-		<link rel="stylesheet" href="/style.css" />
-		<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
-		<link rel="icon" href="/UNO.icon" type="image/x-icon" />
-		<script defer src="/script.js"></script>
-	</head>
-	<body>
-		<div id="grid-container">
-			<!-- Header Section  -->
-			<%- include("partials/header") %>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNO Game System Admin</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
+    <link rel="icon" href="/UNO.icon" type="image/x-icon" />
+    <script defer src="/script.js"></script>
+</head>
+<body>
+    <div id="grid-container">
 
-			<!-- Sidebar Section  -->
-			<%- include("partials/sidebar") %>
+        <!-- Header Section  -->
+        <%- include("partials/header") %>
 
-			<!-- Main Section -->
-			<main class="grid-main">
-				<div class="main-body" data-main-body>
-					<div class="table-container-primary">
-						<div class="main-body-header">
-							<h2 class="main-title">RECENT MATCHES</h2>
-							<div class="table-btn-list">
-								<button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Match</button>
-							</div>
-						</div>
+        <!-- Sidebar Section  -->
+        <%- include("partials/sidebar") %>
 
-						<div class="scrollable-table full-page">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Match ID</th>
-										<th>Start Time</th>
-										<th>End Time</th>
-										<th>Winner</th>
-										<th>Status</th>
-										<th>Actions</th>
-									</tr>
-								</thead>
-								<tbody>
-									<% locals.recentMatches.forEach(element => { %>
-									<tr>
-										<td><%= element.matchID %></td>
-										<td><%= element.matchStartTime %></td>
-										<td><%= element.matchEndTime %></td>
-										<td><%= element.matchWinner %></td>
-										<td data-status="<%= element.matchStatus %>"><%= element.matchStatus %></td>
-										<td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchID %>')" data-pointer-not-allowed>View Details</button></td>
-									</tr>
-									<% }) %>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-
-				<form class="modal create-item-modal" action="/matches/register" method="POST" data-create-match-modal>
-					<div class="modal-header">
-						<h2>Create New Match</h2>
-						<button class="close-btn" type="button" onclick="hideCreateMatchModal()">&times;</button>
-					</div>
-					<div class="modal-body">
-						<div class="modal-fields">
-							<label for="numOfPlayersCreate">Number of Players: </label>
-							<div class="modal-dropdown-container">
-								<select id="numOfPlayersCreate" name="numOfPlayers" class="half-width dropdown" default="2" data-number-of-players data-save-input>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-								</select>
-							</div>
-						</div>
-						<template id="modal-fields-template">
-							<div class="modal-fields" data-template-generated>
-								<label></label>
-								<input type="text" autocomplete="username" aria-label="Username" data-username data-save-input>
-							</div>
-						</template>
-					</div>
-					<div class="modal-footer">
-						<button class="btn modal-btn-confirm" type="submit">Begin</button>
-						<button class="btn modal-btn-cancel" type="button" onclick="hideCreateMatchModal()">Cancel</button>
-					</div>
-					<div class="modal-error-message" data-modal-error-message></div>
-				</form>
-
-				<div class="match-details" data-match-detials>
-					<div class="match-details-header">
-						<div class="match-details-title">
-							<h2>UNO Match History Log</h2>
-							<button class="close-btn" type="button" onclick="hideMatchDetailsModal()">&times;</button>
-						</div>
-                        <div class="match-details-basic-information" data-match-details-basic-information>
-                            <p data-match-id></p>
-                            <p data-match-start-time></p>
-                            <p data-match-end-time></p>
-                            <p data-match-winner></p>
-                        </div>
-                        <div class="match-details-player-information" data-match-details-player-information>
-                            <h2>Players</h2>
-                            <ul data-match-players-list></ul>
-                        </div>
-					</div>
-
-
-					<div class="match-details-body">
-                        <div class="table-container-header">
-                            <h2>Match Actions</h2>
-                        </div>
-                        <div class="scrollable-table">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Timestamp</th>
-                                        <th>Player</th>
-                                        <th>Action</th>
-                                        <th>Additional Info</th>
-                                        <th>Cards in Hand</th>
-                                        <th>Cards in Deck</th>
-                                        <th>Current Direction</th>
-                                        <th>Next Turn</th>
-                                    </tr>
-                                </thead>
-                                <tbody data-match-details-table-body>
-
-                                </tbody>
-                            </table>
+        <!-- Main Section -->
+        <main class="grid-main">
+            <div class="main-body" data-main-body>
+                <div class="table-container-primary">
+                    <div class="main-body-header">
+                        <h2 class="main-title">RECENT MATCHES</h2>
+                        <div class="table-btn-list">
+                            <button class="table-btn add-btn" onclick="showCreateMatchModal()" data-pointer-not-allowed><i class="bx bx-plus"></i>Create Match</button>
                         </div>
                     </div>
-				</div>
+                    <div class="scrollable-table full-page">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Match ID</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Winner</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% locals.recentMatches.forEach(element => { %>
+                                <tr>
+                                    <td><%= element.matchID %></td>
+                                    <td><%= element.matchStartTime %></td>
+                                    <td><%= element.matchEndTime %></td>
+                                    <td><%= element.matchWinner %></td>
+                                    <td data-status="<%= element.matchStatus %>"><%= element.matchStatus %></td>
+                                    <td class="table-btn-td"><button class="table-btn" onclick="showMatchDetailsModal('<%= element.matchID %>')" data-pointer-not-allowed>View Details</button></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-				<!-- Search Result Section -->
-				<div class="search-result" data-search-result></div>
-			</main>
+            <form class="modal create-item-modal" action="/matches/register" method="POST" data-create-match-modal>
+                <div class="modal-header">
+                    <h2>Create New Match</h2>
+                    <button class="close-btn" type="button" onclick="hideCreateMatchModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-fields">
+                        <label for="numOfPlayersCreate">Number of Players: </label>
+                        <div class="modal-dropdown-container">
+                            <select id="numOfPlayersCreate" name="numOfPlayers" class="half-width dropdown" default="2" data-number-of-players data-save-input>
+                                <option value="2" selected>2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <template id="modal-fields-template">
+                        <div class="modal-fields" data-template-generated>
+                            <label></label>
+                            <input type="text" autocomplete="username" aria-label="Username" data-username data-save-input>
+                        </div>
+                    </template>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn modal-btn-confirm" type="submit">Begin</button>
+                    <button class="btn modal-btn-cancel" type="button" onclick="hideCreateMatchModal()">Cancel</button>
+                </div>
+                <div class="modal-error-message" data-modal-error-message></div>
+            </form>
 
-			<!-- Footer Section -->
-			<%- include("partials/footer") %>
-		</div>
-	</body>
+            <div class="match-details" data-match-detials>
+                <div class="match-details-header">
+                    <div class="match-details-title">
+                        <h2>UNO Match History Log</h2>
+                        <button class="close-btn" type="button" onclick="hideMatchDetailsModal()">&times;</button>
+                    </div>
+                    <div class="match-details-basic-information" data-match-details-basic-information>
+                        <p data-match-id></p>
+                        <p data-match-start-time></p>
+                        <p data-match-end-time></p>
+                        <p data-match-winner></p>
+                    </div>
+                    <div class="match-details-player-information" data-match-details-player-information>
+                        <h2>Players</h2>
+                        <ul data-match-players-list>
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="match-details-body">
+                    <div class="table-container-header">
+                        <h2>Match Actions</h2>
+                    </div>
+                    <div class="scrollable-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Player</th>
+                                    <th>Action</th>
+                                    <th>Additional Info</th>
+                                    <th>Cards in Hand</th>
+                                    <th>Cards in Deck</th>
+                                    <th>Current Direction</th>
+                                    <th>Next Turn</th>
+                                </tr>
+                            </thead>
+                            <tbody data-match-details-table-body>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Result Section -->
+            <div class="search-result" data-search-result></div>
+        </main>
+
+        <!-- Footer Section -->
+        <%- include("partials/footer") %>
+    </div>
+</body>
 </html>

@@ -172,7 +172,7 @@ exports.registerMembershipByPlayerID = async (playerID, duration, privilegeLevel
 
 		console.log("OH YES! Membership Registered Successfully!");
 	} catch (error) {
-		console.error(logError("registerMembership"), error);
+		console.error(logError("registerMembershipByPlayerID"), error);
 		throw error;
 	}
 };
@@ -200,7 +200,7 @@ async function updateMembershipStatus() {
 			await db.promise().query("UPDATE Memberships SET status = ? WHERE player_id = ?", [status, element.player_id]);
 		});
 	} catch (error) {
-		console.error(logError("updateMembershipStatus"), error.message);
+		console.error(logError("updateMembershipStatus"), error);
 		throw error;
 	}
 }

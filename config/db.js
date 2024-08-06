@@ -12,7 +12,7 @@ db.connect((error) => {
 	if (error) {
 		console.error("OH NO! Error connecting to MySQL:", error.message);
 	} else {
-		// check if database exists
+		// Check if database exists
 		if (db.config.database === undefined) {
 			db.query(`CREATE DATABASE ${process.env.DATABASE}`, (error, results, fields) => {
 				if (error) {
@@ -23,7 +23,7 @@ db.connect((error) => {
 								console.error("Failed switching db: ", error.message);
 							} else {
 								console.log("Switch successful.");
-								console.log("---------------------------------");
+								console.log("-------------------------------------------");
 							}
 						});
 					} else {
@@ -36,7 +36,7 @@ db.connect((error) => {
 							console.error("Failed switching db: ", error.message);
 						} else {
 							console.log("Switch successful.");
-							// initialize DB: create tables, insert dummy data
+
 							initializeDB();
 							console.log("Initialization successful.");
 							console.log("---------------------------------");
