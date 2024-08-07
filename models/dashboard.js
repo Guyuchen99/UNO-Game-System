@@ -226,7 +226,7 @@ const insertPlayerUsernameAndEmail = async (username, email) => {
 			username: username,
 			email: email,
 		});
-		console.log("OH YES! Insered into insertPlayerUsernameAndEmail Successfully!");
+		console.log("OH YES! Inserted into PlayerUsernameAndEmail Successfully!");
 	} catch (error) {
 		console.error(logError("insertPlayerUsernameAndEmail"), error);
 		throw error;

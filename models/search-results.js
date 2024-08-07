@@ -25,15 +25,14 @@ const queryMap = {
 	"player-participates-all-events": () => `
         SELECT p.username
         FROM Players p
-        WHERE NOT EXISTS (
-            SELECT e.event_id
-            FROM Events e
-            WHERE e.status = 'Completed' AND NOT EXISTS (
+        JOIN (
             SELECT pe.player_id
-            FROM PlayerParticipateEvents pe
-            WHERE pe.event_id = e.event_id AND pe.player_id = p.player_id
-            )
-        );
+            FROM Events e
+            JOIN PlayerParticipateEvents pe ON e.event_id = pe.event_id
+            WHERE e.status = 'Completed'
+            GROUP BY pe.player_id
+            HAVING COUNT(DISTINCT e.event_id) = (SELECT COUNT(*) FROM Events WHERE status = 'Completed')
+        ) AS CompletedParticipation ON p.player_id = CompletedParticipation.player_id;
     `,
 };
 
@@ -46,8 +45,12 @@ exports.getSearchResultData = async (queryType, number = 10) => {
 
 	const myQuery = queryFunction(number);
 
+	console.log(myQuery);
+
 	try {
 		const [results] = await db.promise().query(myQuery);
+
+        console.log(results);
 
 		return results;
 	} catch (error) {
