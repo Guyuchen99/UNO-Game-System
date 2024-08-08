@@ -1,9 +1,6 @@
 # UNO Game System
 
 ![Photo of My UNO Game System](UI/UNO-Game-System-Login.png)
-[View Website](https://unogamesystem.ycgraphixs.com/)
-
-<br> 
 
 ## Project Description
 
