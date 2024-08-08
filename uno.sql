@@ -323,6 +323,9 @@ CREATE TABLE IF NOT EXISTS CardsDrawnInTurn (
     PRIMARY KEY (turn_id, player_id, match_id, card_id, deck_id),
     FOREIGN KEY (turn_id, player_id, match_id) REFERENCES TurnBelongsToPlayerAndMatch(turn_id, player_id, match_id) 
         ON DELETE CASCADE
+        ON UPDATE CASCADE, 
+    FOREIGN KEY (card_id, deck_id) REFERENCES CardBelongsToDeck(card_id, deck_id) 
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -615,7 +618,7 @@ INSERT IGNORE INTO MatchHasDeck(match_id, deck_id)
 VALUES 
 (1, 1);
 
-INSERT INTO CardBelongsToDeck(card_id, deck_id, name) 
+INSERT IGNORE INTO CardBelongsToDeck(card_id, deck_id, name) 
 VALUES
 (1, 1, 'Red 0'), 
 (2, 1, 'Red 1'), (3, 1, 'Red 1'), (4, 1, 'Red 2'), (5, 1, 'Red 2'),

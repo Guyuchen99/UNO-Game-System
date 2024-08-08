@@ -45,12 +45,8 @@ exports.getSearchResultData = async (queryType, number = 10) => {
 
 	const myQuery = queryFunction(number);
 
-	console.log(myQuery);
-
 	try {
 		const [results] = await db.promise().query(myQuery);
-
-        console.log(results);
 
 		return results;
 	} catch (error) {

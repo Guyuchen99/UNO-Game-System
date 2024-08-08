@@ -115,7 +115,7 @@ exports.updateEventByID = async (eventID, updates) => {
 			if (todayUTC < startDateUTC) {
 				currentStatus = "Upcoming";
 			} else if (endDateUTC < todayUTC) {
-				currentStatus = "Expired";
+				currentStatus = "Completed";
 			} else {
 				currentStatus = "Active";
 			}
@@ -157,7 +157,7 @@ exports.registerEventByID = async (name, startDate, endDate) => {
 		if (todayUTC < startDateUTC) {
 			currentStatus = "Upcoming";
 		} else if (endDateUTC < todayUTC) {
-			currentStatus = "Expired";
+			currentStatus = "Completed";
 		} else {
 			currentStatus = "Active";
 		}
@@ -201,7 +201,7 @@ async function updateEventStatus() {
 			if (todayUTC < startDateUTC) {
 				currentStatus = "Upcoming";
 			} else if (endDateUTC < todayUTC) {
-				currentStatus = "Expired";
+				currentStatus = "Completed";
 			} else {
 				currentStatus = "Active";
 			}
